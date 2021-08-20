@@ -1,0 +1,81 @@
+//-------------------------------------------------------------------------
+// 共通スタイルの設定
+//-------------------------------------------------------------------------
+
+//　配色設定
+// $col_main: darken(blue,18%);
+
+//最低幅の設定
+@mixin min-w { min-width: 960px;}
+
+
+// 中央寄せコンテナー
+@mixin center-container{
+  @include min-w;
+  margin: 0 auto;
+  padding-left: 1em;
+}
+
+
+// ボタン類
+.btn-1{
+  padding: .5em 1em;
+  border-radius: .3em;
+  border: 1px solid #bbb;
+  background: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+
+/*
+/-------------------------------------------------------------------------
+/ リセットCSS
+/-------------------------------------------------------------------------
+*/
+body {
+  font-family: "游ゴシック体", "Yu Gothic", YuGothic, "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", "Meiryo", "sans-serif";
+}
+
+
+body, h1, h2, h3,h4,ul, ol, li,a,p,div,nav,figure,article,section,i{
+  margin: 0 0;  padding: 0 0;
+}
+
+
+/* h1,h2,h3,h4,h5,h6{font-size: 100%;} */
+
+
+table{
+  border-collapse: collapse;/*隣り合うセルの境界線を重ねて表示*/
+  border-spacing: 0;/*境界線の感覚を無くす*/
+}
+
+
+img{
+  border: none;/*枠線を消す*/
+  vertical-align: bottom;/*画像下の余白を消す*/
+  }
+
+a{
+  text-decoration: none;
+  color: #000;
+}
+
+ul{
+  list-style: none;
+}
+
+
+button{
+  background: none;
+  border: none;
+	outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+

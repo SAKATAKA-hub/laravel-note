@@ -1,0 +1,180 @@
+@import"env";
+@import"layout";
+$main_color: lightgreen;
+//----------------------------------
+// ノート詳細
+//----------------------------------
+// <!-- ノート表示域 -->
+.display_note_container{
+    max-width: 100%;
+    padding: 1rem;
+    margin-bottom: 5rem;
+    box-sizing: border-box;
+    background: #fff;
+
+    // //レスポンシブ対応
+    // @media screen and (max-width: 1200px){
+    //     margin-bottom: 0;
+    // }
+
+    // タイトルbox
+    .title_box{
+        .title{
+            font-size: 36px;
+            font-weight: bold;
+        }
+        margin-bottom: 3rem;
+
+    }
+
+    // 見出し1
+    .heading1{
+        font-size: 36px;
+        font-weight: bold;
+        border-bottom: 3px solid $main_color;
+        margin-top: 1em;
+        margin-bottom: 1em;
+
+    }
+
+    // 見出し2
+    .heading2{
+        font-size: 24px;
+        font-weight: bold;
+        border-left: .4em solid $main_color;
+        margin-top: 1em;
+        margin-bottom: 1em;
+
+    }
+
+    // 見出し3
+    .heading3{
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 1rem;
+
+    }
+
+    // 文章
+    .text{
+        margin-bottom: 1rem;
+    }
+
+    // 重要な文章
+    .important_text{
+        padding: 1rem;
+
+        border : 2px solid tomato;
+        border-radius: 2px;
+        margin-bottom: 1rem;
+    }
+
+    // 引用文
+    .quote_text{
+        padding: 1rem;
+        color: #aaa;
+        border-left: .4em solid #aaa;
+        margin-bottom: 1rem;
+
+    }
+
+    // コード文
+    .code_text{
+        padding: 1rem;
+        background: lightslategrey;
+        color : #fff;
+        margin-bottom: 1rem;
+
+    }
+
+    // リンク
+    .link{
+        margin-bottom: 1rem;
+        a{
+            font-weight: bold;
+            color: $main_color;
+            text-decoration: underline;
+        }
+
+    }
+
+    // 大きい画像
+    .image{
+        margin-bottom: 1rem;
+        max-width: 660px;
+        img{
+            width: 100%;
+        }
+    }
+    // 小さい画像
+    .image_litle{
+        margin-right: 10px;
+        margin-bottom: 1rem;
+        display: inline-block;
+        img{
+            width: 210px;
+        }
+    }
+
+}
+
+// <!-- コメント表示域 -->
+.comments_container{
+    width: 100%;
+    margin-bottom: 5rem;
+    box-sizing: border-box;
+
+    border: solid 1px #ddd;
+    background: #fff;
+
+    // ユーザーイメージ画像
+    @mixin user_img {
+        width: 2rem;
+        height: 2rem;
+        margin-right: 1em;
+        border-radius: 2rem;
+        border: solid 1px #bbb;
+    }
+
+    h2{
+        padding: 1rem 1rem 0rem 1rem ;
+        border-bottom: solid 1px #ddd;
+    }
+
+    // <!-- コメントの表示 -->
+    .comment_box{
+        padding: 1rem;
+        border-bottom: solid 1px #ddd;
+        .head{
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 1em;
+            img{ @include user_img}
+        }
+        .body{}
+    }
+
+    // <!-- コメントの入力 -->
+    .comment_input_box{
+        padding: 1rem;
+        h3{
+            img{ @include user_img}
+        }
+        label{
+            input, textarea{
+                width: 100%;
+            }
+        }
+        .btn{
+            padding: .5em 2em;
+            border-radius: .3em;
+            border: 1px solid #bbb;
+            background: $main_color;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+    }
+}
+

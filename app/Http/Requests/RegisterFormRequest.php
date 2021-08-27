@@ -31,7 +31,6 @@ class RegisterFormRequest extends FormRequest
             'password.confirmed' => 'パスワードが異なります。',
 
             'conf_password.required' => 'パスワード(確認用)は入力必須です。',
-
         ];
     }
 

@@ -30,6 +30,7 @@
         <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
         <button class="w-100 btn btn-lg btn-primary" type="submit">ログイン</button>
       </form>
+
       <a href="{{ route('get_register') }}">無料会員登録はこちら</a>
     </main>
 

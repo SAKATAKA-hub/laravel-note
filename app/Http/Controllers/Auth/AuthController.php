@@ -18,17 +18,19 @@ class AuthController extends Controller
     }
 
 
+
+
     # ログイン処理(login)
     public function login(LoginFormRequest $request)
     {
         // ログイン成功の処理
         $credentials = $request->only('email','password');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials)) { //ログイン成功のチェック
 
-            $request->session()->regenerate();
+            $request->session()->regenerate(); //ユーザー情報をセッションに保存
 
-            return redirect('home')->with('login_success','ログインに成功しました！');
+            return redirect()->route('home')->with('login_success','ログインに成功しました！');
         }
 
         // ログイン失敗の処理
@@ -36,9 +38,24 @@ class AuthController extends Controller
             'login_error' => 'メールアドレスかパスワードが間違っています。',
         ]);
 
-        return back()->withErrors([
-            'login_error' => 'メールアドレスかパスワードが間違っています。',
-        ]);
+        // return back()->withErrors([
+        //     'login_error' => 'メールアドレスかパスワードが間違っています。',
+        // ]);
+    }
+
+
+
+
+    # ログアウト処理(logout)
+    public function logout(Request $request)
+    {
+        Auth::logout(); //ユーザーセッションの削除
+
+        $request->session()->invalidate(); //全セッションの削除
+
+        $request->session()->regenerateToken(); //セッションの再作成(二重送信の防止)
+
+        return redirect()->route('home')->with('login_success','ログアウトしました！');
     }
 
 
@@ -49,6 +66,8 @@ class AuthController extends Controller
     {
         return view('login.register_form');
     }
+
+
 
 
     # ユーザー登録処理(post_register)

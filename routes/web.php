@@ -11,19 +11,23 @@ use App\Http\Controllers\MypageController;
 //--------------------------------------------------------
 // ログイン認証
 //--------------------------------------------------------
+# ホームページの表示
+Route::get('home',function() {
+    return view('login.home');
+})->name('home');
+
 # ログイン画面の表示(login_form)
 Route::get('/',[AuthController::class,'login_form'])
 ->name('login_form');
-
 
 # ログイン処理(login)
 Route::post('login',[AuthController::class,'login'])
 ->name('login');
 
-# ログイン後のページの表示
-Route::get('home',function() {
-    return view('login.home');
-})->name('login_home');
+# ログアウト処理(logout)
+Route::post('logout',[AuthController::class,'logout'])
+->name('logout');
+
 
 
 # ユーザー登録画面の表示(get_register)
@@ -38,14 +42,45 @@ Route::post('post_register',[AuthController::class,'post_register'])
 
 
 
-# ログイン前の処理
-Route::middleware(['guest'])->group(function () {
-    //
-});
-# ログイン後の処理
-Route::middleware(['auth'])->group(function () {
-    //
-});
+// # ログイン前の処理
+// Route::middleware(['guest'])->group(function () {
+
+//     # ログイン画面の表示(login_form)
+//     Route::get('/',[AuthController::class,'login_form'])
+//     ->name('login_form');
+
+//     # ログイン処理(login)
+//     Route::post('login',[AuthController::class,'login'])
+//     ->name('login');
+
+// });
+
+
+// # ログイン後の処理
+// Route::middleware(['auth'])->group(function () {
+
+//     # ホームページの表示
+//     Route::get('home',function() {
+//         return view('login.home');
+//     })->name('home');
+
+//     # ログアウト処理(logout)
+//     Route::post('logout',[AuthController::class,'logout'])
+//     ->name('logout');
+
+//     # ユーザー登録画面の表示(get_register)
+//     Route::get('get_register',[AuthController::class,'get_register'])
+//     ->name('get_register');
+
+//     # ユーザー登録処理(post_register)
+//     Route::post('post_register',[AuthController::class,'post_register'])
+//     ->name('post_register');
+
+// });
+
+
+
+
 
 //--------------------------------------------------------
 // 閲覧ページの処理 (NotesController)

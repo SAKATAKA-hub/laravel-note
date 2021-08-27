@@ -75,7 +75,7 @@
 
       <footer class="my-5 pt-5 text-muted text-center text-small">
         <ul class="list-inline">
-          <li class="list-inline-item"><a href="{{route( 'login_home' )}}">ホーム</a></li>
+          <li class="list-inline-item"><a href="{{route( 'home' )}}">ホーム</a></li>
           <li class="list-inline-item"><a href="{{route( 'login_form' )}}">ログイン画面</a></li>
         </ul>
       </footer>

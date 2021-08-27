@@ -18,7 +18,8 @@ class HashtagsTableSeeder extends Seeder
 
         foreach ($hashtag_vals as $hashtag_val) {
             $Hashtag = new Hashtag([
-                'hashtag' => $hashtag_val
+                'hashtag' => $hashtag_val,
+                'user_id' => 1,
             ]);
             $Hashtag->save();
         }

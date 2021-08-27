@@ -16,9 +16,10 @@ class CreateNotesTable extends Migration
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
             $table->string('title',100)->comment('題名');
-            $table->string('main_image',100)->comment('メイン画像');
+            $table->string('main_image',100)->comment('メイン画像')
+            ->nullable()->default(null);
             $table->string('main_color',100)->comment('メインカラー');
-            $table->string('hashtags')->comment('＃タグ');
+            $table->string('hashtags',100)->comment('＃タグ');
             $table->unsignedBigInteger('user_id')->comment('user ID');
             $table->timestamps();
 

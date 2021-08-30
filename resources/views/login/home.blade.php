@@ -12,16 +12,23 @@
         <div> {{session('login_success')}} </div>
     @endif
     <h2>ホーム</h2>
+
+    <!-- ログイン中の時 -->
     @if ( Auth::check() )
         <h3>プロフィール</h3>
         <ul>
             <li>名前：{{Auth::user()->name}}</li>
             <li>メールアドレス：{{Auth::user()->email}}</li>
         </ul>
+
+        <a href="{{route('mypage.list',Auth::user()->id)}}">マイページ</a>
+
         <form method="POST" action="{{route('logout')}}">
             @csrf
             <button>ログアウト</button>
         </form>
+
+    <!-- ログアウト中の時 -->
     @else
         <ul>
             <li>こんにちはゲストさん(ログインしていません)</li>

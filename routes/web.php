@@ -12,13 +12,8 @@ use App\Http\Controllers\MypageController;
 //--------------------------------------------------------
 // ログイン認証
 //--------------------------------------------------------
-# ホームページの表示
-Route::get('home',function() {
-    return view('login.home');
-})->name('home');
-
 # ログイン画面の表示(login_form)
-Route::get('/',[AuthController::class,'login_form'])
+Route::get('login_form',[AuthController::class,'login_form'])
 ->name('login_form');
 
 # ログイン処理(login)
@@ -39,7 +34,14 @@ Route::get('get_register',[AuthController::class,'get_register'])
 Route::post('post_register',[AuthController::class,'post_register'])
 ->name('post_register');
 
+// ログイン前は表示不可
+Route::middleware(['auth'])->group(function () {
+    # ホームページの表示
+    Route::get('home',function() {
+        return view('login.home');
+    })->name('home');
 
+});
 
 
 //--------------------------------------------------------
@@ -76,14 +78,15 @@ Route::get('/notes/print_note/{note}',[NotesController::class,'print_note'])
 //--------------------------------------------------------
 
 # ノート一覧ページの表示(list)
-Route::get('/mypage/list/{seach_keys?}',[MypageController::class,'list'])
+Route::get('/mypage/list/user={user}/{seach_keys?}',[MypageController::class,'list'])
 ->name('mypage.list');
 
-
-
+# ノートページの表示(show_note)
+Route::get('/mypage/show_note/note={note}/{seach_keys?}',[MypageController::class,'show_note'])
+->name('show_note');
 
 # ノートの新規作成ページの表示(create_note)
-Route::get('/mypage/create_note',[MypageController::class,'create_note'])
+Route::get('/mypage/create_note/user={user}',[MypageController::class,'create_note'])
 ->name('create_note');
 
 # 新規作成ノートの保存(store_note)
@@ -120,3 +123,12 @@ Route::patch('/mypage/update_note_part/{note}',[MypageController::class,'update_
 # ノート部品の削除(destroy_note_part)
 Route::delete('/mypage/destroy_note_part/{note}',[MypageController::class,'destroy_note_part'])
 ->name('destroy_note_part');
+
+
+
+# ファイルの保存
+Route::get('upload_form',[MypageController::class,'upload_form'])
+->name('upload_form');
+
+Route::post('upload_file',[MypageController::class,'upload_file'])
+->name('upload_file');

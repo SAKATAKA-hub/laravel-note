@@ -30,17 +30,18 @@ class AuthController extends Controller
 
             $request->session()->regenerate(); //ユーザー情報をセッションに保存
 
+            // return back();
             return redirect()->route('home')->with('login_success','ログインに成功しました！');
         }
 
         // ログイン失敗の処理
-        return back()->with([
-            'login_error' => 'メールアドレスかパスワードが間違っています。',
-        ]);
-
-        // return back()->withErrors([
+        // return back()->with([
         //     'login_error' => 'メールアドレスかパスワードが間違っています。',
         // ]);
+
+        return back()->withErrors([
+            'login_error' => 'メールアドレスかパスワードが間違っています。',
+        ]);
     }
 
 

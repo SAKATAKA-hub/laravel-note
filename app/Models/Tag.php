@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Hashtag extends Model
+class Tag extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['hashtag','user_id'];
+    public $timestamps = true;
+
+    protected $fillable = ['tag','user_id'];
 
 }

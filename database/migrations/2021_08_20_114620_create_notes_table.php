@@ -19,7 +19,7 @@ class CreateNotesTable extends Migration
             $table->string('main_image',100)->comment('メイン画像')
             ->nullable()->default(null);
             $table->string('main_color',100)->comment('メインカラー');
-            $table->string('hashtags',100)->comment('＃タグ');
+            $table->string('tags',100)->comment('＃タグ');
             $table->unsignedBigInteger('user_id')->comment('user ID');
             $table->timestamps();
 

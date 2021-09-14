@@ -19,6 +19,7 @@ class Note extends Model
 
 
 
+
     # リレーション設定
     public function user()
     {
@@ -30,4 +31,17 @@ class Note extends Model
     {
         return $this->hasMany(note_part::class);
     }
+
+
+
+    # ローカルスコープ
+
+    # 同じタグが利用されている投稿数を返す
+    public function scopeCountTagUsed($query,$user_id,$tag)
+    {
+        return $query->where('user_id',$user_id)
+        ->where('tags','like','%#'.$tag.',%')->count();
+    }
+
+
 }

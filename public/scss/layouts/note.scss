@@ -1,0 +1,190 @@
+//-----------------------------------------
+// ベースのスタイル
+//-----------------------------------------
+
+@mixin basic_style($color) {
+
+    // タイトルbox
+    .title_box{
+        .title{
+            font-size: 2em;
+            font-weight: bold;
+        }
+        margin-bottom: 3rem;
+
+    }
+
+    // 見出し1
+    .heading1{
+        font-size: 1.5em;
+        font-weight: bold;
+        border-left: .4em solid $color;
+        // background-color: lighten($color, 30%);
+        padding-left: .5em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        strong{ color: $color;}
+    }
+
+    // 見出し2
+    .heading2{
+        display: inline-block;
+        font-size: 1.5em;
+        font-weight: bold;
+        border-bottom: .1em solid $color;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        strong{ color: $color;}
+    }
+
+    // 見出し3
+    .heading3{
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        strong{ color: $color;}
+    }
+
+    // 文章
+    .normal_text{
+        margin-bottom: 1rem;
+        strong{ color: red;}
+    }
+
+    // 重要な文章
+    .important_text{
+        margin: 1em;
+        padding: 1rem;
+
+        border : 2px solid red;
+        border-radius: 2px;
+        margin-bottom: 1rem;
+        strong{ color: red;}
+    }
+
+    //強調する文章
+    .emphasized_text{
+        margin: 1em;
+        padding: 1rem;
+
+        background-color: lighten($color, 30%);
+        margin-bottom: 1rem;
+        strong{ color: red;}
+    }
+
+    // 引用文
+    .quote_text{
+        padding: 1rem;
+        border-left: .4em solid #aaa;
+        margin-bottom: 1rem;
+        strong{ color: red;}
+    }
+
+    // コード文
+    .code_text{
+        .title{
+            display: inline-block;
+            padding: 0 1em;
+            border: solid 2px #eee;
+            border-bottom: none;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        .text{
+            padding: 1rem;
+            background-color: #eee;
+            margin-bottom: 1rem;
+        }
+    }
+
+    // リンク
+    .link{
+        margin-bottom: 1rem;
+        a{
+            font-weight: bold;
+            color: $color;
+            text-decoration: underline;
+        }
+
+    }
+
+    // 大きい画像
+    .image{
+        margin-bottom: 1rem;
+        img{
+            width: 100%;
+        }
+        .title{
+            margin-top: .5em;
+            // text-align: center;
+            font-size: .8em;
+            color: #aaa;
+        }
+    }
+    // 小さい画像
+    .image_litle{
+        margin-right: 10px;
+        margin-bottom: 1rem;
+        display: inline-block;
+        width: 210px;
+
+        img{
+            width: 100%;
+        }
+        .title{
+            margin-top: .5em;
+            text-align: center;
+            font-size: .8em;
+            color: #aaa;
+        }
+    }
+
+
+} //end@mixin basic_style($color)
+
+
+
+
+
+
+
+
+//-----------------------------------------
+// ページカラーの選択と表示域のスタイル
+//-----------------------------------------
+
+
+// Colors (選択可能な色)
+$theme-colors: (
+    blue: #3490dc,
+    indigo: #6574cd,
+    purple: #9561e2,
+    pink: #f66d9b,
+    red: #e3342f,
+    orange: #f6993f,
+    yellow: #ffed4a,
+    green: #38c172,
+    teal: #4dc0b5,
+    cyan: #6cb2eb
+);
+
+
+// 繰り返し
+@each $key, $color in $theme-colors
+{
+    // <!-- ノート表示域 -->
+    .display_note_container_#{$key}{
+        max-width: 100%;
+        margin-bottom: 5rem;
+        box-sizing: border-box;
+
+        @include basic_style($color);
+
+    }
+
+}
+
+
+
+
+

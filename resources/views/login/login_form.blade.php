@@ -14,7 +14,7 @@
 <body class="text-center">
 
     <main class="form-signin">
-      <form method="POST" action="{{route('login')}}">
+
         @csrf
 
         @if (session('login_error'))

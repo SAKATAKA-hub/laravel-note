@@ -1,0 +1,26 @@
+.main_side_container .plofile{
+    /* background: #eee; */
+    padding: 1rem;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 5px;
+    border: solid 1px #ddd;
+}
+.main_side_container .plofile img{
+    width: 6rem;
+    height: 6rem;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    border: solid 1px #ddd;
+
+}
+
+.main_side_container .writer_name{
+    font-weight: bold;
+}
+
+.main_side_container .writer_text {
+    font-weight: normal;
+    text-align: left;
+    /* font-size: 1rem; */
+}

@@ -16,10 +16,10 @@
             </td>
             @if ( Auth::check() && (Auth::user()->id == $user->id) )
                 <td>
-                    <a href="#"><button>編集</button></a>
+                    <a href="{{route('edit_note',$note)}}"><button>編集</button></a>
                 </td>
                 <td>
-                    <form action="#" method="POST">
+                    <form action="{{route('destroy_note',$note)}}" method="POST">
                         @method('DELETE')
                         @csrf
                         <button>削除</button>

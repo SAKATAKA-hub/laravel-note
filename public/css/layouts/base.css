@@ -1,0 +1,65 @@
+a{
+    text-decoration: none;
+    color: #000;
+}
+
+
+
+
+
+body{
+    max-height: 100vh;
+}
+
+
+
+
+header{
+    border-bottom: solid 1px #bbb;
+}
+
+    header .user_image{
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        border: solid 1px #bbb;
+    }
+
+
+
+
+
+
+main .breadcrumb{
+    padding: .5em;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+.main_container{
+    /* border: solid 1px #bbb; */
+
+    min-height: 90vh;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    box-sizing: border-box;
+}
+
+
+    .section_box{
+        padding: 1rem;
+        border: solid 1px #bbb;
+        border-radius: 5px;
+        margin-bottom: 1em;
+    }
+
+
+
+footer{
+    min-height: 2em;
+    line-height: 2em;
+    border-top: solid 1px #bbb;
+    text-align: center;
+}

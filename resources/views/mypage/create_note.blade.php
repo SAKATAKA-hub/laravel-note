@@ -31,7 +31,7 @@
         </label>
         <label>
             <h4>イメージ画像</h4>
-            <input type="file" name="main_image">
+            <input type="file" name="image">
         </label>
         <label>
             <h4>公開設定</h4>

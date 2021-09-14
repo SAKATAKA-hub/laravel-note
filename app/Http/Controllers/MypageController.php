@@ -68,6 +68,10 @@ class MypageController extends Controller
      */
     public function store_note(CreateNoteFomeRequest $request)
     {
+        // $request['main_color'] = 'blue';
+        // $array = $request->only('title','main_color','publishing');
+        // dd($array);
+
         # タグの処理
         //複数関連タグを一つの文字列に変換
         $tags = [];
@@ -79,7 +83,8 @@ class MypageController extends Controller
             $new_tags = str_replace('　',' ',$request->new_tags);
             $new_tags = explode(' ',$new_tags);
         }
-        $tags_text = implode(',', array_merge($tags,$new_tags) );
+        $tags_text = implode(', #', array_merge($tags,$new_tags) );
+        $tags_text = '#'.$tags_text.',';
 
         //新しいタグをテーブルに保存
         $old_tags =[];
@@ -100,18 +105,29 @@ class MypageController extends Controller
 
 
         # 画像の処理
+        $dir = 'upload/main_image'; //保存先ディレクトリ名
 
+        if($request_file = $request->file('image'))
+        {
+            $num = Note::orderBy('id','desc')->first()->id +1; //投稿番号
+            $extension = $request_file->extension(); //拡張子
+            $file_name = sprintf('%04d_%06d', $request->user_id, $num).'.'.$extension; //ファイル
 
+            $main_image_path = $request_file->storeAs($dir,$file_name); //画像の保存
+        }
+        else
+        {
+            $main_image_path = null;
+        }
 
 
         # ノートの保存
-        $note = new Note([
-            'title' => $request->title,
-            // 'main_image' => $request-,
-            'main_color' => $request->main_color,
-            'tags' => $tags_text,
-            'user_id' => $request->user_id,
-        ]);
+        $request['tags'] = $tags_text;
+        $request['main_image'] = $main_image_path;
+
+        $note = new Note(
+            $request->only('title','user_id','main_color','tags','main_image')
+        );
         $note->save();
 
         return redirect()->route('mypage.list',$request->user_id);
@@ -123,6 +139,47 @@ class MypageController extends Controller
 
 
     /**
+     * ノートの削除(destroy_note)
+     *
+     * @param \App\Models\Note $note
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy_note(Note $note)
+    {
+        # 利用されていないタグの削除処理
+        //タグを変換（文字列 ---> 配列）
+        $tags_text = $note->tags;
+        $tags_text = str_replace('#','',$tags_text);
+        $tags_text = str_replace(',','',$tags_text);
+        $tags = explode(' ',$tags_text);
+
+        //タグ(#タグ,)を利用している投稿が他に存在しないとき、タグを一覧から削除
+        foreach ($tags as $tag)
+        {
+            $count = Note::countTagUsed($note->user_id, $tag);
+            if($count == 1)
+            {
+                Tag::where('user_id',$note->user_id)->where('tag',$tag)
+                ->delete();
+            }
+        }
+
+
+        # 画像の削除処理
+        if( !empty($note->main_image) ){
+            Storage::delete($note->main_image); //画像があれば削除
+        }
+
+        # 投稿の削除
+        $note->delete();
+
+
+        return redirect()->route('mypage.list',$note->user_id);
+    }
+
+
+
+    /**
      * ノート編集ページの表示(edit_note)
      *
      * @param \App\Models\Note $note
@@ -130,39 +187,8 @@ class MypageController extends Controller
      */
     public function edit_note(Note $note)
     {
-        return 'edit_note'.$note;
+        // return 'edit_note'.$note->id;
         return view('mypage.edit_note');
     }
 
-
-
-
-    # ファイルアップロードフォーム
-    public function upload_form()
-    {
-        return view('upload_form');
-    }
-
-    # 画像のアップロード
-    public function upload_file(Request $request)
-    {
-        if($request->file('upload_file'))
-        {
-            $extension = $request->file('upload_file')->extension(); //拡張子
-            $file_name = 'upload_file'.'.'.$extension; //ファイル名
-            $dir = 'upload'; //保存先ディレクトリ名
-
-            //ファイル名(拡張子も含む)の自動生成と'upload'ディレクトリへファイルを保存
-            $path = $request->file('upload_file')->store($dir);
-
-            //任意のファイル名でファイルを保存
-            $path = $request->file('upload_file')->storeAs($dir,$file_name);
-            // $path = 'upload/upload_file.jpg';
-
-            return $path;
-        }
-    }
 }
-
-
-

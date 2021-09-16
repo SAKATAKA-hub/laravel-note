@@ -16,5 +16,8 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory(2)->create();
         $this->call(NotePartNamesTableSeeder::class);
         $this->call(TagsTableSeeder::class);
+
+        $this->call(NotesTableSeeder::class);
+
     }
 }

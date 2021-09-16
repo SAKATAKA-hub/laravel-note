@@ -14,15 +14,31 @@ use App\Models\User;
 class NotesController extends Controller
 {
     /**
-     * ノート一覧ページの表示(list)
+     * マイページの表示(list)
      *
      * @param \App\Models\User $user
      * @param string $seach_keys
      * @return \Illuminate\View\View
      */
-    public function list()
+    public function list( User $user, $seach_keys=null )
     {
-        return view('notes.list');
+        $notes = Note::where('user_id',$user->id)->paginate(8);
+
+        return view('notes.list',compact('user','notes'));
+    }
+
+
+
+
+    /**
+     * ノート閲覧ページの表示(show)
+     *
+     * @param \App\Models\Note $note
+     * @return \Illuminate\View\View
+     */
+    public function show(Note $note){
+
+        return view('notes.show',compact('note'));
     }
 
 

@@ -11,7 +11,7 @@
     <!-- side_container.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/side_container.css')}}">
     <style>
-        .note_master_only{ display: none;}
+        .main_container .note_master_only{ display: inline-block;}
     </style>
 
 @endsection
@@ -30,7 +30,7 @@
 
 
 
-@section('title','ユーザーさんのマイノート閲覧')
+@section('title','ノート閲覧')
 
 
 
@@ -41,7 +41,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-fill"></i>home</a></li>
             <li class="breadcrumb-item"><a href="#">ユーザーさんのマイページ</a></li>
-            <li class="breadcrumb-item active" aria-current="page">ユーザーさんのマイノート閲覧</li>
+            <li class="breadcrumb-item active" aria-current="page">ノート閲覧</li>
         </ol>
     </nav>
 @endsection
@@ -67,13 +67,24 @@
 
 
         <div class="title_box">
-            <p><span class="note_master_only badge rounded-pill bg-success">公開中</span> 0000年00月00日更新</p>
+            <p>
+                @if ($note->publishing)
+                <span class="note_master_only badge rounded-pill bg-success">公開中</span>
+                @else
+                <span class="note_master_only badge rounded-pill bg-danger">非公開</span>
+                @endif
 
-            <h2 class="title">タイトルタイトルタイトルタイトルタイトルタイトルタイトルタイトルタイトルタイトルタイトル</h2>
+                {{$note->updated_at}}
+            </p>
 
-            <p><i class="bi bi-tag-fill"></i>
-                <a href="">laravel</a>
-                <a href="">テスト</a>
+            <h3 class="title">{{$note->title}}</h3>
+
+            <p>
+                <i class="bi bi-tag-fill"></i>
+
+                @foreach ($note->tags_array as $tag)
+                <a href="">{{$tag}}</a>
+                @endforeach
             </p>
 
 

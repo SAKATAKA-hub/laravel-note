@@ -50,7 +50,7 @@
                 </label>
             </div>
 
-            <input type="text" name="tags[]" class="form-control" placeholder="複数のタグを追加するときは、'空白文字'を挟む。 " id="newTags">
+            <input  class="form-control" type="text" name="tags[]"placeholder="複数のタグを追加するときは、'空白文字'を挟む。 " id="newTags">
 
 
             <p style="color:red;height:1em;"></p>
@@ -60,7 +60,7 @@
         <div class="form_group mb-4">
             <label class="fw-bold">公開設定</label>
             <div class="form-check form-switch fs-5 mt-2">
-                <input class="form-check-input" type="checkbox" id="inputPublishing"  checked="checked">
+                <input class="form-check-input" type="checkbox" name="publishing" id="inputPublishing"  checked="checked">
                 <label class="form-check-label fs-5 fw-bold text-primary" for="inputPublishing">公開</label>
             </div>
         </div>

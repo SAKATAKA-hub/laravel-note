@@ -31,7 +31,7 @@ header{
 
 
 .breadcrumb, .heading{
-    padding: 1em 0;
+    padding: 1em;
     max-width: 1200px;
     margin: 0 auto;
 }

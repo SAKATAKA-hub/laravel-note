@@ -12,7 +12,7 @@ class Note extends Model
 
     # データ挿入設定
     protected $fillable = [
-        'title','main_image','main_color','tags','user_id',
+        'title','color','tags','publishing','user_id',
     ];
 
     public $timestamps = true;
@@ -31,6 +31,25 @@ class Note extends Model
     {
         return $this->hasMany(note_part::class);
     }
+
+
+
+
+
+    # アクセサー
+    /**
+     * フォーム入力値とラベルを結びつける'ID'の値を返す
+     *
+     *
+     * @return String
+     */
+    public function getTagsArrayAttribute()
+    {
+
+        return explode('　',$this->tags);
+    }
+
+
 
 
 

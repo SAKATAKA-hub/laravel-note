@@ -33,7 +33,10 @@
         @yield('main.breadcrumb')
 
         <!-- heading -->
-        <h2 class="heading">@yield('title')</h2>
+        <h2 class="heading">
+            <p class="h-100 me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
+            @yield('title')
+        </h2>
 
 
         <div class="main_container row p-md-3">

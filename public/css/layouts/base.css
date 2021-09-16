@@ -30,22 +30,25 @@ header{
 
 
 
-main .breadcrumb{
-    padding: .5em;
+.breadcrumb, .heading{
+    padding: 1em 0;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 
 .main_container{
-    /* border: solid 1px #bbb; */
-
     min-height: 90vh;
     max-width: 1200px;
     margin: 0 auto;
 
     box-sizing: border-box;
+
 }
+
+
+
+    .main_container .note_master_only{ display: none;} /* マイページ管理者以外非表示 */
 
 
     .section_box{

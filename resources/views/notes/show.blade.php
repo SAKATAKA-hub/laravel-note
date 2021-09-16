@@ -4,15 +4,15 @@
 
 
 
-@section('title','マイノートの表示')
-
-
-
-
 @section('style')
 
+    <!-- note.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/note.css')}}">
+    <!-- side_container.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/side_container.css')}}">
+    <style>
+        .note_master_only{ display: none;}
+    </style>
 
 @endsection
 
@@ -30,13 +30,18 @@
 
 
 
+@section('title','ユーザーさんのマイノート閲覧')
+
+
+
+
 
 @section('main.breadcrumb')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-fill"></i>home</a></li>
-            <li class="breadcrumb-item"><a href="#">マイページ</a></li>
-            <li class="breadcrumb-item active" aria-current="page">マイノートの表示</li>
+            <li class="breadcrumb-item"><a href="#">ユーザーさんのマイページ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">ユーザーさんのマイノート閲覧</li>
         </ol>
     </nav>
 @endsection
@@ -46,7 +51,7 @@
 
 @section('main.side_container')
 
-    @include('includes.side_container')
+    @include('includes.side_container.list')
 
 @endsection
 
@@ -56,12 +61,13 @@
 @section('main.center_container')
     <!-- ノート表示域 -->
     <div class="display_note_container_orange"> <!-- (クラスからページカラーを指定できる) -->
+    {{-- <div class="display_note_container_green"> <!-- (クラスからページカラーを指定できる) --> --}}
 
 
 
 
         <div class="title_box">
-            <p>0000年00月00日更新<span class="badge rounded-pill bg-success">公開中</span></p>
+            <p><span class="note_master_only badge rounded-pill bg-success">公開中</span> 0000年00月00日更新</p>
 
             <h2 class="title">タイトルタイトルタイトルタイトルタイトルタイトルタイトルタイトルタイトルタイトルタイトル</h2>
 
@@ -71,7 +77,7 @@
             </p>
 
 
-            <div class="operation_box">
+            <div class="note_master_only text-end">
                 <button class="btn btn-outline-secondary"><i class="bi bi-eraser-fill"></i>編集</button>
                 <button class="btn btn-outline-secondary"><i class="bi bi-trash"></i>削除</button>
                 <button class="btn btn-outline-secondary"><i class="bi bi-trash"></i>印刷</button>
@@ -122,24 +128,24 @@
 
 
         <div class="image">
-            <img src="common/img/sample.jpg" alt="">
+            <img src="{{ asset('storage/upload/sample.jpg') }}" alt="">
             <p class="title">大きい写真</p>
         </div>
 
         <div class="image_litle">
-            <img src="common/img/sample.jpg" alt="">
+            <img src="{{ asset('storage/upload/sample.jpg') }}" alt="">
             <p class="title">小さい写真</p>
         </div>
         <div class="image_litle">
-            <img src="common/img/sample.jpg" alt="">
+            <img src="{{ asset('storage/upload/sample.jpg') }}" alt="">
             <p class="title">小さい写真</p>
         </div>
         <div class="image_litle">
-            <img src="common/img/sample.jpg" alt="">
+            <img src="{{ asset('storage/upload/sample.jpg') }}" alt="">
             <p class="title">ddd</p>
         </div>
         <div class="image_litle">
-            <img src="common/img/sample.jpg" alt="">
+            <img src="{{ asset('storage/upload/sample.jpg') }}" alt="">
             <p class="title">小さい写真</p>
         </div>
 

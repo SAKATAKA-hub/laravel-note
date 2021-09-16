@@ -11,9 +11,11 @@
 
 
     <!-- Styel link tags -->
-        @include('includes.bootstrap.css') <!--(bootstrap)-->
+        <!--(bootstrap)-->
+        @include('includes.bootstrap.css')
+        <!-- base.css -->
+        <link rel="stylesheet" href="{{asset('css/layouts/base.css')}}">
 
-        <link rel="stylesheet" href="{{asset('css/layouts/base.css')}}"> <!-- base.css -->
         @yield('style')
 
 </head>
@@ -29,6 +31,9 @@
     <main>
         <!-- breadcrumb -->
         @yield('main.breadcrumb')
+
+        <!-- heading -->
+        <h2 class="heading">@yield('title')</h2>
 
 
         <div class="main_container row p-md-3">

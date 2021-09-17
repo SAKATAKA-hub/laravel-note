@@ -13,12 +13,16 @@ class TagsTableSeeder extends Seeder
      */
     public function run()
     {
+        $name = 'tags';
+        $user_id = 1;
         $tag_vals=['アプリ開発','学習ノート','制作メモ','Laravel'];
 
         foreach ($tag_vals as $tag_val) {
             $tag = new Tag([
-                'tag' => $tag_val,
-                'user_id' => 1,
+                'name' => $name,
+                'value' => $tag_val,
+                'text' => $tag_val,
+                'user_id' => $user_id,
             ]);
             $tag->save();
         }

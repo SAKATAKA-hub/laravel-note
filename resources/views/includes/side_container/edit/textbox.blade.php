@@ -17,7 +17,7 @@
             <option value="normalText">通常の文章</option>
             <option value="importantText">重要な文章</option>
             <option value="emphasizedText">強調する文章</option>
-            <option value=quoteText"">引用文</option>
+            <option value="quoteText">引用文</option>
             <option value="codeText">コード文</option>
 
             <option value="link">リンク</option>

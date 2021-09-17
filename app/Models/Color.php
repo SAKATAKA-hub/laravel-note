@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tag extends Model
+class Color extends Model
 {
     use HasFactory;
 
@@ -13,7 +13,8 @@ class Tag extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'name','value','text','user_id','checked',
+        'name','value','text','selected ',
     ];
+
 
 }

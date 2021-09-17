@@ -9,13 +9,13 @@ class Note extends Model
 {
     use HasFactory;
 
-
     # データ挿入設定
+    public $timestamps = true;
+
     protected $fillable = [
         'title','color','tags','publishing','user_id',
     ];
 
-    public $timestamps = true;
 
 
 

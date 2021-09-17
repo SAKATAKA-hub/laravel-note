@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tag extends Model
+class Textbox extends Model
 {
     use HasFactory;
 
@@ -13,7 +13,7 @@ class Tag extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'name','value','text','user_id','checked',
+        'note_id', 'textbox_case_id','main_value', 'sub_value', 'order',
     ];
 
 }

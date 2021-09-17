@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateNotePartNamesTable extends Migration
+class CreateTextboxCasesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateNotePartNamesTable extends Migration
      */
     public function up()
     {
-        Schema::create('note_part_names', function (Blueprint $table) {
+        Schema::create('textbox_cases', function (Blueprint $table) {
             $table->id();
-            $table->string('part_key',100)->comment('部品名キー');
-            $table->string('part_name',100)->comment('部品名');
+            $table->string('name',50);
+            $table->string('value',50);
+            $table->string('text',50);
+            $table->boolean('selected')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateNotePartNamesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('note_part_names');
+        Schema::dropIfExists('textbox_cases');
     }
 }

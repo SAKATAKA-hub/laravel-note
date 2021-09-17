@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateNotePartsTable extends Migration
+class CreateTextboxesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,24 +13,33 @@ class CreateNotePartsTable extends Migration
      */
     public function up()
     {
-        Schema::create('note_parts', function (Blueprint $table) {
+        Schema::create('textboxes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('note_id')->comment('ノートID');
-            $table->unsignedBigInteger('note_part_name_id')->comment('部品ID');
-            $table->string('text')->comment('テキスト');
-            $table->string('url')->comment('URL');
+            $table->unsignedBigInteger('note_id');
+            $table->unsignedBigInteger('textbox_case_id');
+
+            $table->string('main_value');
+            $table->string('sub_value',100)->nullable()->default(null);
+            $table->integer('order');
             $table->timestamps();
+
+
+
 
             $table->foreign('note_id')
             ->references('id')->on('notes') //存在しないidの登録は不可
             ->onDelete('cascade');//主テーブルに関連する従テーブルのレコードを削除
 
-            $table->foreign('note_part_name_id')
-            ->references('id')->on('note_part_names') //存在しないidの登録は不可
+            $table->foreign('textbox_case_id')
+            ->references('id')->on('textbox_cases') //存在しないidの登録は不可
             ->onDelete('cascade');//主テーブルに関連する従テーブルのレコードを削除
-
         });
+
     }
+
+
+
+
 
     /**
      * Reverse the migrations.
@@ -39,6 +48,6 @@ class CreateNotePartsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('note_parts');
+        Schema::dropIfExists('textboxes');
     }
 }

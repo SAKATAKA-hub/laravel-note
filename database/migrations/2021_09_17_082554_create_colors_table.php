@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTagsTable extends Migration
+class CreateColorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,16 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('colors', function (Blueprint $table) {
             $table->id();
             $table->string('name',50);
             $table->string('value',50);
             $table->string('text',50);
-            $table->unsignedBigInteger('user_id');
-            $table->boolean('checked')->default(0);
+            $table->boolean('selected')->default(0);
             $table->timestamps();
-
-            $table->foreign('user_id')
-            ->references('id')->on('users') //存在しないidの登録は不可
-            ->onDelete('cascade');//主テーブルに関連する従テーブルのレコードを削除
         });
+
     }
-
-
-
 
     /**
      * Reverse the migrations.
@@ -38,6 +31,6 @@ class CreateTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tags');
+        Schema::dropIfExists('colors');
     }
 }

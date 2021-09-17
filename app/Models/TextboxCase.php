@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class NotePartName extends Model
+class TextboxCase extends Model
 {
     use HasFactory;
 
+    # データ挿入設定
+    public $timestamps = true;
+
     protected $fillable = [
-        'part_key',
-        'part_name',
+        'name','value','text','selected ',
     ];
+
 
 }

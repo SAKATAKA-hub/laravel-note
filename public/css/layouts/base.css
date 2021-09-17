@@ -4,6 +4,16 @@ a{
 }
 
 
+button{
+    background: none;
+    border: none;
+        outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
 
 
 
@@ -31,9 +41,10 @@ header{
 
 
 .breadcrumb, .heading{
-    padding: 1em;
+    padding: .5em;
     max-width: 1200px;
     margin: 0 auto;
+    font-size: .8em;
 }
 
 
@@ -45,6 +56,7 @@ header{
     box-sizing: border-box;
 
 }
+
 
 
 

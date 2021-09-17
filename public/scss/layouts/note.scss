@@ -19,7 +19,6 @@
         font-size: 1.5em;
         font-weight: bold;
         border-left: .4em solid $color;
-        // background-color: lighten($color, 30%);
         padding-left: .5em;
         margin-top: 1em;
         margin-bottom: 1em;
@@ -48,7 +47,7 @@
     // 文章
     .normal_text{
         margin-bottom: 1rem;
-        strong{ color: red;}
+        strong{ color: $color;}
     }
 
     // 重要な文章
@@ -74,7 +73,9 @@
 
     // 引用文
     .quote_text{
+        margin: 1em;
         padding: 1rem;
+
         border-left: .4em solid #aaa;
         margin-bottom: 1rem;
         strong{ color: red;}
@@ -84,13 +85,16 @@
     .code_text{
         .title{
             display: inline-block;
+            margin-left: 1em;
             padding: 0 1em;
+
             border: solid 2px #eee;
             border-bottom: none;
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
         }
         .text{
+            margin: 0 1em;
             padding: 1rem;
             background-color: #eee;
             margin-bottom: 1rem;
@@ -116,7 +120,7 @@
         }
         .title{
             margin-top: .5em;
-            // text-align: center;
+            text-align: center;
             font-size: .8em;
             color: #aaa;
         }

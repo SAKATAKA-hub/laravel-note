@@ -2,16 +2,16 @@
     <h5><i class="bi bi-file-earmark-person"></i> 筆者プロフィール</h5>
     <div class="plofile">
 
-        <img class="writer_image" src="{{ asset('storage/people/7777.png') }}" alt="">
-
+        <img class="writer_image" src="{{ asset('storage/'.$mypage_master->image) }}" alt="">
         <div class="writer_text">
-            コメントコメントコメントコメントコメントコメントコメント
-            コメントコメントコメントコメントコメントコメントコメント
-            コメントコメント
+            <p class="text-center"><strong>{{$mypage_master->name}}</strong></p>
+            <p><strong>{{$mypage_master->comment}}</strong></p>
         </div>
 
     </div>
 </div>
+
+
 
 
 <div class="mb-5">

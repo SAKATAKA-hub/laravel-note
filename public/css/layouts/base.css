@@ -40,14 +40,6 @@ header{
 
 
 
-.breadcrumb, .heading{
-    padding: .5em;
-    max-width: 1200px;
-    margin: 0 auto;
-    font-size: .8em;
-}
-
-
 .main_container{
     min-height: 90vh;
     max-width: 1200px;

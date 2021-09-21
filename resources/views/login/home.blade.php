@@ -8,6 +8,7 @@
 
 </head>
 <body>
+
     @if (session('login_success'))
         <div> {{session('login_success')}} </div>
     @endif
@@ -35,6 +36,7 @@
             <li><a href="{{route('login_form')}}">ログイン</a></li>
         </ul>
     @endif
+
 
 </body>
 </html>

@@ -8,9 +8,13 @@
 
     <!-- side_container.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/side_container.css')}}">
-    <style>
-        .main_container .note_master_only{ display: inline-block;}
-    </style>
+
+    <!-- note_master_only -->
+    @if ( Auth::check() && (Auth::user()->id == $mypage_master->id) )
+        <style>
+            .main_container .note_master_only{ display: block;}
+        </style>
+    @endif
 
 @endsection
 
@@ -27,20 +31,16 @@
 
 
 
-
-@section('title','ユーザーさんのマイページ')
+@section('title',$title)
 
 
 
 
 
 @section('main.breadcrumb')
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-fill"></i>home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">ユーザーさんのマイページ</li>
-        </ol>
-    </nav>
+
+    {{ Breadcrumbs::render('list', $mypage_master) }}
+
 @endsection
 
 
@@ -58,9 +58,15 @@
 @section('main.center_container')
 
 
+    <h2 class="pt-2 pb-2 mb-3">
+        <p class="me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
+        {{$title}}
+    </h2>
+
+
 
     <h5 class="d-flex justify-content-between align-items-center mb-3" style="padding-right:.5em">
-        <div class="fs-3"><i class="bi bi-book"></i> 新着投稿</div>
+        <div class="fs-3"><i class="bi bi-file-earmark-text"></i> 新着投稿</div>
         <button class="note_master_only btn btn-lg btn-primary" style="font-size:.8em;"><i class="bi bi-file-earmark-plus"></i> 新規作成</button>
     </h5>
 
@@ -69,25 +75,26 @@
     <ul class="list-group mb-3">
 
 
-        @foreach ($notes as $note)
+        @forelse ($notes as $note)
             <li class="list-group-item w-100 d-md-flex justify-content-between align-items-center row">
 
-                <div class="col-md-9">
-                    <small class="text-muted">
+                <div class="col-md-8">
+                    <small class="text-muted d-flex">
 
                         @if ($note->publishing)
-                        <span class="note_master_only badge rounded-pill bg-success">公開中</span>
+                        <span class="note_master_only badge rounded-pill bg-success me-3">公開中</span>
                         @else
-                        <span class="note_master_only badge rounded-pill bg-danger">非公開</span>
+                        <span class="note_master_only badge rounded-pill bg-danger  me-3">非公開</span>
                         @endif
 
-                        {{$note->updated_at}}
+                        <span>{{$note->created_at}}</span>
+
 
                     </small>
 
 
                     <div class="">
-                        <a href="{{route('show',$note->id)}}"  class="">
+                        <a href="{{route('show',$note)}}"  class="">
                             <h3 class="text-primary mt-2">{{$note->title}}</h3>
                         </a>
                     </div>
@@ -97,20 +104,24 @@
                         <i class="bi bi-tag-fill"></i>
 
                         @foreach ($note->tags_array as $tag)
-                        <a href="">{{$tag}}</a>
+                        <a href="">{{$tag}}　</a>
                         @endforeach
                     </small>
 
                 </div>
 
 
-                <div class="note_master_only col-md-3 text-md-end mt-3 mt-md-0">
-                    <button class="btn btn-outline-secondary"><i class="bi bi-eraser-fill"></i>編集</button>
-                    <button class="btn btn-outline-secondary"><i class="bi bi-trash"></i>削除</button>
+                <div class="note_master_only col-md-4 text-md-end mt-3 mt-md-0">
+                    <button class="btn btn-secondary"><i class="bi bi-eraser-fill"></i> 編集</button>
+                    <button class="btn btn-secondary"><i class="bi bi-trash"></i> 削除</button>
                 </div>
 
             </li>
-        @endforeach
+        @empty
+            <li class="list-group-item w-100 text-center p-5 fs-4 text-secondary">
+                投稿はありません
+            </li>
+        @endforelse
 
 
     </ul>

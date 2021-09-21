@@ -28,6 +28,8 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'password' => Hash::make('password'),
             // 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'image' => sprintf('people/%04d.png',rand(1,20)),
+            'comment' => 'ヨロシクオネガイシマス。',
         ];
     }
 

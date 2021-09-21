@@ -16,4 +16,27 @@ class Textbox extends Model
         'note_id', 'textbox_case_id','main_value', 'sub_value', 'order',
     ];
 
+
+
+
+    # アクセサー
+    /**
+     * 'main_value'カラムの表示に'改行'と'<strong>タグ'を反映させる
+     * ($textbox->replace_main_value)
+     *
+     *
+     * @return String
+     */
+    public function getReplaceMainValueAttribute()
+    {
+        $value = e($this->main_value);
+        $value = str_replace('{{','<strong>',$value);
+        $value = str_replace('}}','</strong>',$value);
+        $value = nl2br($value);
+
+
+        return $value;
+    }
+
+
 }

@@ -64,8 +64,9 @@ Route::get('list',function(){
 
 
 Route::get('edit_note',function(){
-    return view('notes.edit_note');
-});
+    return view('notes.edit_note',['title'=>'マイノート編集(TOP)']);
+})
+->name('edit_note');
 
 
 Route::get('edit_note_title',function(){
@@ -78,14 +79,15 @@ Route::get('edit_textbox',function(){
 });
 
 
-
+Route::get('test/mypage_master={mypage_master}/{seach_key?}',[NotesController::class,'test'])->name('test');
 
 //--------------------------------------------------------
 // 閲覧ページの処理 (NotesController)
+
 //--------------------------------------------------------
 # マイページの表示(list)
-Route::get('/list/user={user}/{seach_keys?}',[NotesController::class,'list'])
-->name('note.list');
+Route::get('/list/mypage_master={mypage_master}/{seach_key?}',[NotesController::class,'list'])
+->name('list');
 
 # ノート閲覧ページの表示(show)
 Route::get('/show/note={note}',[NotesController::class,'show'])

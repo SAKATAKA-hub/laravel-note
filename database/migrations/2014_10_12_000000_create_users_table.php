@@ -17,6 +17,8 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name',100);
             $table->string('email')->unique();
+            $table->string('image',100)->default('people/no_image.png');
+            $table->string('comment')->nullable()->default(null);
             $table->string('password');
             $table->tinyInteger('locked_flg')->default(0);
             $table->integer('error_count')->unsigned()->default(0);

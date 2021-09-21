@@ -15,13 +15,13 @@
 <body class="bg-light">
 
     <div class="container">
-      <main>
+      <main class="d-flex flex-column align-items-center">
         <div class="py-5 text-center">
           <h2>新規会員登録</h2>
           <p class="lead">会員登録を行うと、サービスの利用が可能になります。登録は無料です。</p>
         </div>
 
-        <div class="row g-3">
+        <div class="row g-3 w-50">
             <div class="col-lg-12">
             <h4 class="mb-3">情報の入力</h4>
             <form method="POST" action="{{ route('post_register') }}" class="needs-validation" novalidate>
@@ -75,8 +75,8 @@
 
       <footer class="my-5 pt-5 text-muted text-center text-small">
         <ul class="list-inline">
-          <li class="list-inline-item"><a href="{{route( 'home' )}}">ホーム</a></li>
-          <li class="list-inline-item"><a href="{{route( 'login_form' )}}">ログイン画面</a></li>
+            <li class="list-inline-item"><button  class="btn btn-link" type="button" onclick="history.back()">戻る</button></li>
+            <li class="list-inline-item"><a  class="btn btn-link" href="{{route( 'login_form' )}}">ログイン画面</a></li>
         </ul>
       </footer>
     </div>

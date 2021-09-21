@@ -11,27 +11,27 @@
     <link href="{{ asset('css/signin.css') }}" rel="stylesheet">
 </head>
 
+
 <body class="text-center">
 
     <main class="form-signin">
-
-        @csrf
-
         @if (session('login_error'))
-            <div class="alert alert-denger">
-                エラー：{{ session('login_error') }}
-            </div>
+            <div class="text-danger mb-3">※{{ session('login_error') }}</div>
         @endif
 
-        <h1 class="h3 mb-3 fw-normal">ログイン</h1>
-        <label for="inputEmail" class="visually-hidden" >メールアドレス</label>
-        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="visually-hidden">パスワード</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">ログイン</button>
-      </form>
+        <form method="POST" action="{{route('login')}}">
+            @csrf
+            <h1 class="h3 mb-3 fw-normal">ログイン</h1>
+            <label for="inputEmail" class="visually-hidden" >メールアドレス</label>
+            <input type="email" name="email" id="inputEmail" class="form-control mb-4" placeholder="Email address" required autofocus>
+            <label for="inputPassword" class="visually-hidden">パスワード</label>
+            <input type="password" name="password" id="inputPassword" class="form-control mb-4" placeholder="Password" required>
+            <button class="w-100 btn btn-lg btn-primary mt-4" type="submit">ログイン</button>
+        </form>
 
-      <a href="{{ route('get_register') }}">無料会員登録はこちら</a>
+        <div class="mt-2">
+            <a href="{{ route('get_register') }}">会員登録はこちら</a>
+        </div>
     </main>
 
   </body>

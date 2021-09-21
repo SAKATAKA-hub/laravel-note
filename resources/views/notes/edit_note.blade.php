@@ -32,7 +32,7 @@
 
 
 
-@section('title','マイノート編集(TOP)')
+@section('title',$title)
 
 
 
@@ -43,7 +43,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-fill"></i>home</a></li>
             <li class="breadcrumb-item"><a href="#">マイページ</a></li>
-            <li class="breadcrumb-item active" aria-current="page">マイノート編集(TOP)</li>
+            <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>
         </ol>
     </nav>
 @endsection
@@ -71,6 +71,14 @@
 
 
 @section('main.center_container')
+
+
+    <h2 class="pt-2 pb-2 mb-3">
+        <p class="me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
+        {{$title}}
+    </h2>
+
+
 
 
     <h5 class="preview_note_tag"><i class="bi bi-eye"></i>プレビュー</h5>

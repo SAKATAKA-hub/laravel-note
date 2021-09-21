@@ -17,7 +17,6 @@
         <link rel="stylesheet" href="{{asset('css/layouts/base.css')}}">
 
         @yield('style')
-
 </head>
 
 <body>
@@ -29,17 +28,20 @@
 
 
     <main>
-        <!-- breadcrumb -->
-        @yield('main.breadcrumb')
-
-        <!-- heading -->
-        <h2 class="heading">
-            <p class="h-100 me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
-            @yield('title')
-        </h2>
+        <div class="main_container row pt-3 p-md-3">
 
 
-        <div class="main_container row p-md-3">
+            <!-- breadcrumb -->
+            <div class="mt-2">
+                <i class="bi bi-book fs-5"></i>
+                <div class="d-inline-block">
+                    @yield('main.breadcrumb')
+                </div>
+            </div>
+
+
+            <!-- alert -->
+            @include('includes.alert')
 
 
             <!-- main_center_container -->

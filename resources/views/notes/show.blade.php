@@ -52,7 +52,7 @@
 
 @section('main.side_container')
 
-    @include('includes.side_container.list')
+    @include('includes.side_container.lists')
 
 @endsection
 
@@ -60,6 +60,7 @@
 
 
 @section('main.center_container')
+
     <!-- ノート表示域 -->
     <div class="display_note_container_{{$note->color}}"> <!-- (クラスからページカラーを指定できる) -->
 

@@ -48,7 +48,7 @@
 
 @section('main.side_container')
 
-    @include('includes.side_container.list')
+    @include('includes.side_container.lists')
 
 @endsection
 
@@ -57,21 +57,39 @@
 
 @section('main.center_container')
 
-
+    <!-- page title -->
     <h2 class="pt-2 pb-2 mb-3">
         <p class="me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
         {{$title}}
     </h2>
 
 
-
+    <!-- notes list heading -->
     <h5 class="d-flex justify-content-between align-items-center mb-3" style="padding-right:.5em">
-        <div class="fs-3"><i class="bi bi-file-earmark-text"></i> 新着投稿</div>
+        @switch($list_type)
+            @case('seach_word')
+                <div class="fs-3"><i class="bi bi-search"></i> 検索キーワード　”{{$seach_value}}”を含む投稿</div>
+                @break
+            <!-- -->
+            @case('tag')
+                <div class="fs-3"><i class="bi bi-tag-fill"></i> タグ ”{{$seach_value}}”を含む投稿</div>
+                @break
+            <!-- -->
+            @case('month')
+                <div class="fs-3"><i class="bi bi-calendar"></i> 投稿月 {{$seach_value}}の投稿</div>
+                @break
+            <!-- -->
+            @default
+                <div class="fs-3"><i class="bi bi-file-earmark-text"></i> 新着投稿</div>
+            <!-- -->
+        @endswitch
+
         <button class="note_master_only btn btn-lg btn-primary" style="font-size:.8em;"><i class="bi bi-file-earmark-plus"></i> 新規作成</button>
     </h5>
 
 
 
+    <!-- notes list -->
     <ul class="list-group mb-3">
 
 
@@ -130,7 +148,7 @@
 
 
     <!-- pagenation -->
-    {{ $notes->links('includes.pagination.oliginal') }}
+    {{-- {{ $notes->links('includes.pagination.oliginal') }} --}}
 
 
 @endsection

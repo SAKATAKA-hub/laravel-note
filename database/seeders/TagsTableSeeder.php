@@ -20,8 +20,8 @@ class TagsTableSeeder extends Seeder
         foreach ($tag_vals as $tag_val) {
             $tag = new Tag([
                 'name' => $name,
-                'value' => $tag_val,
-                'text' => $tag_val,
+                'value' => "'".$tag_val."'", //" 'tag_val' "
+                'text' => $tag_val, //" tag_val "
                 'user_id' => $user_id,
             ]);
             $tag->save();

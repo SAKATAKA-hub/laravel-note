@@ -79,15 +79,24 @@ Route::get('edit_textbox',function(){
 });
 
 
-Route::get('test/mypage_master={mypage_master}/{seach_key?}',[NotesController::class,'test'])->name('test');
+// Route::get('test/mypage_master={mypage_master}/{seach_key?}',[NotesController::class,'test'])
+// ->name('test');
+
+Route::get('test/mypage_master={mypage_master}/{seach_mode?}/{seach_val?}',[NotesController::class,'test'])
+->name('test');
+
 
 //--------------------------------------------------------
 // 閲覧ページの処理 (NotesController)
 
 //--------------------------------------------------------
 # マイページの表示(list)
-Route::get('/list/mypage_master={mypage_master}/{seach_key?}',[NotesController::class,'list'])
+Route::get('/list/mypage_master={mypage_master}',[NotesController::class,'list'])
 ->name('list');
+
+# マイページの検索表示(seach_list)
+Route::get('/seach_list/mypage_master={mypage_master}/{list_type}/{seach_value?}',[NotesController::class,'seach_list'])
+->name('seach_list');
 
 # ノート閲覧ページの表示(show)
 Route::get('/show/note={note}',[NotesController::class,'show'])

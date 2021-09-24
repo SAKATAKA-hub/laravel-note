@@ -102,6 +102,12 @@ Route::get('/seach_list/mypage_master={mypage_master}/{list_type}/{seach_value?}
 Route::get('/show/note={note}',[NotesController::class,'show'])
 ->name('show');
 
+# ノート印刷ページの表示(print)
+Route::get('/print/note={note}',[NotesController::class,'print'])
+->name('print');
+
+
+
 
 //--------------------------------------------------------
 // マイページの処理 (MypageController)

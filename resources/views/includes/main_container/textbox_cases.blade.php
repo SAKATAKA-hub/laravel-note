@@ -2,19 +2,24 @@
 
 
     @case(1)
+        <br>
         <div class="heading1">
             {!!$textbox->replace_main_value!!}
         </div>
+        <br>
         @break
     @case(2)
+        <br>
         <div class="heading2">
             {!!$textbox->replace_main_value!!}
         </div>
+        <br>
         @break
     @case(3)
         <div class="heading3">
             {!!$textbox->replace_main_value!!}
         </div>
+        <br>
         @break
 
 
@@ -24,29 +29,42 @@
         <div class="normal_text">
             {!!$textbox->replace_main_value!!}
         </div>
+        <br>
         @break
     @case(5)
         <div class="important_text">
+            <br>
             {!!$textbox->replace_main_value!!}
+            <br>
         </div>
+        <br>
         @break
     @case(6)
         <div class="emphasized_text">
+            <br>
             {!!$textbox->replace_main_value!!}
+            <br>
         </div>
+        <br>
         @break
     @case(7)
         <div class="quote_text">
+            <br>
             {!!$textbox->replace_main_value!!}
+            <br>
         </div>
+        <br>
         @break
     @case(8)
         <div class="code_text">
             <div class="title">tatle.php</div>
             <div class="text">
+                <br>
                 {!!$textbox->replace_main_value!!}
+                <br>
             </div>
         </div>
+        <br>
         @break
 
 

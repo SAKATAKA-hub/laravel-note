@@ -12,6 +12,9 @@ use App\Models\Note;
 use App\Models\Textbox;
 use App\Models\Tag;
 
+use TCPDF;
+use TCPDF_FONTS;
+
 class NotesController extends Controller
 {
 
@@ -102,6 +105,7 @@ class NotesController extends Controller
         }
 
 
+
         # サイドコンテンツのリスト一式取得
         $side_lists = [
             'new_notes' => Note::mypageNotes($mypage_master)->limit(5)->get(),
@@ -125,7 +129,10 @@ class NotesController extends Controller
      * @param \App\Models\Note $note
      * @return \Illuminate\View\View
      */
-    public function show(Note $note){
+    public function show($note){
+
+        # notesテーブルとtextboxsテーブルのリレーション
+        $note = Note::with('Textboxs')->find($note);
 
         # ノートの管理者
         $mypage_master = User::find($note->user_id);
@@ -140,6 +147,52 @@ class NotesController extends Controller
         return view('notes.show',compact('mypage_master','note','side_lists') );
     }
 
+
+
+
+    /**
+     * ノート印刷ページの表示(print)
+     *
+     * @param \App\Models\Note $note
+     * @return \Illuminate\View\View
+     */
+    public function print($note){
+
+        # notesテーブルとtextboxsテーブルのリレーション
+        $note = Note::with('Textboxs')->find($note);
+
+        # ノートの管理者
+        $mypage_master = User::find($note->user_id);
+
+        # CSSファイル内容の読み込み
+        $css = file_get_contents( asset('css/layouts/note.css') );
+
+
+        # PDF設定
+        // ページ設定
+        $pdf = new TCPDF("P", "mm", "A4", true, "UTF-8" );// PDF 生成メイン　－　A4 縦に設定
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // 日本語フォント設定
+        $pdf->setFont('kozminproregular','',10);
+
+        // ページ追加
+        $pdf->addPage();
+
+        // PDF プロパティ設定
+        $pdf->SetTitle($note->title);  // PDFドキュメントのタイトルを設定
+        $pdf->SetAuthor($mypage_master->name);  // PDFドキュメントの著者名を設定
+
+        // HTMLを描画、viewの指定と変数代入 - pdf_test.blade.php
+        $pdf->writeHTML(
+            view('notes.print', compact('mypage_master','note','css') )->render()
+        );
+
+        // 出力指定 ファイル名、拡張子、I(ブラウザー表示)
+        $pdf->output( sprintf('note%06d',$note->id).'.pdf', 'I' );
+        return;
+    }
 
 
 

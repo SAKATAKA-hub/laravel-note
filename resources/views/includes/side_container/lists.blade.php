@@ -15,7 +15,7 @@
 
 <!-- noteのタイトルで検索 -->
 <div class="mb-5">
-    <h5><i class="bi bi-search"></i> {{$mypage_master->name}} さんの、ノートのタイトルから検索</h5>
+    <h5><i class="bi bi-search"></i> ノートのタイトルから検索</h5>
     @php
         $param = ['list_type' => 'seach_title'];
     @endphp

@@ -9,6 +9,7 @@
         .title{
             font-size: 2em;
             font-weight: bold;
+            margin: 0;
         }
         margin-bottom: 3rem;
 
@@ -20,18 +21,16 @@
         font-weight: bold;
         border-left: .4em solid $color;
         padding-left: .5em;
-        margin-top: 1em;
+        // margin-top: 1em;
         margin-bottom: 1em;
         strong{ color: $color;}
     }
 
     // 見出し2
     .heading2{
-        display: inline-block;
         font-size: 1.5em;
         font-weight: bold;
-        border-bottom: .1em solid $color;
-        margin-top: 1em;
+        // margin-top: 1em;
         margin-bottom: 1em;
         strong{ color: $color;}
     }
@@ -54,6 +53,7 @@
     .important_text{
         margin: 1em;
         padding: 1rem;
+        padding-top: 0;
 
         border : 2px solid red;
         border-radius: 2px;
@@ -65,6 +65,7 @@
     .emphasized_text{
         margin: 1em;
         padding: 1rem;
+        padding-top: 0;
 
         background-color: lighten($color, 30%);
         margin-bottom: 1rem;
@@ -75,6 +76,7 @@
     .quote_text{
         margin: 1em;
         padding: 1rem;
+        padding-top: 0;
 
         border-left: .4em solid #aaa;
         margin-bottom: 1rem;
@@ -96,6 +98,8 @@
         .text{
             margin: 0 1em;
             padding: 1rem;
+            padding-top: 0;
+
             background-color: #eee;
             margin-bottom: 1rem;
         }
@@ -120,7 +124,7 @@
         }
         .title{
             margin-top: .5em;
-            text-align: center;
+            // text-align: center;
             font-size: .8em;
             color: #aaa;
         }
@@ -136,8 +140,9 @@
             width: 100%;
         }
         .title{
+            width: 100%;
             margin-top: .5em;
-            text-align: center;
+            // text-align: center;
             font-size: .8em;
             color: #aaa;
         }
@@ -145,6 +150,56 @@
 
 
 } //end@mixin basic_style($color)
+
+
+
+
+
+
+
+//-----------------------------------------
+// 印刷ページ用スタイル
+//-----------------------------------------
+
+@mixin print_style($color) {
+
+    .heading1{
+        font-size: 1.5em;
+        font-weight: bold;
+        border-left: 2em solid $color;
+    }
+
+    .image{
+        margin-bottom: 1rem;
+        img{
+            width: 280px;
+
+        }
+        .title{
+            margin-top: .5em;
+            text-align: left;
+            font-size: .8em;
+            color: #aaa;
+        }
+    }
+
+    .image_litle{
+        margin-right: 10px;
+        margin-bottom: 1rem;
+        display: inline-block;
+
+        img{
+            width: 140px;
+        }
+        .title{
+            margin-top: .5em;
+            text-align: left;
+            font-size: .8em;
+            color: #aaa;
+        }
+    }
+
+}
 
 
 
@@ -185,6 +240,17 @@ $theme-colors: (
         @include basic_style($color);
 
     }
+
+    // <!-- TCPDF印刷用 -->
+    .print_note_container_#{$key}{
+        max-width: 100%;
+        margin-bottom: 5rem;
+        box-sizing: border-box;
+
+        @include basic_style($color);
+        @include print_style($color);
+    }
+
 
 }
 

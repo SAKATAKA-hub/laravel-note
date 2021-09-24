@@ -92,10 +92,13 @@
             </small>
 
 
-            <div class="note_master_only mt-3">
-                <button class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 編集</button>
-                <button class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
-                <button class="btn btn-outline-primary"><i class="bi bi-printer"></i> 印刷</button>
+            <div class="mt-3">
+                <button class="note_master_only btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 編集</button>
+                <button class="note_master_only btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
+
+                <a class="btn btn-outline-primary" href="{{route('print',$note)}}">
+                    <i class="bi bi-printer"></i> 印刷
+                </a>
             </div>
 
         </div>
@@ -108,7 +111,9 @@
 
         <!-- textboxs -->
         @foreach ($note->textboxs as $textbox)
+
             @include('includes.main_container.textbox_cases')
+
         @endforeach
 
     </div>

@@ -67,20 +67,20 @@
     <!-- notes list heading -->
     <h5 class="d-flex justify-content-between align-items-center mb-3" style="padding-right:.5em">
         @switch($list_type)
-            @case('seach_word')
-                <div class="fs-3"><i class="bi bi-search"></i> 検索キーワード　”{{$seach_value}}”を含む投稿</div>
+            @case('seach_title')
+                <div class="fs-3"><i class="bi bi-search"></i> タイトルに”{{$seach_value}}”を含むノート一覧</div>
                 @break
             <!-- -->
             @case('tag')
-                <div class="fs-3"><i class="bi bi-tag-fill"></i> タグ ”{{$seach_value}}”を含む投稿</div>
+                <div class="fs-3"><i class="bi bi-tag-fill"></i> タグ ”{{str_replace("'",'', $seach_value)}}”を含むノート一覧</div>
                 @break
             <!-- -->
             @case('month')
-                <div class="fs-3"><i class="bi bi-calendar"></i> 投稿月 {{$seach_value}}の投稿</div>
+                <div class="fs-3"><i class="bi bi-calendar"></i> 投稿月 {{$seach_value}}のノート一覧</div>
                 @break
             <!-- -->
             @default
-                <div class="fs-3"><i class="bi bi-file-earmark-text"></i> 新着投稿</div>
+                <div class="fs-3"><i class="bi bi-file-earmark-text"></i> 新着ノート一覧</div>
             <!-- -->
         @endswitch
 
@@ -112,8 +112,8 @@
 
 
                     <div class="">
-                        <a href="{{route('show',$note)}}"  class="">
-                            <h3 class="text-primary mt-2">{{$note->title}}</h3>
+                        <a href="{{route('show',$note)}}"  class="text-primary">
+                            <h3 class="mt-2">{{$note->title}}</h3>
                         </a>
                     </div>
 
@@ -130,8 +130,8 @@
 
 
                 <div class="note_master_only col-md-4 text-md-end mt-3 mt-md-0">
-                    <button class="btn btn-secondary"><i class="bi bi-eraser-fill"></i> 編集</button>
-                    <button class="btn btn-secondary"><i class="bi bi-trash"></i> 削除</button>
+                    <button class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 編集</button>
+                    <button class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
                 </div>
 
             </li>

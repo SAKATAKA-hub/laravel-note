@@ -131,43 +131,6 @@ class Note extends Model
 
 
     /**
-     * seacrhTags($tags,$mypage_master)
-     * 指定された複数のタグを含むノートのデータを取得
-     *
-     *
-     * @return Array
-    */
-    public function scopeSeacrhTags($query,$tags,$mypage_master)
-    {
-        $tags = str_replace('tags=[','', str_replace(']','',$tags) );
-        $tags = explode(',',$tags);
-
-        $tag=$tags[0];
-
-
-        // マイページ管理者のデータのみ取得
-        $query->where(function($query) use($mypage_master){
-            $query->where('user_id',$mypage_master->id);
-        });
-
-        // 指定された複数のタグを含むノートのデータを取得
-        foreach ($tags as $tag)
-        {
-            $query->where(function($query) use($tag){
-                $query->where('tags','like',"%".$tag."%");
-            });
-        }
-
-
-
-
-        return $query;
-    }
-
-
-
-
-    /**
      * TagsListCount($mypage_master,$tag)
      * 同じタグの総投稿数を返す
      * tagモデル\scopeTagsListメソッド内で利用する。

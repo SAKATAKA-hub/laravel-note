@@ -93,9 +93,9 @@
 
 
             <div class="note_master_only mt-3">
-                <button class="btn btn-secondary"><i class="bi bi-eraser-fill"></i> 編集</button>
-                <button class="btn btn-secondary"><i class="bi bi-trash"></i> 削除</button>
-                <button class="btn btn-secondary"><i class="bi bi-printer"></i> 印刷</button>
+                <button class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 編集</button>
+                <button class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
+                <button class="btn btn-outline-primary"><i class="bi bi-printer"></i> 印刷</button>
             </div>
 
         </div>

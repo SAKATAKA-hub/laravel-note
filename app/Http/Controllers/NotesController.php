@@ -16,79 +16,6 @@ class NotesController extends Controller
 {
 
 
-    public function test(User $mypage_master, $seach_mode=null, $seach_val=null){
-
-        #(example) $seach_key = "tags=['Laravel','アプリ開発','学習ノート']";
-
-
-        # 設定
-        $notes=[];
-        $pn = 8; //ページネーション最高表示数
-
-        # ノート一覧データの取得
-        // マイページ管理者の全てのノートを取得(マイページの管理者がログインしていなければ、非公開ノートの非表示)
-        switch ($seach_mode) {
-            case null:
-
-                $notes = Note::mypageNotes($mypage_master)->paginate($pn);
-                break;
-            //
-            default:
-                // return back();
-            //
-        }
-
-
-
-
-        # ノート一覧データの取得
-        // 全てのノートを取得
-        // if ($seach_mode == null)
-        // {
-        //     $notes = ( Auth::user() && ($mypage_master->id == Auth::id()) ) ? //マイページの管理者がログインしているかどうか。
-        //         Note::where('user_id',$mypage_master->id)->paginate($pn) : //非公開データを含む
-        //         Note::where('user_id',$mypage_master->id)->where('publishing',1) //非公開データを含まない
-        //         ->paginate($pn)
-        //     ;
-        // }
-
-        // // 'タグ'の検索結果を取得
-        // elseif( substr($seach_key,0,4) == 'tags' )
-        // {
-        //     $notes =  ( Auth::user() && ($mypage_master->id == Auth::id()) ) ?
-        //         Note::seacrhTags($seach_key,$mypage_master)->paginate($pn) :
-        //         Note::seacrhTags($seach_key,$mypage_master)->where('publishing',1)
-        //         ->paginate($pn)
-        //     ;
-        // }
-
-        # サイドコンテンツのリスト一式取得
-        $side_lists = [
-            'new_notes' => Note::mypageNotes($mypage_master)->limit(3)->get(),
-            'tags' => Tag::where('user_id',$mypage_master->id)->get(),
-            'months' => Note::monthsList($mypage_master->id),
-        ];
-
-        return view( 'test.test',compact('mypage_master','notes','side_lists'));
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * マイページの表示(list)
      *
@@ -130,13 +57,12 @@ class NotesController extends Controller
      * マイページの検索表示(seach_list)
      *
      * @param \App\Models\User $mypage_master (マイページの管理者)
-     * @param string $list_type (リストの表示タイプ ['seach_word' or 'tag' or 'month'])
+     * @param string $list_type (リストの表示タイプ ['seach_title' or 'tag' or 'month'])
      * @param string $seach_value (リストの検索値)
      * @return \Illuminate\View\View
      */
     public function seach_list( Request $request, User $mypage_master, $list_type, $seach_value=null )
     {
-
         # タイトル
         $title = $mypage_master->name.'さんのマイページ';
 
@@ -144,19 +70,31 @@ class NotesController extends Controller
         # ノート一覧データの取得
         //(マイページの管理者がログインしていなければ、非公開ノートの非表示)
         $notes = [];
-        // Note::mypageNotes($mypage_master)->paginate(8);
         switch ($list_type) {
-            case 'seach_word':
-                //リストの検索値を代入
+            case 'seach_title':
+                # リストの検索値を代入
                 $seach_value = $request->seach_value;
 
+                # ノート一覧データの取得
+                $notes = Note::mypageNotes($mypage_master)
+                ->where('title','like',"%".$seach_value."%")->paginate(8);
                 break;
+
             //
             case 'tag':
+
+                # ノート一覧データの取得
+                $notes = Note::mypageNotes($mypage_master)
+                ->where('tags','like',"%".$seach_value."%")->paginate(8);
                 break;
+
             //
             case 'month':
+                # ノート一覧データの取得
+                $notes = Note::mypageNotes($mypage_master)
+                ->where('created_at','like',$seach_value."%")->paginate(8);
                 break;
+
             //
             default:
                 return redirect()->route('list',$mypage_master);
@@ -170,6 +108,7 @@ class NotesController extends Controller
             'tags' => Tag::tagsList($mypage_master),
             'months' => Note::monthsList($mypage_master),
         ];
+
 
         return view('notes.list',compact(
             'title','mypage_master','notes','side_lists','list_type','seach_value'

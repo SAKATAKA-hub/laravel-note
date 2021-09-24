@@ -4,7 +4,7 @@
 
         <img class="writer_image" src="{{ asset('storage/'.$mypage_master->image) }}" alt="">
         <div class="writer_text">
-            <p class="text-center"><strong>{{$mypage_master->name}}</strong></p>
+            <p class="text-center"><strong>{{$mypage_master->name}} さん</strong></p>
             <p><strong>{{$mypage_master->comment}}</strong></p>
         </div>
 
@@ -13,14 +13,14 @@
 
 
 
-<!-- キーワード検索 -->
+<!-- noteのタイトルで検索 -->
 <div class="mb-5">
-    <h5><i class="bi bi-search"></i> キーワード検索</h5>
+    <h5><i class="bi bi-search"></i> {{$mypage_master->name}} さんの、ノートのタイトルから検索</h5>
     @php
-        $param = ['list_type' => 'seach_word'];
+        $param = ['list_type' => 'seach_title'];
     @endphp
     <form class="d-flex" method="GET" action="{{route( 'seach_list',compact('mypage_master')+$param )}}" >
-        <input class="form-control me-2" name="seach_value" type="search" placeholder="キーワード" aria-label="Search" required>
+        <input class="form-control me-2" name="seach_value" type="search" placeholder="タイトル" aria-label="Search" required>
         <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
     </form>
 </div>
@@ -61,7 +61,7 @@
         @forelse ($side_lists['tags'] as $list_item)
             @php
                 $param = [
-                    'list_type' => 'seach_word',
+                    'list_type' => 'tag',
                     'seach_value' => $list_item['value'],
                 ];
             @endphp

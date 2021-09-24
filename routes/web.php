@@ -82,7 +82,7 @@ Route::get('edit_textbox',function(){
 // Route::get('test/mypage_master={mypage_master}/{seach_key?}',[NotesController::class,'test'])
 // ->name('test');
 
-Route::get('test/mypage_master={mypage_master}/{seach_mode?}/{seach_val?}',[NotesController::class,'test'])
+Route::get('test/mypage_master={mypage_master}',[NotesController::class,'test'])
 ->name('test');
 
 

@@ -22,6 +22,7 @@ class NotesController extends Controller
     /**
      * マイページの表示(list)
      *
+     *
      * @param \App\Models\User $mypage_master (マイページの管理者)
      * @param string $seach_keys
      * @return \Illuminate\View\View
@@ -59,6 +60,8 @@ class NotesController extends Controller
     /**
      * マイページの検索表示(seach_list)
      *
+     *
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\User $mypage_master (マイページの管理者)
      * @param string $list_type (リストの表示タイプ ['seach_title' or 'tag' or 'month'])
      * @param string $seach_value (リストの検索値)
@@ -126,6 +129,7 @@ class NotesController extends Controller
     /**
      * ノート閲覧ページの表示(show)
      *
+     *
      * @param \App\Models\Note $note
      * @return \Illuminate\View\View
      */
@@ -152,6 +156,7 @@ class NotesController extends Controller
 
     /**
      * ノート印刷ページの表示(print)
+     *
      *
      * @param \App\Models\Note $note
      * @return \Illuminate\View\View

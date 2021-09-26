@@ -20,7 +20,7 @@ class Tag extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'name','value','text','user_id','checked',
+        'value','text','user_id',
     ];
 
 
@@ -44,7 +44,7 @@ class Tag extends Model
      */
     public function scopetagsList($query,$mypage_master)
     {
-        $tags_list = $query->where('user_id',$mypage_master->id)->orderBy('text','desc')->get();
+        $tags_list = $query->where('user_id',$mypage_master->id)->get();
 
         // タグに関する投稿数を追加(Note::TagsListCountメソッド)
         $n = count($tags_list);

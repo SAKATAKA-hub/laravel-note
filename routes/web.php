@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\NotesController;
 use App\Http\Controllers\MypageController;
-
+use App\Http\Controllers\EditNoteController;
 
 
 
@@ -63,10 +63,10 @@ Route::get('list',function(){
 // });
 
 
-Route::get('edit_note',function(){
-    return view('notes.edit_note',['title'=>'マイノート編集(TOP)']);
-})
-->name('edit_note');
+// Route::get('edit_note',function(){
+//     return view('notes.edit_note',['title'=>'マイノート編集(TOP)']);
+// })
+// ->name('edit_note');
 
 
 Route::get('edit_note_title',function(){
@@ -88,7 +88,6 @@ Route::get('test/mypage_master={mypage_master}',[NotesController::class,'test'])
 
 //--------------------------------------------------------
 // 閲覧ページの処理 (NotesController)
-
 //--------------------------------------------------------
 # マイページの表示(list)
 Route::get('/list/mypage_master={mypage_master}',[NotesController::class,'list'])
@@ -105,6 +104,46 @@ Route::get('/show/note={note}',[NotesController::class,'show'])
 # ノート印刷ページの表示(print)
 Route::get('/print/note={note}',[NotesController::class,'print'])
 ->name('print');
+
+
+
+
+//--------------------------------------------------------
+// 編集ページの処理 (EditNoteController)
+//--------------------------------------------------------
+# ノート編集ページの表示(edit_note)
+Route::get('/edit_note/note={note}',[EditNoteController::class,'edit_note'])
+->name('edit_note');
+
+
+
+
+# ノート新規作成ページの表示(createedit_note_title)
+Route::get('/createedit_note_title/mypage_master={mypage_master}',[EditNoteController::class,'createedit_note_title'])
+->name('createedit_note_title');
+
+# ノート新規作成ページの保存(store_note_title)
+Route::post('/store_note_title',[EditNoteController::class,'store_note_title'])
+->name('store_note_title');
+
+
+
+
+# ノート基本情報編集ページの表示(edit_note_title)
+Route::get('/edit_note_title/note={note}',[EditNoteController::class,'edit_note_title'])
+->name('edit_note_title');
+
+# ノート基本情報の更新(update_note_title)
+Route::patch('/update_note_title/note={note}',[EditNoteController::class,'update_note_title'])
+->name('update_note_title');
+
+
+
+
+
+
+
+
 
 
 

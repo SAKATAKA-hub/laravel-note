@@ -6,15 +6,10 @@
 
 
 @section('style')
-
     <!-- note.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/note.css')}}">
     <!-- edit_form.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/edit_form.css')}}">
-
-    <style>
-        .note_master_only{ display: none;}
-    </style>
 @endsection
 
 
@@ -22,22 +17,18 @@
 
 @section('script')
 
-    <script src="{{asset('js/edit_note_title_form.js')}}"></script>
-
+    {{-- <script src="{{asset('js/edit_note_title_form.js')}}"></script> --}}
 
     <script>
         'use strict';
-
-
-
         // ----------------------------------------------
         // プレビュー画面へのレンダリング
         // ----------------------------------------------
 
         // タイトル
         const inputNoteTitle = document.getElementById('inputNoteTitle');
-        const noInputNoteTitle = '※タイトルを入力してください。'
-        document.getElementById('noteTitle').textContent = noInputNoteTitle;
+        const noInputNoteTitle = ''
+        // document.getElementById('noteTitle').textContent = noInputNoteTitle;
 
         inputNoteTitle.onchange = ()=>{
             if(inputNoteTitle.value !== '')
@@ -62,8 +53,8 @@
         // タグ
         const tags = document.querySelectorAll('input[name="tags[]"]');
         const newTags = document.getElementById('newTags');
-        const noInputTags = '※タグを選択してください。'
-        document.getElementById('noteTag').textContent =  noInputTags;
+        const noInputTags = ''
+        // document.getElementById('noteTag').textContent =  noInputTags;
 
         tags.forEach( changeTag => {
             changeTag.onchange = ()=>{
@@ -108,9 +99,6 @@
                 tags[0].required = "required"; //requiredを有効にする。
             }
         }
-
-
-
     </script>
 
 @endsection
@@ -133,7 +121,7 @@
             <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-fill"></i>home</a></li>
             <li class="breadcrumb-item"><a href="#">マイページ</a></li>
             <li class="breadcrumb-item"><a href="#">マイノート編集(TOP)</a></li>
-            <li class="breadcrumb-item active" aria-current="page">基本情報編集</li>
+            <li class="breadcrumb-item active" aria-current="page">基本情報編集（仮）</li>
         </ol>
     </nav>
 @endsection
@@ -162,6 +150,17 @@
 @section('main.center_container')
 
 
+    <!-- page title -->
+    <h2 class="pt-2 pb-2 mb-3">
+        <p class="me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
+        @if (!$note)
+            マイノートの新規作成
+        @else
+            マイノート基本情報編集
+        @endif
+    </h2>
+
+
     <h5 class="preview_note_tag"><i class="bi bi-eye"></i>プレビュー</h5>
 
 
@@ -177,15 +176,30 @@
             </div>
 
             <div class="title_box">
-                <p>0000年00月00日更新</p>
-                <h2 class="title" id="noteTitle">タイトルsss</h2>
-                <div class="d-flex">
+                {{-- 投稿日 --}}
+                <small>{{!$note? '0000-00-00 00:00:00': $note->created_at}}</small>
+
+                {{-- タイトル --}}
+                <h3 class="title"  id="noteTitle">{{!$note? '': $note->title}}</h3>
+
+                {{-- タグ --}}
+                <small class="d-flex">
+                    <i class="bi bi-tag-fill me-2"></i>
+                    @if (!$note)
+                        <div id="noteTag"><!-- ※選択したタグが表示されます。 --></div>
+                    @else
+                        <div id="noteTag">
+                            @foreach ($note->tags_array as $tag)
+                            {{$tag}}　
+                            @endforeach
+                        </div>
+                    @endif
+                </small>
+
+                {{-- <div class="d-flex">
                     <i class="bi bi-tag-fill" style="margin-right:.5em"></i>
-                    <div id="noteTag">
-                        <a href="">laravel</a>
-                        <a href="">テスト</a>
-                    </div>
-                </div>
+                    <div id="noteTag"><!-- ※選択したタグが表示されます。 --></div>
+                </div> --}}
             </div>
 
         </div>

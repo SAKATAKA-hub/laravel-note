@@ -32,7 +32,7 @@
 
 
 
-@section('title',$title)
+@section('title','')
 
 
 
@@ -43,7 +43,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-fill"></i>home</a></li>
             <li class="breadcrumb-item"><a href="#">マイページ</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>
+            <li class="breadcrumb-item active" aria-current="page">ノートの編集</li>
         </ol>
     </nav>
 @endsection
@@ -75,7 +75,7 @@
 
     <h2 class="pt-2 pb-2 mb-3">
         <p class="me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
-        {{$title}}
+        ノートの編集
     </h2>
 
 
@@ -88,16 +88,23 @@
     <div class="preview_note_container display_note_container_orange"> <!-- (クラスからページカラーを指定できる) -->
 
 
-
+        <!-- タイトルボックスの表示 -->
         <div class=" edit_text_box">
 
             <div class="title_box">
-                <p>0000年00月00日更新</p>
-                <h2 class="title">タイトルsss</h2>
-                <p><i class="bi bi-tag-fill"></i>
-                    <a href="">laravel</a>
-                    <a href="">テスト</a>
-                </p>
+                {{-- 投稿日 --}}
+                <small>{{$note->created_at}}</small>
+
+                {{-- タイトル --}}
+                <h3 class="title">{{$note->title}}</h3>
+
+                {{-- タグ --}}
+                <small class="d-flex">
+                    <i class="bi bi-tag-fill me-2"></i>
+                    @foreach ($note->tags_array as $tag)
+                    <span>{{$tag}}　</span>
+                    @endforeach
+                </small>
             </div>
 
         </div>
@@ -105,8 +112,8 @@
 
         <div class="edit_btn_box">
             <div class="update_delete_btn">
-                <button type="button" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 修正</button>
-                <!-- <button type="button" class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button> -->
+                <a href="{{route('edit_note_title',$note)}}" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 修正</a>
+                {{-- <a href="" class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</a> --}}
             </div>
             <button type="button" class="btn btn-primary"><i class="bi bi-plus-square-fill"></i> テキストボックスの挿入</button>
         </div>

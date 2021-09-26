@@ -1,29 +1,27 @@
 <div class="input_group_container">
 
-
-    <form action="">
-
+    @if (!$note)
+    <form action="{{route('store_note_title')}}" method="POST">
+    @else
+    <form action="{{route('update_note_title',$note)}}" method="POST">
+    @endif
+        @csrf
+        <input type="hidden" name="mypage_master_id" value="{{$mypage_master->id}}">
 
         <div class="form_group mb-4">
             <label class="fw-bold" for="inputNoteTitle">タイト</label>
-            <input type="text" name="title" class="form-control fs-3" placeholder="タイトル" id="inputNoteTitle" required>
-            <p style="color:red;margin-top:.5em;">エラーメッセージ</p>
+            <input type="text" name="title" class="form-control" placeholder="タイトル" id="inputNoteTitle"
+            value="{{!$note? '': $note->title}}" required>
+            <p style="color:red;margin-top:.5em;"></p>
         </div>
 
 
         <div class="form_group mb-4">
             <label class="fw-bold" for="inputNoteColor">テーマカラー</label>
             <select class="form-control" name="color" id="inputNoteColor" required>
-                <option value="green" selected>グリーン</option>
-                <option value="teal">ティール</option>
-                <option value="cyan">シアン</option>
-                <option value="blue">ブルー</option>
-                <option value="indigo">インディゴ</option>
-                <option value="purple">パープル</option>
-                <option value="pink">ピンク</option>
-                <option value="red">レッド</option>
-                <option value="orange">オレンジ</option>
-                <option value="yellow">イエロー</option>
+                @foreach ($selects['colors'] as $select)
+                    <option value="{{$select->value}}" {{$select->selected? 'selected':''}}>{{$select->text}}</option>
+                @endforeach
             </select>
         </div>
 
@@ -31,27 +29,17 @@
         <div class="form_group mb-4">
             <label class="fw-bold">タグ</label>
 
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tags[]" value="パソコン" id="inputNoteTag1" required>
-                <label class="form-check-label" for="inputNoteTag1">
-                    パソコン
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tags[]" value="タブレット" id="inputNoteTag2">
-                <label class="form-check-label" for="inputNoteTag2">
-                    タブレット
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tags[]" value="スマートフォン" id="inputNoteTag3">
-                <label class="form-check-label" for="inputNoteTag3">
-                    スマートフォン
-                </label>
-            </div>
+                @foreach ($selects['tags'] as $i => $select)
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="tags[]" value="{{$select->text}}"
+                        id="{{'inputNoteTag'.$i}}" {{$i==0? 'required': ''}} {{$select->checked? 'checked':''}}>
+                        <label class="form-check-label" for="{{'inputNoteTag'.$i}}">
+                            {{$select->text}}
+                        </label>
+                    </div>
+                @endforeach
 
-            <input  class="form-control" type="text" name="tags[]"placeholder="複数のタグを追加するときは、'空白文字'を挟む。 " id="newTags">
-
+                <input  class="form-control" type="text" name="tags[]"placeholder="新しいタグの追加 " id="newTags">
 
             <p style="color:red;height:1em;"></p>
         </div>
@@ -60,8 +48,14 @@
         <div class="form_group mb-4">
             <label class="fw-bold">公開設定</label>
             <div class="form-check form-switch fs-5 mt-2">
-                <input class="form-check-input" type="checkbox" name="publishing" id="inputPublishing"  checked="checked">
+                <input class="form-check-input" type="checkbox" name="publishing" id="inputPublishing"
+                {{$note && !$note->publishing? '': 'checked'}}>
+
+                @if ($note && !$note->publishing)
+                <label class="form-check-label fs-5 fw-bold text-secondary" for="inputPublishing">非公開</label>
+                @else
                 <label class="form-check-label fs-5 fw-bold text-primary" for="inputPublishing">公開</label>
+                @endif
             </div>
         </div>
 

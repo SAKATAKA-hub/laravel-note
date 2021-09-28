@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\EditNoteTitleFormRequest;
+
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\CreateNoteFomeRequest;
@@ -17,6 +20,7 @@ use App\Models\Color;
 class EditNoteController extends Controller
 {
     /**
+     *
      * ノート編集ページの表示(edit_note)
      *
      *
@@ -24,8 +28,6 @@ class EditNoteController extends Controller
      * @return \Illuminate\View\View
      */
     public function edit_note(Note $note){
-
-        $form = "edit_note";
 
         return view('edit.note',compact('note') );
     }
@@ -38,24 +40,20 @@ class EditNoteController extends Controller
 
 
     /**
-     * ノート新規作成ページの表示(createedit_note_title)
+     *
+     * ノート新規作成ページの表示(create_note_title)
      *
      *
      * @param \App\Models\User $mypage_master (マイページの管理者)
      * @return \Illuminate\View\View
      */
-    public function createedit_note_title(User $mypage_master){
+    public function create_note_title(User $mypage_master){
 
-        // $form = "createedit_note_title";
         $note = 0;
         $selects = [
             'colors' => Color::get(),
             'tags' => Tag::tagsList($mypage_master),
         ];
-        $selects['colors'][0]->selected = 1;
-        $selects['tags'][1]->checked = 1;
-
-        // dd($selects['tags']);
 
         return view('edit.note_title',compact('note','mypage_master','selects') );
 
@@ -63,83 +61,32 @@ class EditNoteController extends Controller
 
 
     /**
+     *
      * 新規作成ノートの保存(store_note_title)
      *
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\EditNoteTitleFormRequest $request
      * @param \App\Models\User $mypage_master (マイページの管理者)
      * @return \Illuminate\View\View
      */
-    public function store_note_title(Request $request){
-
-
-        # タグの処理
-        $tags_srting = implode(' ',$request->tags);
-        $tags_srting =  str_replace('　',' ',$tags_srting); //新しいタグ入力の区切り文字を'半角空白'に統一
-        $tags_array = explode(' ',$tags_srting);
-        $tags_array = array_unique($tags_array); //重複したタグの入力を削除
-
-        $key = array_search(null, $tags_array);
-        if( ($key==true)or($key===0) ){ unset($tags_array[$key]);} // 'NULLの値'を削除
-
-        $update_tags_srting = "'".implode("','",$tags_array)."'"; // ノートに保存する形式にタグを変換
-
-
-        # 公開設定の処理
-        $update_publishing = $request->publishing? 1:0; //'公開'=> 1, '非公開'=> 0,
-
-
-
+    public function store_note_title(EditNoteTitleFormRequest $request){
 
         # 新規ノートの保存
         $note = new Note([
-            'title' => $request->title,
-            'color' => $request->color,
-            'tags' => $update_tags_srting,
-            'publishing' => $update_publishing,
-            'user_id' => $request->mypage_master_id,
+            'title' => $request->title, //タイトル
+            'color' => $request->color, //カラー
+            'tags' => $this::getUpdateTagsString($request->tags), //タグ('****','****','****'形式)
+            'publishing' => $request->publishing? 1:0, //公開設定
+            'user_id' => $request->mypage_master_id, //投稿者ID
         ]);
-        // $note->save();
+        $note->save();
 
 
+        # 新しいタグをtagsテーブルに保存
+        $this::saveNewTags($request);
 
 
-        # 新しいタグの保存
-        $update_tags_array = explode(",",$update_tags_srting); //'入力された全てのタグ'を配列形式に変換
-        $old_tags =  Tag::where('user_id',$request->mypage_master_id )->get();// '登録済みのタグ'を取得
-        foreach ($old_tags as $old_tag)
-        {
-            $del_val = $old_tag->value;
-            $key = array_search($del_val, $update_tags_array);
-            if( ($key==true)or($key===0) ){ unset($update_tags_array[$key]);} // '入力された全てのタグ'から'登録済みのタグ'を削除
-        }
-
-
-        //新しいタグが存在すれば、新しいタグを登録
-        if( count($update_tags_array) )
-        {
-
-            foreach ($update_tags_array as $update_tag)
-            {
-                $tag = new Tag([
-                    'value' => $update_tag,
-                    'text' => str_replace("'",'',$update_tag),
-                    'user_id' => $request->mypage_master_id,
-                ]);
-                $tag->save();
-
-            }
-        }
-        dd($tag);
-
-        return <<<__
-        <h1>store_note_title</h1>
-        <strong>mypage_master_id:</strong> $request->mypage_master_id <br>
-        <strong>title:</strong> $request->title <br>
-        <strong>color:</strong> $request->color <br>
-        <strong>tags:</strong> $update_tags_srting<br>
-        <strong>publishing:</strong> $update_publishing<br>
-        __;
+        return redirect()->route('edit_note_title',$note);
 
     }
 
@@ -149,6 +96,7 @@ class EditNoteController extends Controller
 
 
     /**
+     *
      * ノート基本情報編集ページの表示(edit_note_title)
      *
      *
@@ -199,16 +147,168 @@ class EditNoteController extends Controller
 
 
     /**
+     *
      * ノート基本情報の更新(update_note_title)
      *
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\EditNoteTitleFormRequest $request
      * @param \App\Models\Note $note
      * @return \Illuminate\View\View
      */
-    public function update_note_title(Request $request, Note $note){
+    public function update_note_title(EditNoteTitleFormRequest $request, Note $note){
 
-        return 'update_note_title';
+        # ノート基本情報の更新
+        $note->update([
+            'title' => $request->title, //タイトル
+            'color' => $request->color, //カラー
+            'tags' => $this::getUpdateTagsString($request->tags), //タグ('****','****','****'形式)
+            'publishing' => $request->publishing? 1:0, //公開設定
+            'user_id' => $request->mypage_master_id, //投稿者ID
+        ]);
+
+
+        # 新しいタグをtagsテーブルに保存
+        $this::saveNewTags($request);
+
+        # 利用されていないタグをtagsテーブルから削除
+        $this::deleteTags($note->user_id);
+
+
+        return redirect()->route('edit_note_title',$note);
+
+    }
+
+
+
+
+
+    /**
+     *
+     * ノートの削除(destroy_note)
+     *
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
+    public function destroy_note(Request $request){
+
+        # 削除するノート
+        $note = Note::find($request->note_id);
+
+        # マイページ管理者
+        $mypage_master = $note->user_id;
+
+
+        # ノートの削除
+        $note->delete();
+
+        # 利用されていないタグをtagsテーブルから削除
+        $this::deleteTags($mypage_master);
+
+
+        return redirect()->route('list',$mypage_master)->with('destroy_note_alert','ノートを１件削除しました。');
+    }
+
+
+
+
+
+
+
+    /*
+    |
+    |　コントローラー内で利用するメソッド
+    |
+    |
+    */
+
+
+    /**
+     *
+     * タグの配列をノートの新規作成・更新時に保存する形式で返す(getUpdateTagsString)
+     *
+     *
+     * @param String
+     * @return Array
+     */
+    public function getUpdateTagsString($request_tags)
+    {
+        $tags_srting = implode(' ',$request_tags);
+        $tags_srting =  str_replace('　',' ',$tags_srting); //新しいタグ入力の区切り文字を'半角空白'に統一
+        $tags_array = explode(' ',$tags_srting);
+        $tags_array = array_unique($tags_array); //重複したタグの入力を削除
+
+        $key = array_search(null, $tags_array);
+        if( ($key==true)or($key===0) ){ unset($tags_array[$key]);} // 'NULLの値'を削除
+
+        $update_tags_srting = "'".implode("','",$tags_array)."'"; // ノートに保存する形式にタグを変換
+
+        return $update_tags_srting;
+    }
+
+
+
+
+    /**
+     *
+     * 新しいタグをtagsテーブルに保存(saveNewTags)
+     *
+     *
+     * @param String
+     * @return Array
+     */
+    public function saveNewTags($request)
+    {
+        # '入力された全てのタグ'から'登録済みのタグ'を削除
+        $update_tags_srting = $this::getUpdateTagsString($request->tags);
+        $update_tags_array = explode(",",$update_tags_srting); //'入力された全てのタグ'を配列形式に変換
+        $old_tags =  Tag::where('user_id',$request->mypage_master_id )->get();// '登録済みのタグ'を取得
+        foreach ($old_tags as $old_tag)
+        {
+            $del_val = $old_tag->value;
+            $key = array_search($del_val, $update_tags_array);
+            if( ($key==true)or($key===0) ){ unset($update_tags_array[$key]);} // '入力された全てのタグ'から'登録済みのタグ'を削除
+        }
+
+
+        # 新しいタグが存在すれば、新しいタグを登録
+        if( count($update_tags_array) )
+        {
+
+            foreach ($update_tags_array as $update_tag)
+            {
+                $tag = new Tag([
+                    'value' => $update_tag,
+                    'text' => str_replace("'",'',$update_tag),
+                    'user_id' => $request->mypage_master_id,
+                ]);
+                $tag->save();
+
+            }
+        }
+    }
+
+
+
+
+    /**
+     *
+     * 利用されていないタグをtagsテーブルから削除(deleteTags)
+     *
+     *
+     * @param String
+     * @return Array
+     */
+    public function deleteTags($mypage_master_id){
+        $tags =  Tag::where('user_id',$mypage_master_id)->get();// '登録済みのタグ'を取得
+        foreach ($tags as $tag)
+        {
+            $mypage_master = User::find($mypage_master_id);
+            $count = Note::TagsListCount($mypage_master,$tag->value); //タグが利用される投稿数
+
+            if($count === 0){ $tag->delete();} //タグが利用される投稿数が０なら、そのタグを削除
+        }
+
     }
 
 }

@@ -38,3 +38,12 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
+
+
+<!-- destroy_note -->
+@if ( session('destroy_note_alert') )
+<div class="alert alert-warning alert-dismissible fade show fs-5" role="alert">
+    {{session('destroy_note_alert')}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif

@@ -119,8 +119,8 @@ Route::get('/edit_note/note={note}',[EditNoteController::class,'edit_note'])
 
 
 # ノート新規作成ページの表示(createedit_note_title)
-Route::get('/createedit_note_title/mypage_master={mypage_master}',[EditNoteController::class,'createedit_note_title'])
-->name('createedit_note_title');
+Route::get('/create_note_title/mypage_master={mypage_master}',[EditNoteController::class,'create_note_title'])
+->name('create_note_title');
 
 # ノート新規作成ページの保存(store_note_title)
 Route::post('/store_note_title',[EditNoteController::class,'store_note_title'])
@@ -137,6 +137,12 @@ Route::get('/edit_note_title/note={note}',[EditNoteController::class,'edit_note_
 Route::patch('/update_note_title/note={note}',[EditNoteController::class,'update_note_title'])
 ->name('update_note_title');
 
+
+
+
+# ノートの削除(destroy_note)
+Route::delete('/destroy_note',[EditNoteController::class,'destroy_note'])
+->name('destroy_note');
 
 
 
@@ -169,12 +175,12 @@ Route::post('/mypages/store_note',[MypageController::class,'store_note'])
 ->name('store_note');
 
 # ノートの削除(destroy_note)
-Route::delete('/mypages/destroy_note/note={note}',[MypageController::class,'destroy_note'])
-->name('destroy_note');
+// Route::delete('/mypages/destroy_note/note={note}',[MypageController::class,'destroy_note'])
+// ->name('destroy_note');
 
 # ノート編集ページの表示(edit_note)
-Route::get('/mypages/edit_note/note={note}',[MypageController::class,'edit_note'])
-->name('edit_note');
+// Route::get('/mypages/edit_note/note={note}',[MypageController::class,'edit_note'])
+// ->name('edit_note');
 
 # ノート基本情報の更新(update_note)
 Route::patch('/mypages/update_note/note={note}',[MypageController::class,'update_note'])

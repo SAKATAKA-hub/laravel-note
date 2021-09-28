@@ -112,7 +112,7 @@
 
         <div class="edit_btn_box">
             <div class="update_delete_btn">
-                <a href="{{route('edit_note_title',$note)}}" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 修正</a>
+                <a href="{{route('edit_note_title',$note)}}" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 基本情報の修正</a>
                 {{-- <a href="" class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</a> --}}
             </div>
             <button type="button" class="btn btn-primary"><i class="bi bi-plus-square-fill"></i> テキストボックスの挿入</button>

@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="{{asset('css/layouts/note.css')}}">
     <!-- edit_form.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/edit_form.css')}}">
+
+    <style>
+        .display_note_container_ .text_box{
+            display: none;
+        }
+    </style>
 @endsection
 
 
@@ -21,6 +27,30 @@
 
     <script>
         'use strict';
+        // ----------------------------------------------
+        // 公開設定スイッチの切り替え
+        // ----------------------------------------------
+
+        const publishingInput = document.getElementById('inputPublishing');
+        const publishingLabel = document.querySelector('label[for="inputPublishing"]');
+
+        publishingInput.onchange = ()=> {
+
+            if( publishingInput.checked )
+            {
+                publishingLabel.textContent = '公開';
+                publishingLabel.classList.add('text-primary');
+                publishingLabel.classList.remove('text-secondary');
+                // 'text-primary'
+            }
+            else{
+                publishingLabel.textContent = '非公開';
+                publishingLabel.classList.remove('text-primary');
+                publishingLabel.classList.add('text-secondary');
+            }
+
+        };
+
         // ----------------------------------------------
         // プレビュー画面へのレンダリング
         // ----------------------------------------------
@@ -91,12 +121,12 @@
             if(tagsArray.length)
             {
                 document.getElementById('noteTag').textContent =  tagsArray.join('　');
-                tags[0].required = ""; //requiredを無効にする。
+                // tags[0].required = ""; //requiredを無効にする。
             }
             else
             {
                 document.getElementById('noteTag').textContent =  noInputTags;
-                tags[0].required = "required"; //requiredを有効にする。
+                // tags[0].required = "required"; //requiredを有効にする。
             }
         }
     </script>
@@ -165,7 +195,12 @@
 
 
     <!-- ノート表示域 -->
-    <div class="preview_note_container display_note_container_green" id="previewContainer"> <!-- (クラスからページカラーを指定できる) -->
+    @if (!$note)<!-- (クラスからページカラーを指定できる) -->
+        <div class="preview_note_container display_note_container_" id="previewContainer">
+    @else
+        <div class="{{'preview_note_container display_note_container_'.old('color',$note->color)}}" id="previewContainer">
+    @endif
+
 
 
 
@@ -180,7 +215,7 @@
                 <small>{{!$note? '0000-00-00 00:00:00': $note->created_at}}</small>
 
                 {{-- タイトル --}}
-                <h3 class="title"  id="noteTitle">{{!$note? '': $note->title}}</h3>
+                <h3 class="title"  id="noteTitle">{{!$note? '': old('title', $note->title)}}</h3>
 
                 {{-- タグ --}}
                 <small class="d-flex">
@@ -189,7 +224,8 @@
                         <div id="noteTag"><!-- ※選択したタグが表示されます。 --></div>
                     @else
                         <div id="noteTag">
-                            @foreach ($note->tags_array as $tag)
+                            <?php $tags_array = old('tags')? old('tags'): $note->tags_array; ?><!-- (エラーがあれば、oldの返り値) -->
+                            @foreach ($tags_array as $tag)
                             {{$tag}}　
                             @endforeach
                         </div>
@@ -207,7 +243,7 @@
 
 
 
-        <div class="">
+        <div class="text_box">
 
 
             <div class="heading1">

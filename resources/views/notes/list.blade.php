@@ -23,6 +23,17 @@
 
 @section('script')
 
+    <!-- modal -->>
+    {{-- <script src="{ aseet('js/includes/modal.js') }}"></script> --}}
+    <script>
+        'use strict';
+        function modalInput(target)
+        {
+            let input = document.getElementById('modalInputElement');
+            input.value = target.value;
+            console.log(input.value);
+        }
+    </script>
 
 @endsection
 
@@ -84,8 +95,11 @@
             <!-- -->
         @endswitch
 
-        <button class="note_master_only btn btn-lg btn-primary" style="font-size:.8em;"><i class="bi bi-file-earmark-plus"></i> 新規作成</button>
+        <a href="{{route('create_note_title',$mypage_master)}}" class="note_master_only btn btn-lg btn-primary" style="font-size:.8em;">
+            <i class="bi bi-file-earmark-plus"></i> 新規ノート作成
+        </a>
     </h5>
+
 
 
 
@@ -130,8 +144,16 @@
 
 
                 <div class="note_master_only col-md-4 text-md-end mt-3 mt-md-0">
-                    <button class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 編集</button>
-                    <button class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
+                    <a href="{{route('edit_note',$note)}}" class="btn btn-outline-primary">
+                        <i class="bi bi-eraser-fill"></i> 編集
+                    </a>
+
+                    {{-- <button class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button> --}}
+
+                    <button class="btn btn-outline-primary" type="button" value="{{ $note->id }}"  data-bs-toggle="modal" data-bs-target="#centerModal" onclick="modalInput(this)">
+                        <i class="bi bi-trash"></i>削除
+                    </button>
+
                 </div>
 
             </li>
@@ -148,7 +170,37 @@
 
 
     <!-- pagenation -->
-    {{-- {{ $notes->links('includes.pagination.oliginal') }} --}}
+    {{ $notes->links('includes.pagination.oliginal') }}
+
+
+
+
+    <!-- Modal(データ削除モーダル) -->
+    <form action="{{route('destroy_note')}}" method="POST">
+        @method('DELETE')
+        @csrf
+        <input type="hidden" name="note_id" value="aaa" id="modalInputElement">
+
+        @php
+            $modal = [
+                'title' => 'ノートの削除',
+                'body' => 'ノートを1件削除します。\nよろしいですか？',
+                'yes_btn' => '削除',
+            ];
+        @endphp
+        @include('includes.modal')
+    </form>
+    {{--
+        * 削除ボタン
+        <button class=""  type="button" value="{{ $note }}" data-bs-toggle="modal" data-bs-target="#centerModal" onclick="deletModalInput(this)">
+            削除
+        </button>
+
+        * js読込み (deletModalInput関数)
+        <script src="{ aseet('js/includes/modal.js') }}"></script>
+    --}}
+
+
 
 
 @endsection

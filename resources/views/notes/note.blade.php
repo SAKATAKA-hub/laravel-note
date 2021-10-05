@@ -43,7 +43,7 @@
 
 @section('main.breadcrumb')
 
-    {{ Breadcrumbs::render('show', $mypage_master, $note) }}
+    {{ Breadcrumbs::render('note', $mypage_master, $note) }}
 
 @endsection
 

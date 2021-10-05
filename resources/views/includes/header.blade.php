@@ -64,7 +64,7 @@
                         @if (Auth::check())
 
                             <li>
-                                <a class="dropdown-item" href="{{route('list',Auth::user()->id)}}">
+                                <a class="dropdown-item" href="{{route('mypage_top',Auth::user()->id)}}">
                                     <i class="bi bi-person"></i> マイページ
                                 </a>
                             </li>

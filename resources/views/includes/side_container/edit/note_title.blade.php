@@ -1,7 +1,7 @@
 <div class="input_group_container">
 
     @if (!$note)
-    <form action="{{route('store_note_title')}}" method="POST">
+    <form action="{{route('store_note_title',$mypage_master)}}" method="POST">
     @else
     <form action="{{route('update_note_title',$note)}}" method="POST">
         @method('PATCH')

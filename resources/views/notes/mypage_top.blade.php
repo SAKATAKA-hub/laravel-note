@@ -42,7 +42,7 @@
 
 
 
-@section('title',$title)
+@section('title',$mypage_master->name.'さんのマイページ')
 
 
 
@@ -50,7 +50,12 @@
 
 @section('main.breadcrumb')
 
-    {{ Breadcrumbs::render('list', $mypage_master) }}
+
+    @if (isset($seach_heading))
+        {{ Breadcrumbs::render('mypage_seach', $mypage_master, $seach_heading) }}<!-- 検索ページ -->
+    @else
+        {{ Breadcrumbs::render('mypage_top', $mypage_master) }}<!-- マイページTOP -->
+    @endif
 
 @endsection
 
@@ -71,30 +76,17 @@
     <!-- page title -->
     <h2 class="pt-2 pb-2 mb-3">
         <p class="me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
-        {{$title}}
+        {{$mypage_master->name.'さんのマイページ'}}
     </h2>
 
 
     <!-- notes list heading -->
     <h5 class="d-flex justify-content-between align-items-center mb-3" style="padding-right:.5em">
-        @switch($list_type)
-            @case('seach_title')
-                <div class="fs-3"><i class="bi bi-search"></i> タイトルに”{{$seach_value}}”を含むノート一覧</div>
-                @break
-            <!-- -->
-            @case('tag')
-                <div class="fs-3"><i class="bi bi-tag-fill"></i> タグ ”{{str_replace("'",'', $seach_value)}}”を含むノート一覧</div>
-                @break
-            <!-- -->
-            @case('month')
-                <div class="fs-3"><i class="bi bi-calendar"></i> 投稿月 {{$seach_value}}のノート一覧</div>
-                @break
-            <!-- -->
-            @default
-                <div class="fs-3"><i class="bi bi-file-earmark-text"></i> 新着ノート一覧</div>
-            <!-- -->
-        @endswitch
-
+        @if (isset($seach_heading))
+            <div class="fs-3"><i class="bi bi-file-earmark-text"></i>{{$seach_heading}}</div>
+        @else
+            <div class="fs-3"><i class="bi bi-file-earmark-text"></i> 新着ノート一覧</div>
+        @endif
         <a href="{{route('create_note_title',$mypage_master)}}" class="note_master_only btn btn-lg btn-primary" style="font-size:.8em;">
             <i class="bi bi-file-earmark-plus"></i> 新規ノート作成
         </a>
@@ -126,7 +118,7 @@
 
 
                     <div class="">
-                        <a href="{{route('show',$note)}}"  class="text-primary">
+                        <a href="{{route( 'note',$note )}}"  class="text-primary">
                             <h3 class="mt-2">{{$note->title}}</h3>
                         </a>
                     </div>
@@ -144,7 +136,7 @@
 
 
                 <div class="note_master_only col-md-4 text-md-end mt-3 mt-md-0">
-                    <a href="{{route('edit_note',$note)}}" class="btn btn-outline-primary">
+                    <a href="{{route('edit_note', compact('note') )}}" class="btn btn-outline-primary">
                         <i class="bi bi-eraser-fill"></i> 編集
                     </a>
 

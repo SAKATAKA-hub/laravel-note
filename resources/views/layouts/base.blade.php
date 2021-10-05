@@ -28,16 +28,19 @@
 
 
     <main>
-        <div class="main_container row pt-3 p-md-3">
-
-
-            <!-- breadcrumb -->
-            <div class="mt-2">
-                <i class="bi bi-book fs-5"></i>
-                <div class="d-inline-block">
-                    @yield('main.breadcrumb')
-                </div>
+        <!-- breadcrumb -->
+        <div class="mt-2 ms-3">
+            <i class="bi bi-house-fill"></i>
+            <div class="d-inline-block">
+                @yield('main.breadcrumb')
             </div>
+        </div>
+
+
+
+
+        <!-- main_container -->
+        <div class="main_container row ps-2 ps-md-0 pt-5">
 
 
             <!-- alert -->

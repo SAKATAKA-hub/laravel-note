@@ -39,13 +39,9 @@
 
 
 @section('main.breadcrumb')
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-fill"></i>home</a></li>
-            <li class="breadcrumb-item"><a href="#">マイページ</a></li>
-            <li class="breadcrumb-item active" aria-current="page">ノートの編集</li>
-        </ol>
-    </nav>
+
+    {{ Breadcrumbs::render('edit_note', $mypage_master) }}
+
 @endsection
 
 

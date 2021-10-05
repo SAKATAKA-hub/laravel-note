@@ -29,7 +29,11 @@ class EditNoteController extends Controller
      */
     public function edit_note(Note $note){
 
-        return view('edit.note',compact('note') );
+        # マイページ管理者
+        $mypage_master = User::find($note->user_id);
+
+
+        return view('edit.note',compact('mypage_master','note') );
     }
 
 
@@ -69,7 +73,7 @@ class EditNoteController extends Controller
      * @param \App\Models\User $mypage_master (マイページの管理者)
      * @return \Illuminate\View\View
      */
-    public function store_note_title(EditNoteTitleFormRequest $request){
+    public function store_note_title(EditNoteTitleFormRequest $request, User $mypage_master){
 
         # 新規ノートの保存
         $note = new Note([
@@ -100,10 +104,11 @@ class EditNoteController extends Controller
      * ノート基本情報編集ページの表示(edit_note_title)
      *
      *
+     * @param \App\Models\User $mypage_master (マイページの管理者)
      * @param \App\Models\Note $note
      * @return \Illuminate\View\View
      */
-    public function edit_note_title(Note $note){
+    public function edit_note_title( User $mypage_master, Note $note){
 
         # マイページ管理者
         $mypage_master = User::find($note->user_id);
@@ -206,7 +211,7 @@ class EditNoteController extends Controller
         $this::deleteTags($mypage_master);
 
 
-        return redirect()->route('list',$mypage_master)->with('destroy_note_alert','ノートを１件削除しました。');
+        return redirect()->route('mypage_top',$mypage_master)->with('destroy_note_alert','ノートを１件削除しました。');
     }
 
 

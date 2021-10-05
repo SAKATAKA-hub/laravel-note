@@ -4,14 +4,17 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\NotesController;
-use App\Http\Controllers\MypageController;
 use App\Http\Controllers\EditNoteController;
 
+use App\Http\Middleware\CheckMypageMaster;
 
 
-//--------------------------------------------------------
-// ログイン認証
-//--------------------------------------------------------
+/*
+| --------------------------------------------------------
+| ログイン認証
+| --------------------------------------------------------
+*/
+
 # ログイン画面の表示(login_form)
 Route::get('login_form',[AuthController::class,'login_form'])
 ->name('login_form');
@@ -37,11 +40,14 @@ Route::post('post_register',[AuthController::class,'post_register'])
 // ログイン前は表示不可
 Route::middleware(['auth'])->group(function () {
     # ホームページの表示
-    Route::get('home',function() {
+    Route::get('login_home',function() {
         return view('login.home');
-    })->name('home');
+    })->name('login_home');
 
 });
+
+
+
 
 
 //--------------------------------------------------------
@@ -82,59 +88,67 @@ Route::get('edit_textbox',function(){
 // Route::get('test/mypage_master={mypage_master}/{seach_key?}',[NotesController::class,'test'])
 // ->name('test');
 
-Route::get('test/mypage_master={mypage_master}',[NotesController::class,'test'])
-->name('test');
 
 
-//--------------------------------------------------------
-// 閲覧ページの処理 (NotesController)
-//--------------------------------------------------------
-# マイページの表示(list)
-Route::get('/list/mypage_master={mypage_master}',[NotesController::class,'list'])
-->name('list');
+/*
+| --------------------------------------------------------
+| 閲覧ページの処理 (NotesController)
+| --------------------------------------------------------
+*/
 
-# マイページの検索表示(seach_list)
-Route::get('/seach_list/mypage_master={mypage_master}/{list_type}/{seach_value?}',[NotesController::class,'seach_list'])
-->name('seach_list');
+# ホームページの表示(home)
+Route::get('home',function(){
+    return '<h1>Home(準備中)</h1>';
+})->name('home');
 
-# ノート閲覧ページの表示(show)
-Route::get('/show/note={note}',[NotesController::class,'show'])
-->name('show');
+# マイページの表示(mypage_top)
+Route::get('/mypage_top/{mypage_master}',[NotesController::class,'mypage_top'])
+->name('mypage_top');
+
+# マイページの検索表示(mypage_seach)
+Route::get('/mypage_seach/{mypage_master}',[NotesController::class,'mypage_seach'])
+->name('mypage_seach');
+
+
+# ノート閲覧ページの表示(note)
+Route::get('/note/{note}',[NotesController::class,'note'])
+->name('note');
 
 # ノート印刷ページの表示(print)
-Route::get('/print/note={note}',[NotesController::class,'print'])
+Route::get('/print/{note}',[NotesController::class,'print'])
 ->name('print');
 
 
 
 
-//--------------------------------------------------------
-// 編集ページの処理 (EditNoteController)
-//--------------------------------------------------------
+/*
+| --------------------------------------------------------
+| ノート編集ページの処理 (EditNoteController)
+| --------------------------------------------------------
+*/
 # ノート編集ページの表示(edit_note)
-Route::get('/edit_note/note={note}',[EditNoteController::class,'edit_note'])
-->name('edit_note');
+Route::get('/edit_note/{note}',[EditNoteController::class,'edit_note'])
+->name('edit_note')
+->middleware('check_mypage_master');
 
 
-
-
-# ノート新規作成ページの表示(createedit_note_title)
-Route::get('/create_note_title/mypage_master={mypage_master}',[EditNoteController::class,'create_note_title'])
+# ノート新規作成ページの表示(create_note_title)
+Route::get('/create_note_title/{mypage_master}',[EditNoteController::class,'create_note_title'])
 ->name('create_note_title');
 
 # ノート新規作成ページの保存(store_note_title)
-Route::post('/store_note_title',[EditNoteController::class,'store_note_title'])
+Route::post('/store_note_title/{mypage_master}',[EditNoteController::class,'store_note_title'])
 ->name('store_note_title');
 
 
 
 
 # ノート基本情報編集ページの表示(edit_note_title)
-Route::get('/edit_note_title/note={note}',[EditNoteController::class,'edit_note_title'])
+Route::get('/edit_note_title/{note}',[EditNoteController::class,'edit_note_title'])
 ->name('edit_note_title');
 
 # ノート基本情報の更新(update_note_title)
-Route::patch('/update_note_title/note={note}',[EditNoteController::class,'update_note_title'])
+Route::patch('/update_note_title/{note}',[EditNoteController::class,'update_note_title'])
 ->name('update_note_title');
 
 
@@ -147,62 +161,14 @@ Route::delete('/destroy_note',[EditNoteController::class,'destroy_note'])
 
 
 
+/*
+| --------------------------------------------------------
+| テキストボックス編集ページの処理 (EditTextboxController)
+| --------------------------------------------------------
+*/
 
 
 
 
 
-
-
-//--------------------------------------------------------
-// マイページの処理 (MypageController)
-//--------------------------------------------------------
-
-# ノート一覧ページの表示(list)
-Route::get('/mypages/list/user={user}/{seach_keys?}',[MypageController::class,'list'])
-->name('mypage.list');
-
-# ノートページの表示(show_note)
-Route::get('/mypages/show_note/note={note}/{seach_keys?}',[MypageController::class,'show_note'])
-->name('show_note');
-
-# ノートの新規作成ページの表示(create_note)
-Route::get('/mypages/create_note/user={user}',[MypageController::class,'create_note'])
-->name('create_note');
-
-# 新規作成ノートの保存(store_note)
-Route::post('/mypages/store_note',[MypageController::class,'store_note'])
-->name('store_note');
-
-# ノートの削除(destroy_note)
-// Route::delete('/mypages/destroy_note/note={note}',[MypageController::class,'destroy_note'])
-// ->name('destroy_note');
-
-# ノート編集ページの表示(edit_note)
-// Route::get('/mypages/edit_note/note={note}',[MypageController::class,'edit_note'])
-// ->name('edit_note');
-
-# ノート基本情報の更新(update_note)
-Route::patch('/mypages/update_note/note={note}',[MypageController::class,'update_note'])
-->name('update_note');
-
-
-
-
-
-# 新規作成ノート部品の保存(store_note_part)
-Route::post('/mypage/store_note_part',[MypageController::class,'store_note_part'])
-->name('store_note_part');
-
-# ノート部品編集ページの表示(edit_note_part)
-Route::get('/mypage/edit_note_part/{note}',[MypageController::class,'edit_note_part'])
-->name('edit_note_part');
-
-# 編集ノート部品の保存(update_note_part)
-Route::patch('/mypage/update_note_part/{note}',[MypageController::class,'update_note_part'])
-->name('update_note_part');
-
-# ノート部品の削除(destroy_note_part)
-Route::delete('/mypage/destroy_note_part/{note}',[MypageController::class,'destroy_note_part'])
-->name('destroy_note_part');
 

@@ -139,21 +139,26 @@
 
 
 
-@section('title','マイノート編集(基本情報編集)')
+@section('title')
 
+    @if (!$note)
+        ノートの新規作成
+    @else
+        基本情報編集
+    @endif
 
+@endsection
 
 
 
 @section('main.breadcrumb')
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-fill"></i>home</a></li>
-            <li class="breadcrumb-item"><a href="#">マイページ</a></li>
-            <li class="breadcrumb-item"><a href="#">マイノート編集(TOP)</a></li>
-            <li class="breadcrumb-item active" aria-current="page">基本情報編集（仮）</li>
-        </ol>
-    </nav>
+
+    @if (!$note)
+        {{ Breadcrumbs::render('create_note_title', $mypage_master) }}
+    @else
+        {{ Breadcrumbs::render('edit_note_title', $mypage_master) }}
+    @endif
+
 @endsection
 
 
@@ -184,9 +189,9 @@
     <h2 class="pt-2 pb-2 mb-3">
         <p class="me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
         @if (!$note)
-            マイノートの新規作成
+            ノートの新規作成
         @else
-            マイノート基本情報編集
+            基本情報編集
         @endif
     </h2>
 

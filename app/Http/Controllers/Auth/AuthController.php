@@ -33,9 +33,8 @@ class AuthController extends Controller
 
             $request->session()->regenerate(); //ユーザー情報をセッションに保存
 
-            // return redirect()->route('list',$user);
 
-            return redirect()->route('list',$user)->with('login_alert','ログイン成功');
+            return redirect()->route('mypage_top',$user)->with('login_alert','ログイン成功');
         }
 
         // ログイン失敗の処理
@@ -91,9 +90,9 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->route('list',$user)->with('register_alert','新規登録成功');
+            return redirect()->route('mypage_top',$user)->with('register_alert','新規登録成功');
         }
 
-        return redirect()->route('list',$user)->with('error_alert','ログインに失敗しました。');
+        return redirect()->route('mypage_top',$user)->with('error_alert','ログインに失敗しました。');
     }
 }

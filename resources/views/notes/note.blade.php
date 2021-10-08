@@ -110,7 +110,7 @@
 
 
         <!-- textboxs -->
-        @foreach ($note->textboxs as $textbox)
+        @foreach ($note->textboxes as $textbox)
 
             @include('includes.main_container.textbox_cases')
 

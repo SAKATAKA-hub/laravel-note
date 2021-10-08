@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\CreateNoteFomeRequest;
 
 use App\Models\User;
 use App\Models\Note;
@@ -60,7 +57,7 @@ class NotesController extends Controller
      * @param \App\Models\User $mypage_master (マイページの管理者)
      * @return \Illuminate\View\View
      */
-    public function mypage_seach( Request $request, User $mypage_master)
+    public function mypage_seach(Request $request, User $mypage_master)
     {
         # リストの表示タイプ ['seach_title' or 'tag' or 'month']
         $list_type = $request->list_type;
@@ -135,7 +132,10 @@ class NotesController extends Controller
      * @param \App\Models\Note $note
      * @return \Illuminate\View\View
      */
-    public function note(Note $note){
+    public function note($note){
+
+        # notesテーブルとtextboxsテーブルのリレーション
+        $note = Note::with('Textboxes')->find($note);
 
         # マイページ管理者
         $mypage_master = User::find($note->user_id);
@@ -164,7 +164,7 @@ class NotesController extends Controller
     public function print($note){
 
         # notesテーブルとtextboxsテーブルのリレーション
-        $note = Note::with('Textboxs')->find($note);
+        $note = Note::with('Textboxes')->find($note);
 
         # ノートの管理者
         $mypage_master = User::find($note->user_id);

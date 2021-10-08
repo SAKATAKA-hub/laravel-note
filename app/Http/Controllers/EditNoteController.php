@@ -5,11 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\EditNoteTitleFormRequest;
 
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\CreateNoteFomeRequest;
-
 use App\Models\User;
 use App\Models\Note;
 use App\Models\Textbox;
@@ -20,14 +15,16 @@ use App\Models\Color;
 class EditNoteController extends Controller
 {
     /**
-     *
      * ノート編集ページの表示(edit_note)
      *
      *
-     * @param \App\Models\Note $note
+     * @param Int $note
      * @return \Illuminate\View\View
      */
-    public function edit_note(Note $note){
+    public function edit_note($note){
+
+        # notesテーブルとtextboxsテーブルのリレーション
+        $note = Note::with('Textboxes')->find($note);
 
         # マイページ管理者
         $mypage_master = User::find($note->user_id);
@@ -44,7 +41,6 @@ class EditNoteController extends Controller
 
 
     /**
-     *
      * ノート新規作成ページの表示(create_note_title)
      *
      *
@@ -65,7 +61,6 @@ class EditNoteController extends Controller
 
 
     /**
-     *
      * 新規作成ノートの保存(store_note_title)
      *
      *
@@ -100,7 +95,6 @@ class EditNoteController extends Controller
 
 
     /**
-     *
      * ノート基本情報編集ページの表示(edit_note_title)
      *
      *
@@ -152,7 +146,6 @@ class EditNoteController extends Controller
 
 
     /**
-     *
      * ノート基本情報の更新(update_note_title)
      *
      *
@@ -188,7 +181,6 @@ class EditNoteController extends Controller
 
 
     /**
-     *
      * ノートの削除(destroy_note)
      *
      *
@@ -229,11 +221,10 @@ class EditNoteController extends Controller
 
 
     /**
-     *
      * タグの配列をノートの新規作成・更新時に保存する形式で返す(getUpdateTagsString)
      *
      *
-     * @param String
+     * @param \Illuminate\Http\Request $request
      * @return Array
      */
     public function getUpdateTagsString($request_tags)
@@ -255,11 +246,10 @@ class EditNoteController extends Controller
 
 
     /**
-     *
      * 新しいタグをtagsテーブルに保存(saveNewTags)
      *
      *
-     * @param String
+     * @param \Illuminate\Http\Request $request
      * @return Array
      */
     public function saveNewTags($request)
@@ -297,11 +287,10 @@ class EditNoteController extends Controller
 
 
     /**
-     *
      * 利用されていないタグをtagsテーブルから削除(deleteTags)
      *
      *
-     * @param String
+     * @param String $mypage_master_id
      * @return Array
      */
     public function deleteTags($mypage_master_id){

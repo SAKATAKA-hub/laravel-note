@@ -111,205 +111,35 @@
                 <a href="{{route('edit_note_title',$note)}}" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 基本情報の修正</a>
                 {{-- <a href="" class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</a> --}}
             </div>
-            <button type="button" class="btn btn-primary"><i class="bi bi-plus-square-fill"></i> テキストボックスの挿入</button>
+
+            <a href="{{route('create_textbox',compact('note')+['order'=> 1])}}"  class="btn btn-primary">
+                <i class="bi bi-plus-square-fill"></i> テキストボックスの挿入
+            </a>
         </div>
 
 
 
 
-        <div class=" edit_text_box">
+        <!-- テキストボックスの表示 -->
+        @foreach ($note->textboxes as $textbox)
 
-            <div class="heading1">
-                見出し1<strong>重要</strong>
+            <div class=" edit_text_box">
+                @include('includes.main_container.textbox_cases')
             </div>
 
-        </div>
-
-
-        <div class="edit_btn_box">
-            <div class="update_delete_btn">
-                <button type="button" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 修正</button>
-                <button type="button" class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
-            </div>
-            <button type="button" class="btn btn-primary"><i class="bi bi-plus-square-fill"></i> テキストボックスの挿入</button>
-        </div>
-
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="heading2">
-                見出し2<strong>重要</strong>
-            </div>
-
-        </div>
-
-
-        <div class="edit_btn_box">
-            <div class="update_delete_btn">
-                <button type="button" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 修正</button>
-                <button type="button" class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
-            </div>
-            <button type="button" class="btn btn-primary"><i class="bi bi-plus-square-fill"></i> テキストボックスの挿入</button>
-        </div>
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="heading3">
-                見出し3<strong>重要</strong>
-            </div>
-
-        </div>
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="normal_text">
-                テキスト１テキスト１テキスト１<strong>重要</strong>
-            </div>
-
-        </div>
-
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="important_text">
-                重要な文章<strong>重要</strong>
-            </div>
-
-        </div>
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="emphasized_text">
-                強調する文章<strong>重要</strong>
-            </div>
-
-        </div>
-
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="quote_text">
-                テキスト２<br>テキスト２<br>テキスト２<strong>重要</strong>
-            </div>
-
-        </div>
-
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="code_text">
-                <div class="title">tatle.php</div>
-                <div class="text">
-                    テキスト２<br>テキスト２<br>テキスト２
+            <div class="edit_btn_box">
+                <div class="update_delete_btn">
+                    <button type="button" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 修正</button>
+                    <button type="button" class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
                 </div>
+                <button>{{$textbox->order+1}}</button>
+
+                <a href="{{route('create_textbox',compact('note')+['order'=> $textbox->order+1])}}"  class="btn btn-primary">
+                    <i class="bi bi-plus-square-fill"></i> テキストボックスの挿入
+                </a>
             </div>
 
-        </div>
-
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="link">
-                <a href="#">リンク</a>
-            </div>
-
-        </div>
-
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="image">
-                <img src="common/img/sample.jpg" alt="">
-                <p class="title">大きい写真</p>
-            </div>
-
-        </div>
-
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="image_litle">
-                <img src="common/img/sample.jpg" alt="">
-                <p class="title">小さい写真</p>
-            </div>
-
-        </div>
-
-
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="image_litle">
-                <img src="common/img/sample.jpg" alt="">
-                <p class="title">小さい写真</p>
-            </div>
-
-        </div>
-
-
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="image_litle">
-                <img src="common/img/sample.jpg" alt="">
-                <p class="title">小さい写真</p>
-            </div>
-
-        </div>
-
-
-
-
-
-
-        <div class=" edit_text_box">
-
-            <div class="image_litle">
-                <img src="common/img/sample.jpg" alt="">
-                <p class="title">小さい写真</p>
-            </div>
-
-        </div>
-
-
-
-
+        @endforeach
 
 
     </div>

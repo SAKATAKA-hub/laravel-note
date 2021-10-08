@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\NotesController;
 use App\Http\Controllers\EditNoteController;
+use App\Http\Controllers\EditTextboxController;
 
 use App\Http\Middleware\CheckMypageMaster;
 
@@ -81,7 +82,7 @@ Route::get('edit_note_title',function(){
 
 
 Route::get('edit_textbox',function(){
-    return view('notes.edit_textbox');
+    return view('edit.textbox');
 });
 
 
@@ -129,7 +130,8 @@ Route::get('/print/{note}',[NotesController::class,'print'])
 # ノート編集ページの表示(edit_note)
 Route::get('/edit_note/{note}',[EditNoteController::class,'edit_note'])
 ->name('edit_note')
-->middleware('check_mypage_master');
+;
+// ->middleware('check_mypage_master');
 
 
 # ノート新規作成ページの表示(create_note_title)
@@ -166,7 +168,31 @@ Route::delete('/destroy_note',[EditNoteController::class,'destroy_note'])
 | テキストボックス編集ページの処理 (EditTextboxController)
 | --------------------------------------------------------
 */
+# テキストボックス新規作成ページの表示(create_textbox)
+Route::get('/create_textbox/{note}/{order}',[EditTextboxController::class,'create_textbox'])
+->name('create_textbox');
 
+# テキストボックス新規作成ページの保存(store_textbox)
+Route::post('/store_textbox/{note}/{order}',[EditTextboxController::class,'store_textbox'])
+->name('store_textbox');
+
+
+
+
+# テキストボックス基本情報編集ページの表示(edit_textbox)
+Route::get('/edit_textbox/{note}',[EditTextboxController::class,'edit_textbox'])
+->name('edit_textbox');
+
+# テキストボックス基本情報の更新(update_textbox)
+Route::patch('/update_textbox/{note}',[EditTextboxController::class,'update_textbox'])
+->name('update_textbox');
+
+
+
+
+# ノートの削除(destroy_textbox)
+Route::delete('/destroy_textbox',[EditTextboxController::class,'destroy_textbox'])
+->name('destroy_textbox');
 
 
 

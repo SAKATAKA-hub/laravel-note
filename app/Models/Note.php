@@ -61,7 +61,7 @@ class Note extends Model
      *
      */
 
-    public function textboxs()
+    public function textboxes()
     {
         return $this->hasMany(Textbox::class)->orderBy('order','asc');
     }

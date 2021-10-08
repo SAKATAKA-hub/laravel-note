@@ -23,6 +23,7 @@ class CheckMypageMaster
         if( isset($request->mypage_master) ){ $mypage_master = $request->mypage_master->id; }
         if( isset($request->note) ){ $mypage_master = $request->note->user_id; }
 
+
         # ログインユーザーがマイページ管理者以外の時は、ログインページへリダイレクト
         if( !(Auth::check() && Auth::user()->id == $mypage_master) )
         {

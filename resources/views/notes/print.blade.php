@@ -6,10 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>print</title>
 
-    {{-- <!-- base.css -->
-    <link rel="stylesheet" href="{{asset('css/layouts/base.css')}}">
-    <!-- note.css -->
-    <link rel="stylesheet" href="{{asset('css/layouts/note.css')}}"> --}}
 
     <style>
         {{$css}}
@@ -32,7 +28,7 @@
         <br><br>
 
 
-        @foreach ($note->textboxs as $textbox)
+        @foreach ($note->textboxes as $textbox)
 
             @include('includes.main_container.textbox_cases')
 

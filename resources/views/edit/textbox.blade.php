@@ -12,9 +12,6 @@
     <!-- edit_form.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/edit_form.css')}}">
 
-    <style>
-        .note_master_only{ display: none;}
-    </style>
 @endsection
 
 
@@ -58,6 +55,7 @@
 
 
 @section('main.side_container')
+
     @include('includes.side_container.edit.textbox')
 
     @include('includes.side_container.edit.back_buttons')
@@ -82,30 +80,61 @@
 
 
 
-        <div class="">
+        <!-- タイトルボックスの表示 -->
+        <div class="title_box">
+            {{-- 投稿日 --}}
+            <small>{{$note->created_at}}</small>
 
-            <div class="title_box">
-                <p>0000年00月00日更新</p>
-                <h2 class="title">タイトルsss</h2>
-                <p><i class="bi bi-tag-fill"></i>
-                    <a href="">laravel</a>
-                    <a href="">テスト</a>
-                </p>
-            </div>
+            {{-- タイトル --}}
+            <h3 class="title">{{$note->title}}</h3>
 
+            {{-- タグ --}}
+            <small class="d-flex">
+                <i class="bi bi-tag-fill me-2"></i>
+                @foreach ($note->tags_array as $tag)
+                <span>{{$tag}}　</span>
+                @endforeach
+            </small>
         </div>
 
 
+        <!-- テキストボックスの表示 -->
+        @foreach ($note->textboxes as $textbox)
 
 
-        <div class="">
+            <!-- 編集中テキストボックスの表示 -->
+            @if ($textbox->order == $order)
+            <div class="editing_text_box">
 
-            <div class="heading1">
-                <p class="text">見出し1<strong>重要</strong></p>
+                {{-- <div class="alert alert-danger text-center fs-5" role="alert">
+                    ・・・  編集中テキストボックス  ・・・
+                </div> --}}
+
+
+
+
+                <div class="editing heading1  hidden">
+                    <p class="text"><strong>例）</strong>見出し1が表示されます。</p>
+                </div>
+
+
+                <div class="editing link hidden">
+                    <a class="text" href="#">リンク</a>
+                </div>
+
+
+                <div class="editing image hidden">
+                    <p class="subval title">画像タイトル</p>
+                    <img id="previewImage">
+                </div>
+
             </div>
+            @endif
 
-        </div>
 
+            @include('includes.main_container.textbox_cases')
+
+        @endforeach
 
 
 
@@ -133,8 +162,6 @@
                 <p class="subval title">画像タイトル</p>
                 <img id="previewImage">
             </div>
-
-
 
         </div>
 

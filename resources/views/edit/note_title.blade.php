@@ -237,10 +237,6 @@
                     @endif
                 </small>
 
-                {{-- <div class="d-flex">
-                    <i class="bi bi-tag-fill" style="margin-right:.5em"></i>
-                    <div id="noteTag"><!-- ※選択したタグが表示されます。 --></div>
-                </div> --}}
             </div>
 
         </div>
@@ -248,8 +244,7 @@
 
 
 
-        <div class="text_box">
-
+        {{-- <div class="text_box">
 
             <div class="heading1">
                 <p class="text"><strong>Sample</strong> サンプルテキストの表示</p>
@@ -269,40 +264,19 @@
                 ＊この文章はサンプルです。
             </div>
 
-
         </div>
+ --}}
+
+
+        <!-- 保存済みテキストボックスの表示 -->
+        @foreach ($note->textboxes as $textbox)
+
+            @include('includes.main_container.textbox_cases')
+
+        @endforeach
 
 
 
-
-
-        {{-- <div class="editing_text_box">
-
-            <div class="alert alert-danger text-center fs-5" role="alert">
-                ・・・  編集中テキストボックス  ・・・
-            </div>
-
-
-
-
-            <div class="editing heading1  hidden">
-                <p class="text"><strong>例）</strong>見出し1が表示されます。</p>
-            </div>
-
-
-            <div class="editing link hidden">
-                <a class="text" href="#">リンク</a>
-            </div>
-
-
-            <div class="editing image hidden">
-                <img id="previewImage">
-                <p class="subval title">画像タイトル</p>
-            </div>
-
-
-
-        </div> --}}
 
 
 

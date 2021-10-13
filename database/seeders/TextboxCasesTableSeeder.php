@@ -20,13 +20,14 @@ class TextboxCasesTableSeeder extends Seeder
             ['value' => "heading2", 'text' => '見出し2'],
             ['value' => "heading3", 'text' => '見出し3'],
 
-            ['value' => "normalText", 'text' => '通常の文章'],
-            ['value' => "importantText", 'text' => '重要な文章'],
-            ['value' => "emphasizedText", 'text' => '強調する文章'],
-            ['value' => "quoteText", 'text' => '引用文'],
-            ['value' => "codeText", 'text' => 'コード文'],
+            ['value' => "normal_text", 'text' => '通常の文章'],
+            ['value' => "important_text", 'text' => '重要な文章'],
+            ['value' => "emphasized_text", 'text' => '強調する文章'],
+            ['value' => "quote_text", 'text' => '引用文'],
+            ['value' => "code_text", 'text' => 'コード文'],
 
             ['value' => "link", 'text' => 'リンク'],
+
             ['value' => "image", 'text' => '大きい画像'],
             ['value' => "image_litle", 'text' => '小さい画像'],
         ];

@@ -138,7 +138,7 @@ Route::get('/edit_note/{note}',[EditNoteController::class,'edit_note'])
 Route::get('/create_note_title/{mypage_master}',[EditNoteController::class,'create_note_title'])
 ->name('create_note_title');
 
-# ノート新規作成ページの保存(store_note_title)
+# 新規作成ノートの保存(store_note_title)
 Route::post('/store_note_title/{mypage_master}',[EditNoteController::class,'store_note_title'])
 ->name('store_note_title');
 
@@ -172,15 +172,15 @@ Route::delete('/destroy_note',[EditNoteController::class,'destroy_note'])
 Route::get('/create_textbox/{note}/{order}',[EditTextboxController::class,'create_textbox'])
 ->name('create_textbox');
 
-# テキストボックス新規作成ページの保存(store_textbox)
-Route::post('/store_textbox/{note}/{order}',[EditTextboxController::class,'store_textbox'])
+# 新規作成テキストボックスの保存(store_textbox)
+Route::post('/store_textbox/{note}',[EditTextboxController::class,'store_textbox'])
 ->name('store_textbox');
 
 
 
 
 # テキストボックス基本情報編集ページの表示(edit_textbox)
-Route::get('/edit_textbox/{note}',[EditTextboxController::class,'edit_textbox'])
+Route::get('/edit_textbox/{textbox}',[EditTextboxController::class,'edit_textbox'])
 ->name('edit_textbox');
 
 # テキストボックス基本情報の更新(update_textbox)
@@ -190,8 +190,8 @@ Route::patch('/update_textbox/{note}',[EditTextboxController::class,'update_text
 
 
 
-# ノートの削除(destroy_textbox)
-Route::delete('/destroy_textbox',[EditTextboxController::class,'destroy_textbox'])
+# テキストボックスの削除(destroy_textbox)
+Route::delete('/destroy_textbox/{note}',[EditTextboxController::class,'destroy_textbox'])
 ->name('destroy_textbox');
 
 

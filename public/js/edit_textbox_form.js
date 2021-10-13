@@ -1,123 +1,145 @@
 'use strict';
 
+//---------------------------------------------------------------
+// 関数：文字列をアッパーキャメルケースに変換
+
+function toUpperFirst(str) {
+    return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
+}
+//---------------------------------------------------------------
+
+
+
+
+//---------------------------------------------------------------
+// 基本設定
+//---------------------------------------------------------------
+// テキストボックスの種類グループ
+const textboxCaseGroups = ['heading','text','link','image'];
+
+// テキストボックスの種類を選択するselect要素
+const inputTextBoxCase = document.getElementById('inputTextBoxCase');
+
+// 入力域
+const inputBoxs = document.querySelectorAll('.input_box');
+
+// 編集中テキストボックス表示領域
+const editingBoxs = document.querySelectorAll('.editing_box');
+
+
+
 
 //---------------------------------------------------------------
 // 挿入するテキストボックスの種類を選択
 //---------------------------------------------------------------
+inputTextBoxCase.onchange = ()=> {
 
-const inputTextBoxType = document.getElementById('inputTextBoxType');// テキストボックスの種類を選択するselect要素
-const inputBoxs = document.querySelectorAll('.input_box');// 入力域
-const editings = document.querySelectorAll('.editing');// プレビュー域
+    // <-- 選択したテキストボックスの種類 -->
+    let textboxCase = inputTextBoxCase.value;
+
+    // <-- 選択したテキストボックスの種類グループ -->
+    let textboxCaseGroup ="";
+    textboxCaseGroups.forEach((group)=>{
+
+        if( textboxCase.includes(group) ){ textboxCaseGroup = toUpperFirst(group);}
+
+    });
 
 
-inputTextBoxType.onchange = ()=> {
-
-    let typeKey = inputTextBoxType.value; //選択したテキストボックスの種類を関連付ける"キー"
-
-
-    // 入力域の表示変更
+    // <-- 入力域の表示切替 -->
     inputBoxs.forEach( (inputBox)=> {
 
-        // 入力値を空に戻す
-        // inputBox.querySelector('input[name="text"]').value = '';
-        // inputBox.querySelector('input[name="subval"]').value = '';
+        // 全て非表示
+        inputBox.className = "input_box hidden";
 
-        //クラスを最初に戻す
-        inputBox.classList.add('hidden');
-
-
-
-        if(  inputBox.id === typeKey )
+        // 入力域の変更
+        if(inputBox.id === 'input'+textboxCaseGroup)
         {
-            inputBox.classList.remove('hidden');
+            inputBox.classList.remove('hidden'); //表示
+            inputBox.querySelector('input[name="textbox_case_name"]').value = textboxCase; //インプットタグのvalueにテキストボックスの種類を代入
         }
 
     });
 
 
-    // プレビュー域の表示変更
-    editings.forEach( (editing)=> {
-
-        // 表示内容を空に戻す
 
 
-        // クラスを最初に戻す
-        editing.classList.add('hidden');
+    // <-- プレビュー域の表示変更 -->
+    editingBoxs.forEach( (editingBox)=> {
 
-        if(  editing.classList.contains(typeKey) )
+        // 全て非表示
+        editingBox.className = "editing_box hidden";
+
+        // 表示
+        if(editingBox.id === 'editing'+textboxCaseGroup)
         {
-            editing.classList.remove('hidden');
+            editingBox.classList.remove('hidden');
+            editingBox.classList.add(textboxCase);
         }
 
     });
 
 
-};
+}
+
+
+
+
+
 
 
 
 //---------------------------------------------------------------
 // 入力内容をプレビューに反映させる
 //---------------------------------------------------------------
-inputBoxs.forEach( (inputBox)=>{
+textboxCaseGroups.forEach( (group)=>{
 
-    let inputText = inputBox.querySelector('textarea[name="text"]');
-    let inputSubval = inputBox.querySelector('input[name="subval"]');
+    // <-- main_valueの入力 -->
+    let inputMain = document.getElementById('input'+toUpperFirst(group)+'MainValue'); //main入力要素
+    if(inputMain !== null){ //選択したテキストボックスの種類に、main_valueの入力が存在しなければ、処理なし
 
+        inputMain.onchange = ()=>{
 
-
-
-    // textインプットに入力した時
-    inputText.onchange = ()=>{
-        console.log(inputBox.id);
-
-        editings.forEach( (editing)=> {
-
-            if(  editing.classList.contains(inputBox.id) )
+            if(group === 'link')
             {
-                editing.querySelector('.text').innerHTML = inputText.value.replace('{{', '<strong>').replace('}}', '</strong>');
+                let editLink = document.getElementById('editing'+toUpperFirst(group)).querySelector('a');
+                editLink.href = inputMain.value;//main_valueの入力値をプレビューに表示
+
+            }else{
+
+                let editMain = document.getElementById('editing'+toUpperFirst(group)).querySelector('.mainValue');
+                editMain.textContent = inputMain.value;//main_valueの入力値をプレビューに表示
             }
 
-        });
-
-    };
-
+        };
+    }
 
 
-    // subvalインプットに入力した時
-    inputSubval.onchange = ()=>{
+    // <-- sub_valueの入力 -->
+    let inputSub = document.getElementById('input'+toUpperFirst(group)+'SubValue'); //sub入力要素
+    if(inputSub !== null){ //選択したテキストボックスの種類に、sub_valueの入力が存在しなければ、処理なし
 
-        editings.forEach( (editing)=> {
+        inputSub.onchange = ()=>{
 
-            if(  editing.classList.contains(inputBox.id) )
+            if(group === 'image')
             {
-                if( inputBox.id === 'link')　//テキストボックスが'link'のとき
-                {
-                    editing.querySelector('.text').href = inputSubval.value;
-                }
-                else
-                {
-                    editing.querySelector('.subval').textContent = inputSubval.value;
-                }
+                let editSub = document.getElementById('editing'+toUpperFirst(group)).querySelector('.subValue');
+                editSub.textContent = inputSub.value; //sub_valueの入力値をプレビューに表示
             }
 
+            if(group === 'link')
+            {
+                let editLink = document.getElementById('editing'+toUpperFirst(group)).querySelector('a');
+                editLink.textContent = inputSub.value; //sub_valueの入力値をプレビューに表示
+            }
 
-        });
-
-    };
-
-
-
+        };
+    }
 
 });
 
-
-
-
-
-
 //---------------------------------------------------------------
-// 画像の処理
+// アップロード画像の表示
 //---------------------------------------------------------------
 //
 // 添付画像の読み込み
@@ -125,8 +147,6 @@ inputBoxs.forEach( (inputBox)=>{
 //    onchange="setImage(this);" onclick="this.value = '';">
 // <img id="previewImage">
 //---------------------------------------------------------------
-
-//大きい画像の処理
 function setImage(target) {
     var reader = new FileReader();
     reader.onload = function (e) {
@@ -136,18 +156,4 @@ function setImage(target) {
     }
     reader.readAsDataURL(target.files[0]);
 };
-
-//小さい画像の処理
-function setImageLitle(target) {
-    var reader = new FileReader();
-    reader.onload = function (e) {
-
-        document.getElementById("previewImageLitle").setAttribute('src', e.target.result);
-
-    }
-    reader.readAsDataURL(target.files[0]);
-};
-
-
-
 

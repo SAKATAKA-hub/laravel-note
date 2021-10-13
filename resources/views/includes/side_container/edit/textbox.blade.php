@@ -5,24 +5,22 @@
 
 <div class="input_group_container mb-6">
 
+    <!-- エラー表示 -->
+    @if ($errors->all())
+        @foreach ($errors->all() as $error)
+        <div class="mb-2" style="color:red;">{{$error}}</div>
+        @endforeach
+    @endif
 
-    <div class="form_group mb-4">
-        <label class="fw-bold text-primary" for="input_age_group">テキストボックスの種類を選択してください。</label>
-        <select class="form-control fs-3 text-primary fw-bold" name="age_group" id="inputTextBoxType">
+    <div class="form_group mb-5">
+        <label class="fw-bold text-primary" for="inputTextBoxCase">テキストボックスの種類を選択してください。</label>
+        <select class="form-control fs-3 text-primary fw-bold" name="age_group" id="inputTextBoxCase">
             <option value="">-- 選択 --</option>
-            <option value="heading1">見出し1</option>
-            <option value="heading2">見出し2</option>
-            <option value="heading3">見出し3</option>
 
-            <option value="normalText">通常の文章</option>
-            <option value="importantText">重要な文章</option>
-            <option value="emphasizedText">強調する文章</option>
-            <option value="quoteText">引用文</option>
-            <option value="codeText">コード文</option>
+            @foreach ($select_textbox_cases as $item)
+                <option value="{{$item->value}}">{{$item->text}}</option>
+            @endforeach
 
-            <option value="link">リンク</option>
-            <option value="image">大きい画像</option>
-            <option value="image_litle">小さい画像</option>
         </select>
     </div>
 
@@ -31,33 +29,45 @@
 
 
 
+    <!-- inputHeading -->
+    <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputHeading">
+        @csrf
+        <input type="hidden" name="order" value="{{$order}}">
+        <input type="hidden" name="textbox_case_name" value="">
+        {{-- <input type="hidden" name="textbox_case_id" value="1"> <!-- textbox_case_id --> --}}
 
-
-    <form action="" class="input_box hidden" id="heading1">
-
-
-        <input type="hidden" name="textbox_cases_id" val="1">
-
-        <div class="form_group mb-4">
-            <label class="form-label" for="">見出しを入力して下さい。</label>
-            <textarea name="text" class="form-control" style="height: 4rem;"
-                placeholder="※重要な言葉を {{ '{'.'{' }} と {{ '}'.'}' }} (半角記号) で囲むと強調されます。" id="" ></textarea>
-            <!-- <p style="color:red;margin-top:.5em;">エラーメッセージ</p> -->
-        </div>
-
-
-        <div class="form_group mb-4">
-            <label class="fw-bold" for=""></label>
-            <input type="hidden" name="subval" class="form-control" value="" placeholder="" id="">
-            <!-- <p style="color:red;margin-top:.5em;">エラーメッセージ</p> -->
+        <div class="form_group mb-5">
+            <label class="fw-bold" for="inputHeadingMainValue">見出しを入力して下さい。</label>
+            <input type="text" name="main_value" class="form-control"
+            placeholder="※重要な言葉は {{ '{'.'{' }} と {{ '}'.'}' }} (半角記号) で囲む。" id="inputHeadingMainValue" required>
         </div>
 
 
         <div class="form_group d-grid gap-2">
-            <button type="button" class="btn btn-primary btn-lg">テキストボックスの挿入</button>
+            <button type="submit" class="btn btn-primary btn-lg">テキストボックスの挿入</button>
+        </div>
+    </form>
+
+
+
+
+
+    <!-- inputText -->
+    <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputText">
+        @csrf
+        <input type="hidden" name="order" value="{{$order}}">
+        <input type="hidden" name="textbox_case_name" value="">
+
+        <div class="form_group mb-5">
+            <label class="fw-bold" for="inputTextMainValue">文章を入力して下さい。</label>
+            <textarea name="main_value" class="form-control" style="height:12rem;"
+                placeholder="※重要な言葉は {{ '{'.'{' }} と {{ '}'.'}' }} (半角記号) で囲む。" id="inputTextMainValue" required></textarea>
         </div>
 
 
+        <div class="form_group d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">テキストボックスの挿入</button>
+        </div>
     </form>
 
 
@@ -67,29 +77,25 @@
 
 
 
-    <form action="" class="input_box hidden" id="link">
+    <!-- inputLink -->
+    <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputLink">
+        @csrf
+        <input type="hidden" name="order" value="{{$order}}">
+        <input type="hidden" name="textbox_case_name" value="">
 
-
-        <input type="hidden" name="textbox_cases_id" val="1">
-
-        <div class="form_group mb-4">
-            <label class="form-label" for="">リンク名を入力してください。</label>
-            <textarea name="text" class="form-control" style="height: 4rem;" placeholder="リンクタイトル" id="" ></textarea>
-            <!-- <p style="color:red;margin-top:.5em;">エラーメッセージ</p> -->
+        <div class="form_group mb-5">
+            <label class="fw-bold" for="inputLinkMainValue">リンク先URLを入力して下さい。</label>
+            <input type="text" name="main_value" class="form-control" placeholder="半角記号英数字" id="inputLinkMainValue" required>
         </div>
 
-        <div class="form_group mb-4">
-            <label class="fw-bold" for="">リンク先のURLを入力してください。</label>
-            <input type="text" name="subval" class="form-control" placeholder="半角記号英数字" id="">
-            <!-- <p style="color:red;margin-top:.5em;">エラーメッセージ</p> -->
+        <div class="form_group mb-5">
+            <label class="fw-bold" for="inputLinkSubValue">リンクタイトルを入力してください。</label>
+            <input type="text" name="sub_value" class="form-control" placeholder="リンクタイトル" id="inputLinkSubValue" required>
         </div>
-
 
         <div class="form_group d-grid gap-2">
-            <button type="button" class="btn btn-primary btn-lg">テキストボックスの挿入</button>
+            <button type="submit" class="btn btn-primary btn-lg">テキストボックスの挿入</button>
         </div>
-
-
     </form>
 
 
@@ -98,38 +104,27 @@
 
 
 
+    <!-- inputImage -->
+    <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputImage" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="order" value="{{$order}}">
+        <input type="hidden" name="textbox_case_name" value="">
 
-    <form action="" class="input_box hidden" id="image">
-
-
-        <input type="hidden" name="textbox_cases_id" val="1">
-
-
-        <div class="form_group mb-4 hidden"> <!--(非表示)-->
-            <label class="form-label" for=""></label>
-            <textarea name="text" class="form-control" style="height: 4rem;" placeholder="" id="" ></textarea>
+        <div class="form_group mb-5">
+            <label class="form-label" for="fileImage">挿入する画像を選択してください。</label>
+            <input type="file" name="image" class="form-control" onchange="setImage(this);" id="fileImage" required>
         </div>
 
-        <div class="form_group mb-4">
-            <label class="form-label" for="">挿入する画像を選択してください。</label>
-            <input type="file" name="image" class="form-control" onchange="setImage(this);" onclick="this.value = '';" id="fileImage">
-            <!-- <p style="color:red;margin-top:.5em;">エラーメッセージ</p> -->
+        <div class="form_group mb-5">
+            <label class="fw-bold" for="inputImageSubValue">画像タイトルを入力してください。</label>
+            <input type="text" name="sub_value" class="form-control" placeholder="画像のタイトル" id="inputImageSubValue" required>
         </div>
-
-
-        <div class="form_group mb-4">
-            <label class="fw-bold" for="">画像のタイトルを選択してください。</label>
-            <input type="text" name="subval" class="form-control" placeholder="画像のタイトル">
-            <!-- <p style="color:red;margin-top:.5em;">エラーメッセージ</p> -->
-        </div>
-
 
         <div class="form_group d-grid gap-2">
-            <button type="button" class="btn btn-primary btn-lg">テキストボックスの挿入</button>
+            <button type="submit" class="btn btn-primary btn-lg">テキストボックスの挿入</button>
         </div>
-
-
     </form>
+
 
 
 

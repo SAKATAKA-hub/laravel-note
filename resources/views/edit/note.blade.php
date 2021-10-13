@@ -81,8 +81,7 @@
 
 
     <!-- ノート表示域 -->
-    <div class="preview_note_container display_note_container_orange"> <!-- (クラスからページカラーを指定できる) -->
-
+    <div class="preview_note_container display_note_container_{{$note->color}}"> <!-- (クラスからページカラーを指定できる) -->
 
         <!-- タイトルボックスの表示 -->
         <div class=" edit_text_box">
@@ -129,10 +128,19 @@
 
             <div class="edit_btn_box">
                 <div class="update_delete_btn">
-                    <button type="button" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 修正</button>
-                    <button type="button" class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
+                    <a href="{{route('edit_textbox',$textbox)}}" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 修正</a>
+
+                    <form method="POST" action="{{route('destroy_textbox',$note)}}">
+                        @method('delete')
+                        @csrf
+                        <input type="hidden" name="textbox_id" value="{{$textbox->id}}"> <!-- テキストボックスのID -->
+                        <input type="hidden" name="order" value="{{$textbox->order}}"> <!-- テキストボックスの採番 -->
+                        <button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
+                    </form>
+
                 </div>
-                <button>{{$textbox->order+1}}</button>
+
+                <p>{{$textbox->order}}</p>
 
                 <a href="{{route('create_textbox',compact('note')+['order'=> $textbox->order+1])}}"  class="btn btn-primary">
                     <i class="bi bi-plus-square-fill"></i> テキストボックスの挿入

@@ -39,4 +39,30 @@ class Textbox extends Model
     }
 
 
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ローカルスコープ
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+
+    /**
+     * changeOrders($request, $note)
+     * マイページ管理者のノートを取得
+     * (マイページの管理者がログインしていなければ、非公開ノートの非表示)
+     *
+     *
+     * @return Array
+    */
+    public function scopeChangeOrders($query, $request, $note)
+    {
+        return $query->where('note_id',$note->id)
+        ->where('order','>=',$request->order)
+        ->orderBy('order','asc')->get();
+
+    }
+
 }

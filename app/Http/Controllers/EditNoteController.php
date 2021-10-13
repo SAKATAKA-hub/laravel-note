@@ -172,7 +172,7 @@ class EditNoteController extends Controller
         $this::deleteTags($note->user_id);
 
 
-        return redirect()->route('edit_note_title',$note);
+        return redirect()->route('edit_note',$note);
 
     }
 

@@ -18,7 +18,16 @@
             <option value="">-- 選択 --</option>
 
             @foreach ($select_textbox_cases as $item)
-                <option value="{{$item->value}}">{{$item->text}}</option>
+
+                @if ( !isset($textbox) ) <!-- ( create ) -->
+                    <option value="{{$item->value}}">{{$item->text}}</option>
+
+                @else <!-- ( edit ) -->
+                    <option value="{{$item->value}}" {{$item->value===$textbox_case->value? 'selected': ''}}>
+                        {{$item->text}}
+                    </option>
+                @endif
+
             @endforeach
 
         </select>
@@ -28,24 +37,34 @@
 
 
 
-
     <!-- inputHeading -->
+    @if ( !isset($textbox) ) <!-- ( create ) -->
     <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputHeading">
         @csrf
+    @else <!-- ( edit ) -->
+    <form method="POST" action="{{route('update_textbox',$note)}}" id="inputHeading"
+        class="input_box {{$textbox_case->group === 'heading'? '': 'hidden'}}">
+        @method('PATCH')
+        @csrf
+    @endif
+
         <input type="hidden" name="order" value="{{$order}}">
-        <input type="hidden" name="textbox_case_name" value="">
-        {{-- <input type="hidden" name="textbox_case_id" value="1"> <!-- textbox_case_id --> --}}
+        <input type="hidden" name="textbox_case_name" value="{{isset($textbox)? $textbox_case->value:''}}">
 
         <div class="form_group mb-5">
+
             <label class="fw-bold" for="inputHeadingMainValue">見出しを入力して下さい。</label>
             <input type="text" name="main_value" class="form-control"
-            placeholder="※重要な言葉は {{ '{'.'{' }} と {{ '}'.'}' }} (半角記号) で囲む。" id="inputHeadingMainValue" required>
+            placeholder="※重要な言葉は {{ '{'.'{' }} と {{ '}'.'}' }} (半角記号) で囲む。" id="inputHeadingMainValue" required
+            value="{{ isset($textbox)? $textbox->main_value: '' }}">
+
         </div>
 
 
         <div class="form_group d-grid gap-2">
             <button type="submit" class="btn btn-primary btn-lg">テキストボックスの挿入</button>
         </div>
+
     </form>
 
 
@@ -124,9 +143,6 @@
             <button type="submit" class="btn btn-primary btn-lg">テキストボックスの挿入</button>
         </div>
     </form>
-
-
-
 
 
 </div>

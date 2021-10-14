@@ -13,7 +13,7 @@ class TextboxCase extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'name','value','text','selected ',
+        'group','name','value','text','selected ',
     ];
 
 

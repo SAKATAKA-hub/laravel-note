@@ -179,11 +179,11 @@ Route::post('/store_textbox/{note}',[EditTextboxController::class,'store_textbox
 
 
 
-# テキストボックス基本情報編集ページの表示(edit_textbox)
+# テキストボックス編集ページの表示(edit_textbox)
 Route::get('/edit_textbox/{textbox}',[EditTextboxController::class,'edit_textbox'])
 ->name('edit_textbox');
 
-# テキストボックス基本情報の更新(update_textbox)
+# テキストボックスの更新(update_textbox)
 Route::patch('/update_textbox/{note}',[EditTextboxController::class,'update_textbox'])
 ->name('update_textbox');
 

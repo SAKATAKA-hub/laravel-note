@@ -15,6 +15,7 @@ class CreateTextboxCasesTable extends Migration
     {
         Schema::create('textbox_cases', function (Blueprint $table) {
             $table->id();
+            $table->string('group',50);
             $table->string('name',50);
             $table->string('value',50);
             $table->string('text',50);

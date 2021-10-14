@@ -98,7 +98,7 @@ class EditTextboxController extends Controller
 
 
     /**
-     * テキストボックス基本情報編集ページの表示(edit_textbox)
+     * テキストボックス編集ページの表示(edit_textbox)
      *
      *
      * @param App\Models\Textbox $textbox
@@ -106,22 +106,23 @@ class EditTextboxController extends Controller
      */
     public function edit_textbox(Textbox $textbox){
 
-        // return'edit_textbox';
-
         # ノートデータ
         $note = Note::find($textbox->note_id);
 
-        #
+        # 編集するテキストボックスの種類
+        $textbox_case = TextboxCase::find($textbox->textbox_case_id);
+
+        # 採番
         $order =$textbox->order;
 
         # テキストボックスの種類を選択する要素のデータ
         $select_textbox_cases = TextboxCase::All();
 
-        return view('edit.textbox',compact('note','order','textbox', 'select_textbox_cases'));
+        return view('edit.textbox',compact('note','order','textbox','textbox_case','select_textbox_cases'));
 
     }
 
-    # テキストボックス基本情報の更新(update_textbox)
+    # テキストボックスの更新(update_textbox)
 
 
 

@@ -16,20 +16,20 @@ class TextboxCasesTableSeeder extends Seeder
     {
         $name = 'textbox_case';
         $items =[
-            ['value' => "heading1", 'text' => '見出し1'],
-            ['value' => "heading2", 'text' => '見出し2'],
-            ['value' => "heading3", 'text' => '見出し3'],
+            ['group' => 'heading', 'value' => "heading1", 'text' => '見出し1'],
+            ['group' => 'heading', 'value' => "heading2", 'text' => '見出し2'],
+            ['group' => 'heading', 'value' => "heading3", 'text' => '見出し3'],
 
-            ['value' => "normal_text", 'text' => '通常の文章'],
-            ['value' => "important_text", 'text' => '重要な文章'],
-            ['value' => "emphasized_text", 'text' => '強調する文章'],
-            ['value' => "quote_text", 'text' => '引用文'],
-            ['value' => "code_text", 'text' => 'コード文'],
+            ['group' => 'text', 'value' => "normal_text", 'text' => '通常の文章'],
+            ['group' => 'text', 'value' => "important_text", 'text' => '重要な文章'],
+            ['group' => 'text', 'value' => "emphasized_text", 'text' => '強調する文章'],
+            ['group' => 'text', 'value' => "quote_text", 'text' => '引用文'],
+            ['group' => 'text', 'value' => "code_text", 'text' => 'コード文'],
 
-            ['value' => "link", 'text' => 'リンク'],
+            ['group' => 'link', 'value' => "link", 'text' => 'リンク'],
 
-            ['value' => "image", 'text' => '大きい画像'],
-            ['value' => "image_litle", 'text' => '小さい画像'],
+            ['group' => 'image', 'value' => "image", 'text' => '大きい画像'],
+            ['group' => 'image', 'value' => "image_litle", 'text' => '小さい画像'],
         ];
 
 
@@ -37,6 +37,7 @@ class TextboxCasesTableSeeder extends Seeder
         foreach ($items as $item)
         {
             $data = new TextboxCase([
+                'group' => $item['group'],
                 'name' => $name,
                 'value' => $item['value'],
                 'text' => $item['text'],

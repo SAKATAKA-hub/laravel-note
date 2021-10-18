@@ -20,7 +20,7 @@ class EditTextboxFormRequest extends FormRequest
 
         # 画像のアップロードがあるとき
         $request = $this->all();
-        if( isset($request['image']) )
+        if( isset($request['image']) && !isset($request['old_image']) )
         {
             $rules['image'] = 'file|max:1600|mimes:jpeg,png,jpg';
         }

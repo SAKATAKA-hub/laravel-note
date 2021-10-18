@@ -252,6 +252,8 @@
     <div class="preview_note_container display_note_container_{{$note->color}}"> <!-- (クラスからページカラーを指定できる) -->
 
 
+
+
         <!-- タイトルボックスの表示 -->
         <div class="title_box">
             {{-- 投稿日 --}}
@@ -270,30 +272,33 @@
         </div>
 
 
-        <!-- テキストボックスの表示 -->
 
-        <!-- 編集中テキストボックスの表示(先頭表示) -->
-        @if ($order == 1)
+
+        <!-- 編集中テキストボックスの表示(初めてのテキストボックスの挿入) -->
+        @if ($note->textboxes->count() === 0)
             @include('includes.main_container.editing_textbox')
         @endif
 
+
+        <!-- テキストボックスの表示 -->
         @foreach ($note->textboxes as $textbox)
-
-            <!-- 保存済みテキストボックスの表示 -->
-            @include('includes.main_container.textbox_cases')
-
             <!-- 編集中テキストボックスの表示 -->
-            @if ($textbox->order == $order-1)
+            @if ($textbox->order == $order)
+                @include('includes.main_container.editing_textbox')
+            @endif
+
+            <!-- 保存済みテキストボックスの表示(編集中のテキストボックスは非表示) -->
+            @if ( !( isset($edit_textbox) && ($textbox->order == $order) ) )
+                @include('includes.main_container.textbox_cases')
+            @endif
+
+
+            <!-- 編集中テキストボックスの表示(末尾表示) -->
+            @if ( $loop->last && (($textbox->order +1) == $order) )
                 @include('includes.main_container.editing_textbox')
             @endif
 
         @endforeach
-
-
-
-
-
-
 
 
 

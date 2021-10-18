@@ -203,7 +203,8 @@ class EditNoteController extends Controller
         $this::deleteTags($mypage_master);
 
 
-        return redirect()->route('mypage_top',$mypage_master)->with('destroy_note_alert','ノートを１件削除しました。');
+        return redirect()->route('mypage_top',$mypage_master)
+        ->with('note_alert','destroy_note_alert');
     }
 
 

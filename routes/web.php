@@ -184,7 +184,7 @@ Route::get('/edit_textbox/{textbox}',[EditTextboxController::class,'edit_textbox
 ->name('edit_textbox');
 
 # テキストボックスの更新(update_textbox)
-Route::patch('/update_textbox/{note}',[EditTextboxController::class,'update_textbox'])
+Route::patch('/update_textbox/{edit_textbox}',[EditTextboxController::class,'update_textbox'])
 ->name('update_textbox');
 
 

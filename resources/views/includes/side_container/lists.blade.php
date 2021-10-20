@@ -58,6 +58,7 @@
     <ul class="list-group">
         @forelse ($side_lists['tags'] as $list_item)
             <li  class="list-group-item p-0">
+
                 <form class="d-flex" method="GET" action="{{route( 'mypage_seach',$mypage_master )}}" >
                     <input type="hidden" name="list_type" value="tag"> <!-- name="list_type" -->
                     <input type="hidden" name="seach_value" value="{{$list_item['value']}}"> <!--name="seach_value" -->
@@ -66,6 +67,7 @@
                         <span class="badge bg-primary rounded-pill">{{$list_item->count}}</span>
                     </button>
                 </form>
+
             </li>
         @empty
             <li  class="list-group-item text-center">投稿はありません。</li>

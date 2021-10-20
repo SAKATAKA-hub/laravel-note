@@ -70,32 +70,40 @@
         <!-- title_box -->
         <div class="title_box">
             <small class="d-flex">
-                @if ($note->publishing)
+
+                <!-- 公開設定 (マイページ管理者ログイン時以外は非表示)-->
+                @if ($note->chake_publishing)
                 <span class="note_master_only badge rounded-pill bg-success me-3">公開中</span>
                 @else
                 <span class="note_master_only badge rounded-pill bg-danger  me-3">非公開</span>
                 @endif
-                <span>{{$note->created_at}}</span>
+
+                <!-- 作成日時・公開日時・更新日時 -->
+                <div>{{$note->time_text}}</div>
+
             </small>
 
 
+            <!-- 投稿タイトル -->
             <h3 class="title">{{$note->title}}</h3>
 
 
+            <!-- 関連タグ -->
             <small class="d-flex">
-
                 <i class="bi bi-tag-fill me-2"></i>
+
                 @foreach ($note->tags_array as $tag)
-                <a href="">{{$tag}}　</a>
+                    <form class="d-inline" method="GET" action="{{route( 'mypage_seach',$mypage_master )}}" >
+                        <input type="hidden" name="list_type" value="tag"> <!-- name="list_type" -->
+                        <input type="hidden" name="seach_value" value="{{$tag}}"> <!--name="seach_value" -->
+                        <button class="" type="submit">{{$tag}}</button>
+                    </form>
                 @endforeach
 
             </small>
 
 
             <div class="mt-3 d-flex">
-                <button class="note_master_only btn btn-outline-primary me-1"><i class="bi bi-eraser-fill"></i> 編集</button>
-                <button class="note_master_only btn btn-outline-primary me-1"><i class="bi bi-trash"></i> 削除</button>
-
                 <a class="btn btn-outline-primary" href="{{route('print',$note)}}">
                     <i class="bi bi-printer"></i> 印刷
                 </a>

@@ -26,6 +26,7 @@ class EditNoteController extends Controller
         # notesテーブルとtextboxsテーブルのリレーション
         $note = Note::with('Textboxes')->find($note);
 
+
         # マイページ管理者
         $mypage_master = User::find($note->user_id);
 
@@ -75,8 +76,12 @@ class EditNoteController extends Controller
             'title' => $request->title, //タイトル
             'color' => $request->color, //カラー
             'tags' => $this::getUpdateTagsString($request->tags), //タグ('****','****','****'形式)
-            'publishing' => $request->publishing? 1:0, //公開設定
             'user_id' => $request->mypage_master_id, //投稿者ID
+
+            'created_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //作成日時
+            'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //更新日時
+            'publication_at' => $this::getPublicationAt($request), //公開日時
+
         ]);
         $note->save();
 
@@ -85,7 +90,8 @@ class EditNoteController extends Controller
         $this::saveNewTags($request);
 
 
-        return redirect()->route('edit_note_title',$note);
+        return redirect()->route('edit_note',$note)
+        ->with('note_alert','store_note_title');
 
     }
 
@@ -106,6 +112,10 @@ class EditNoteController extends Controller
 
         # マイページ管理者
         $mypage_master = User::find($note->user_id);
+
+
+        # '別のテキストボックスを編集する'ボタンの表示に利用
+        $order = 'edit_note_title';
 
 
         # フォーム入力の選択要素の取得
@@ -140,7 +150,7 @@ class EditNoteController extends Controller
         }
 
 
-        return view('edit.note_title',compact('note','mypage_master','selects') );
+        return view('edit.note_title',compact('note','mypage_master','selects','order') );
 
     }
 
@@ -155,13 +165,16 @@ class EditNoteController extends Controller
      */
     public function update_note_title(EditNoteTitleFormRequest $request, Note $note){
 
+
         # ノート基本情報の更新
         $note->update([
             'title' => $request->title, //タイトル
             'color' => $request->color, //カラー
             'tags' => $this::getUpdateTagsString($request->tags), //タグ('****','****','****'形式)
-            'publishing' => $request->publishing? 1:0, //公開設定
             'user_id' => $request->mypage_master_id, //投稿者ID
+
+            'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //更新日時
+            'publication_at' => $this::getPublicationAt($request), //公開日時
         ]);
 
 
@@ -172,7 +185,9 @@ class EditNoteController extends Controller
         $this::deleteTags($note->user_id);
 
 
-        return redirect()->route('edit_note',$note);
+        return redirect()->route('edit_note',$note)
+        ->with('note_alert','update_note_title');
+
 
     }
 
@@ -219,6 +234,9 @@ class EditNoteController extends Controller
     |
     |
     */
+
+
+
 
 
     /**
@@ -305,5 +323,35 @@ class EditNoteController extends Controller
         }
 
     }
+
+
+
+
+    /**
+     * ノートの公開日時(getPublicationAt)
+     *
+     * 公開設定がONのとき、今の日時を返す。
+     * 公開設定がoffかつ、公開予約日時が指定されているとき、指定予約日時を返す。
+     * それ以外はnull。
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return String
+     */
+    public function getPublicationAt($request)
+    {
+        return
+
+            //公開設定がONのとき
+            isset($request->publishing)? \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'):
+
+            //公開設定がoff、公開予約日時が指定されているとき
+            ( isset($request->release_datetime)? str_replace('T',' ',$request->release_datetime).':00' :null )
+
+        ;
+
+    }
+
+
+
 
 }

@@ -39,6 +39,23 @@
 
 
 {{-- ノート・テキストボックス操作処理のアラート --}}
+<!-- store_note_title -->
+@if ( session('note_alert') === 'store_note_title' )
+<div class="alert alert-success alert-dismissible fade show fs-5" role="alert"> <!-- alert-success -->
+    新しいノートの基本情報を登録しました！<br>続けて”テキストボックス”の挿入を行ってください。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+
+<!-- update_note_title -->
+@if ( session('note_alert') === 'update_note_title' )
+<div class="alert alert-info alert-dismissible fade show fs-5" role="alert"> <!-- alert-info -->
+    ノートの基本情報の編集内容を登録しました。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
 
 <!-- destroy_note -->
 @if ( session('note_alert') === 'destroy_note_alert' )
@@ -47,6 +64,8 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
+
+
 
 
 <!-- store_textbox -->
@@ -61,7 +80,7 @@
 <!-- update_textbox -->
 @if ( session('note_alert') === 'update_textbox' )
 <div class="alert alert-info alert-dismissible fade show fs-5" role="alert"> <!-- alert-info -->
-    一つのテキストボックスを修正しました。
+    テキストボックスの編集を登録しました。
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
@@ -71,7 +90,7 @@
 <!-- destroy_textbox -->
 @if ( session('note_alert') === 'destroy_textbox' )
 <div class="alert alert-warning alert-dismissible fade show fs-5" role="alert"> <!-- alert-warning -->
-    一つのテキストボックスを削除しました。
+    テキストボックスを一つ削除しました。
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif

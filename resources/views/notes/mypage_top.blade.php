@@ -71,13 +71,24 @@
 
 
 
-@section('main.center_container')
+
+
+
+
+@section('main.top_container')
+
 
     <!-- page title -->
     <h2 class="pt-2 pb-2 mb-3">
         <p class="me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
         {{$mypage_master->name.'さんのマイページ'}}
     </h2>
+
+
+@endsection
+
+
+@section('main.center_container')
 
 
     <!-- notes list heading -->
@@ -93,8 +104,6 @@
     </h5>
 
 
-
-
     <!-- notes list -->
     <ul class="list-group mb-3">
 
@@ -102,40 +111,50 @@
         @forelse ($notes as $note)
             <li class="list-group-item w-100 d-md-flex justify-content-between align-items-center row">
 
-                <div class="col-md-8">
-                    <small class="text-muted d-flex">
+                <small class="text-muted d-flex">
 
-                        @if ($note->publishing)
-                        <span class="note_master_only badge rounded-pill bg-success me-3">公開中</span>
-                        @else
-                        <span class="note_master_only badge rounded-pill bg-danger  me-3">非公開</span>
-                        @endif
+                    <!-- 公開設定 (マイページ管理者ログイン時以外は非表示)-->
+                    @if ($note->chake_publishing)
+                    <p class="note_master_only badge rounded-pill bg-success me-3">公開中</p>
+                    @else
+                    <p class="note_master_only badge rounded-pill bg-danger me-3">非公開</p>
+                    @endif
 
-                        <span>{{$note->created_at}}</span>
+                    <!-- 作成日時・公開日時・更新日時 -->
+                    <div>{{$note->time_text}}</div>
+
+                </small>
 
 
-                    </small>
 
+                <div class="col-md-9">
 
+                    <!-- 投稿タイトル -->
                     <div class="">
                         <a href="{{route( 'note',$note )}}"  class="text-primary">
-                            <h3 class="mt-2">{{$note->title}}</h3>
+                            <h3 class="">{{$note->title}}</h3>
                         </a>
                     </div>
 
 
+                     <!-- 関連タグ -->
                     <small class="text-muted">
                         <i class="bi bi-tag-fill"></i>
 
                         @foreach ($note->tags_array as $tag)
-                        <a href="">{{$tag}}　</a>
+                            <form class="d-inline" method="GET" action="{{route( 'mypage_seach',$mypage_master )}}" >
+                                <input type="hidden" name="list_type" value="tag"> <!-- name="list_type" -->
+                                <input type="hidden" name="seach_value" value="{{$tag}}"> <!--name="seach_value" -->
+                                <button class="" type="submit">{{$tag}}</button>
+                            </form>
                         @endforeach
+
                     </small>
 
                 </div>
 
 
-                <div class="note_master_only col-md-4 text-md-end mt-3 mt-md-0">
+                <div class="note_master_only col-md-3 text-md-end mt-3 mt-md-0">
                     <a href="{{route('edit_note', compact('note') )}}" class="btn btn-outline-primary">
                         <i class="bi bi-eraser-fill"></i> 編集
                     </a>
@@ -191,8 +210,6 @@
         * js読込み (deletModalInput関数)
         <script src="{ aseet('js/includes/modal.js') }}"></script>
     --}}
-
-
 
 
 @endsection

@@ -1,6 +1,13 @@
-<div class="input_group_container mb-4">
-    <div class="form_group d-grid gap-2">
-        <button type="button" class="btn btn-outline-primary btn-lg">テキストボックス選択画面に戻る　<i class="bi bi-caret-right-fill"></i></button>
-        <button type="button" class="btn btn-outline-primary btn-lg mt-4">マイページに戻る　<i class="bi bi-caret-right-fill"></i></button>
-    </div>
+<div class="input_group_container d-grid gap-4 mb-5">
+
+    @if (isset($order)) <!-- テキストボックスの新規挿入・編集、ノートの編集時のみ表示する -->
+        <a href="{{route('edit_note',$note)}}" class="btn btn-outline-secondary">
+            別のテキストボックスを編集する
+        </a>
+    @endif
+
+    <a href="{{route('mypage_top',$mypage_master)}}" class="btn btn-outline-secondary">
+        マイページに戻る
+    </a>
+
 </div>

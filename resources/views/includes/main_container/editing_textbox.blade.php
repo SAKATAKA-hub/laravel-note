@@ -1,4 +1,4 @@
-<div class="editing_text_box">
+<div class="editing_textbox">
 
     <div class="alert alert-danger text-center fs-5" role="alert">
         ・・・  編集中テキストボックス  ・・・
@@ -14,8 +14,8 @@
 
     @else <!-- ( edit ) -->
 
-        <div class="editing_box" id="editingHeading">
-            <p class="mainValue {{$edit_textbox_case->value}}">{!!$edit_textbox->replace_main_value!!}</p>
+        <div class="editing_box {{$edit_textbox_case->value}}" id="editingHeading">
+            <p class="mainValue">{!!$edit_textbox->replace_main_value!!}</p>
         </div>
 
     @endif

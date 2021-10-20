@@ -2,17 +2,17 @@
 // ベースのスタイル
 //-----------------------------------------
 
+
 @mixin basic_style($color) {
 
     // タイトルbox
     .title_box{
         .title{
-            font-size: 2em;
+            font-size: 3em;
             font-weight: bold;
             margin: 0;
         }
         margin-bottom: 3rem;
-
     }
 
     // 見出し1
@@ -21,8 +21,9 @@
         font-weight: bold;
         border-left: .4em solid $color;
         padding-left: .5em;
+        line-height: 1.6em;
         // margin-top: 1em;
-        margin-bottom: 1em;
+        // margin-bottom: 1em;
         strong{ color: $color;}
     }
 
@@ -31,7 +32,7 @@
         font-size: 1.5em;
         font-weight: bold;
         // margin-top: 1em;
-        margin-bottom: 1em;
+        // margin-bottom: 1em;
         strong{ color: $color;}
     }
 
@@ -39,13 +40,13 @@
     .heading3{
         font-size: 1.2em;
         font-weight: bold;
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
         strong{ color: $color;}
     }
 
     // 文章
     .normal_text{
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
         strong{ color: $color;}
     }
 
@@ -57,7 +58,7 @@
 
         border : 2px solid red;
         border-radius: 2px;
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
         strong{ color: red;}
     }
 
@@ -68,7 +69,7 @@
         padding-top: 0;
 
         background-color: lighten($color, 30%);
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
         strong{ color: red;}
     }
 
@@ -79,7 +80,7 @@
         padding-top: 0;
 
         border-left: .4em solid #aaa;
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
         strong{ color: red;}
     }
 
@@ -101,13 +102,13 @@
             padding-top: 0;
 
             background-color: #eee;
-            margin-bottom: 1rem;
+            // margin-bottom: 1rem;
         }
     }
 
     // リンク
     .link{
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
         a{
             font-weight: bold;
             color: $color;
@@ -118,7 +119,7 @@
 
     // 大きい画像
     .image{
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
         img{
             width: 100%;
         }
@@ -132,7 +133,7 @@
     // 小さい画像
     .image_litle{
         margin-right: 10px;
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
         display: inline-block;
         width: 210px;
 
@@ -150,8 +151,6 @@
 
 
 } //end@mixin basic_style($color)
-
-
 
 
 

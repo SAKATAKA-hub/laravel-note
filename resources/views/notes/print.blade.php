@@ -15,7 +15,7 @@
 <body>
     <div class="print_note_container_{{$note->color}}"> <!-- (クラスからページカラーを指定できる) -->
         <div class="title_box">
-            <span>作成日：{{$note->created_at}}</span>
+            <span>{{$note->time_text}}</span>
             <div class="title">{{' '.$note->title}}</div> <!-- (タイトル) -->
             <span>
                 タグ：

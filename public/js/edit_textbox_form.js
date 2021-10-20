@@ -85,10 +85,6 @@ inputTextBoxCase.onchange = ()=> {
 
 
 
-
-
-
-
 //---------------------------------------------------------------
 // 入力内容をプレビューに反映させる
 //---------------------------------------------------------------
@@ -108,7 +104,21 @@ textboxCaseGroups.forEach( (group)=>{
             }else{
 
                 let editMain = document.getElementById('editing'+toUpperFirst(group)).querySelector('.mainValue');
-                editMain.textContent = inputMain.value;//main_valueの入力値をプレビューに表示
+
+                //改行処理
+                let inputMainValue = inputMain.value;
+                let result = '';
+                while(inputMainValue !== result) {
+                    inputMainValue = inputMainValue.replace('\n','<br>');
+                    result = inputMainValue.replace('\n','<br>');
+                }
+
+                //強調文の処理
+                inputMainValue = inputMainValue.replace('{'+'{','<strong>');
+                inputMainValue = inputMainValue.replace('}'+'}','</strong>');
+
+               editMain.innerHTML = inputMainValue;//main_valueの入力値をプレビューに表示
+
             }
 
         };
@@ -138,6 +148,9 @@ textboxCaseGroups.forEach( (group)=>{
 
 });
 
+
+
+
 //---------------------------------------------------------------
 // アップロード画像の表示
 //---------------------------------------------------------------
@@ -156,4 +169,3 @@ function setImage(target) {
     }
     reader.readAsDataURL(target.files[0]);
 };
-

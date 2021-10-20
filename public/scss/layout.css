@@ -1,0 +1,41 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: lightgoldenrodyellow;
+}
+body header {
+  width: 100%;
+  height: 5rem;
+  background: lightcoral;
+}
+body main {
+  display: flex;
+  max-width: 1200px;
+  height: 100%;
+}
+body main .center {
+  max-width: 800px;
+  min-height: 100vh;
+}
+body main .side {
+  width: 400px;
+  background: #eee;
+}
+@media screen and (max-width: 1200px) {
+  body main {
+    display: block;
+  }
+  body main .side {
+    width: 100%;
+  }
+}
+body footer {
+  width: 100%;
+  height: 3em;
+  line-height: 3em;
+  text-align: center;
+  background: burlywood;
+}
+
+/*# sourceMappingURL=layout.css.map */

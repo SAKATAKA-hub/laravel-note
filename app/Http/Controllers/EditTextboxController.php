@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\EditTextboxFormRequest;
 
+use App\Models\User;
 use App\Models\Note;
 use App\Models\Textbox;
 use App\Models\TextboxCase;
@@ -28,13 +29,18 @@ class EditTextboxController extends Controller
         $note = Note::with('Textboxes')->find($note);
 
 
+        # マイページ管理者
+        $mypage_master = User::find($note->user_id);
+
+
         # テキストボックスの種類を選択する要素のデータ
         $select_textbox_cases = TextboxCase::All();
 
 
-        return view('edit.textbox',compact('note', 'order', 'select_textbox_cases'));
+        return view('edit.textbox',compact('mypage_master','note', 'order', 'select_textbox_cases'));
 
     }
+
 
 
 
@@ -59,17 +65,15 @@ class EditTextboxController extends Controller
         ];
 
 
-
-
         # 採番の更新 (挿入するテキストボックスより後のテキストボックスの採番を'1'加算)
         $textboxes = Textbox::changeOrders($request, $note);
 
         for ($i=0; $i < count($textboxes); $i++)
         {
-            $textboxes[$i]->update(['order' => $textboxes[$i]->order +1]); //採番を'1'加算
+
+            $textboxes[$i]->update(['order' => $request->order +$i +1]); //挿入するテキストボックスの採番＋'$i-1'
+
         }
-
-
 
 
         # 画像アップロード処理
@@ -78,10 +82,16 @@ class EditTextboxController extends Controller
             $save_data['main_value'] = $this::uploadImage($request,$edit_textbox = null); //画像のパスを'main_value'カラムに保存
         }
 
+
         # テキストボックスの保存
         $textbox = new Textbox($save_data);
         $textbox->save();
 
+
+        # ノートの更新日の更新
+        $note->update([
+            'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'),
+        ]);
 
 
         return redirect()->route('edit_note',$note)
@@ -105,21 +115,29 @@ class EditTextboxController extends Controller
         # 編集中のテキストボックス(変数名変更)
         $edit_textbox = $textbox;
 
-        # ノートデータ
-        $note = Note::find($edit_textbox->note_id);
+
+        # ノートデータ(リレーション)
+        $note = Note::with('Textboxes')->find($edit_textbox->note_id);
+
+
+        # マイページ管理者
+        $mypage_master = User::find($note->user_id);
+
 
         # 編集するテキストボックスの種類
         $edit_textbox_case = TextboxCase::find($edit_textbox->textbox_case_id);
 
+
         # 採番
         $order =$edit_textbox->order;
+
 
         # テキストボックスの種類を選択する要素のデータ
         $select_textbox_cases = TextboxCase::All();
 
 
         return view('edit.textbox',compact(
-            'note','order','edit_textbox','edit_textbox_case','select_textbox_cases'
+            'mypage_master','note','order','edit_textbox','edit_textbox_case','select_textbox_cases'
         ));
 
     }
@@ -160,10 +178,9 @@ class EditTextboxController extends Controller
         }
 
 
-        # 画像の削除
+        # 画像の削除(テキストボックスの種類グループが、'image'からそれ以外に変更されるとき)
         $new_group = TextboxCase::find( $save_data['textbox_case_id'] )->group; //'編集前'のテキストボックスの種類グループ名
         $old_group = TextboxCase::find( $edit_textbox->textbox_case_id )->group; //'編集後'のテキストボックスの種類グループ名
-
         if ( ($old_group === 'image')&&($new_group !== 'image') )
         {
             Storage::delete( $edit_textbox->main_value );
@@ -171,8 +188,15 @@ class EditTextboxController extends Controller
 
 
 
-        # テキストボックスの保存
+        # テキストボックスの更新
         $edit_textbox->update($save_data);
+
+
+        # ノートの更新日の更新
+        $note->update([
+            'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'),
+        ]);
+
 
 
         return redirect()->route('edit_note',$note)
@@ -194,7 +218,6 @@ class EditTextboxController extends Controller
      */
     public function destroy_textbox(Request $request, Note $note){
 
-
         # 削除するテキストボックスの取得
         $textbox = Textbox::find($request->textbox_id);
 
@@ -211,7 +234,8 @@ class EditTextboxController extends Controller
 
         for ($i=0; $i < count($textboxes); $i++)
         {
-            $textboxes[$i]->update(['order' => $textboxes[$i]->order -1]); //採番を'1'減算
+            $textboxes[$i]->update(['order' => $request->order +$i-1]); //削除するテキストボックスの採番＋'$i-1'
+
         }
 
 

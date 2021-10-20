@@ -34,11 +34,7 @@ class NotesController extends Controller
 
 
         # サイドコンテンツのリスト一式取得
-        $side_lists = [
-            'new_notes' => Note::mypageNotes($mypage_master)->limit(5)->get(),
-            'tags' => Tag::tagsList($mypage_master),
-            'months' => Note::monthsList($mypage_master),
-        ];
+        $side_lists = $this::getSideLists($mypage_master);
 
 
         return view('notes.mypage_top',compact(
@@ -109,11 +105,7 @@ class NotesController extends Controller
         }
 
         # サイドコンテンツのリスト一式取得
-        $side_lists = [
-            'new_notes' => Note::mypageNotes($mypage_master)->limit(5)->get(),
-            'tags' => Tag::tagsList($mypage_master),
-            'months' => Note::monthsList($mypage_master),
-        ];
+        $side_lists = $this::getSideLists($mypage_master);
 
 
         return view('notes.mypage_top',compact(
@@ -141,11 +133,7 @@ class NotesController extends Controller
         $mypage_master = User::find($note->user_id);
 
         # サイドコンテンツのリスト一式取得
-        $side_lists = [
-            'new_notes' => Note::mypageNotes($mypage_master)->limit(5)->get(),
-            'tags' => Tag::tagsList($mypage_master),
-            'months' => Note::monthsList($mypage_master),
-        ];
+        $side_lists = $this::getSideLists($mypage_master);
 
 
         return view('notes.note',compact('mypage_master','note','side_lists') );
@@ -203,5 +191,35 @@ class NotesController extends Controller
 
 
 
+
+
+
+    /*
+    |
+    |　コントローラー内で利用するメソッド
+    |
+    |
+    */
+
+
+
+
+
+    /**
+     * サイドコンテンツに表示するリスト一式を取得(getSideLists)
+     *
+     *
+     * @param \App\Models\User $mypage_master (マイページの管理者)
+     * @return Array
+     */
+    public function getSideLists($mypage_master)
+    {
+        # サイドコンテンツのリスト一式取得
+        return [
+            'new_notes' => Note::mypageNotes($mypage_master)->limit(5)->get(),
+            'tags' => Tag::tagsList($mypage_master),
+            'months' => Note::monthsList($mypage_master),
+        ];
+    }
 
 }

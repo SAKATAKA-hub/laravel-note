@@ -18,9 +18,11 @@ class CreateNotesTable extends Migration
             $table->string('title',100)->comment('題名');
             $table->string('color',100)->comment('メインカラー');
             $table->string('tags',100)->comment('タグ');
-            $table->boolean('publishing')->default(0)->comment('公開設定');
             $table->unsignedBigInteger('user_id')->comment('user ID');
-            $table->timestamps();
+            $table->dateTime('created_at')->comment('作成日時');
+            $table->dateTime('updated_at')->comment('更新日時');
+            $table->dateTime('publication_at')->comment('公開日時')->nullable()->default(null);
+
 
             $table->foreign('user_id')
             ->references('id')->on('users') //存在しないidの登録は不可

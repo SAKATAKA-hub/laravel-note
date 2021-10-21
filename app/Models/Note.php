@@ -124,6 +124,27 @@ class Note extends Model
 
 
     /**
+     * $note->publication_at_text
+     * ノートの公開日を表示する
+     *
+     *
+     * @return String
+     */
+    public function getPublicationAtTextAttribute()
+    {
+        // 公開日時(公開設定が公開中の時のみ表示)
+        $text = '';
+        $publication_at = \Carbon\Carbon::parse($this->publication_at)->format('公開 : Y/m/d').'　';
+        if ( isset($this->publication_at) ){ $text .= $publication_at; }
+
+        return $text;
+    }
+
+
+
+
+
+    /**
      * $note->tags_array
      * 複数タグの値を、'文字列'から'配列'に変換して返す。
      *
@@ -198,9 +219,70 @@ class Note extends Model
     */
 
     /**
+     * createdOrderMypageNotes($mypage_master)
+     * マイページ管理者のノートを取得(全て、作成日時順で取得)
+     *
+     *
+     * @return Array
+    */
+    public function  scopeCreatedOrderMypageNotes($query, $mypage_master)
+    {
+        $query->where('user_id',$mypage_master->id) //マイページ管理者の投稿ノートのみ
+        ->orderBy('created_at','desc'); //作成日時順に表示
+
+        return $query;
+    }
+
+
+    /**
+     * publicationOrderMypageNotes($mypage_master)
+     * マイページ管理者のノートを取得(公開中のみ、公開日時順で取得)
+     *
+     *
+     * @return Array
+    */
+    public function  scopePublicationOrderMypageNotes($query, $mypage_master)
+    {
+        # 現在日時
+        $now_at = \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s');
+
+        return $query->where('user_id',$mypage_master->id) //マイページ管理者の投稿ノートのみ
+        ->where('publication_at','<',$now_at) //非公開を除く
+        ->orderBy('publication_at','desc'); //公開日時順に表示
+    }
+
+
+    /**
+     * unpublishedOrderMypageNotes($mypage_master)
+     * マイページ管理者のノートを取得(未公開のみ)
+     *
+     *
+     * @return Array
+    */
+    public function  scopeUnpublishedOrderMypageNotes($query, $mypage_master)
+    {
+        # 現在日時
+        $now_at = \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s');
+
+        return $query->where('user_id',$mypage_master->id) //マイページ管理者の投稿ノートのみ
+        ->where('publication_at',null) //非公開を除く
+        // ->where('publication_at','>',$now_at) //非公開を除く
+        ->orderBy('created_at','desc'); //作成日時順に表示
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
      * mypageNotes($mypage_master)
      * マイページ管理者のノートを取得
-     * (マイページの管理者がログインしていなければ、非公開ノートの非表示)
+     * (マイページ管理者のログインのみ、非公開ノートの表示)
      *
      *
      * @return Array
@@ -214,17 +296,16 @@ class Note extends Model
         if ( Auth::user() && ($mypage_master->id == Auth::id()) )
         {
             //非公開データを含む
-            $query->where('user_id',$mypage_master->id)->orderBy('created_at','desc')->orderBy('id','desc') ;
+            return $this::createdOrderMypageNotes($mypage_master);
         }
         else
         {
             //非公開データを含まない
-            $query->where('user_id',$mypage_master->id)->where('publication_at','<',$now_at)
-            ->orderBy('created_at','desc')->orderBy('id','desc') ;
+            return $this::publicationOrderMypageNotes($mypage_master);
         }
 
 
-        return $query;
+        // return $query;
 
     }
 
@@ -262,7 +343,7 @@ class Note extends Model
     public function scopeMonthsListCount($query,$mypage_master,$month)
     {
         $count =  $this::mypageNotes($mypage_master)
-        ->where('created_at','like', $month.'%')
+        ->where('publication_at','like', $month.'%')
         ->count();
 
         return $count;
@@ -279,13 +360,13 @@ class Note extends Model
     public function scopemonthsList($query,$mypage_master)
     {
         # 投稿したノートの取得
-        $notes = $this::mypageNotes($mypage_master)->orderBy('created_at','desc')->orderBy('id','desc')->get();
+        $notes = $this::mypageNotes($mypage_master)->orderBy('publication_at','desc')->orderBy('id','desc')->get();
 
         # 投稿月の配列
         $months = [];
         foreach ($notes as $note)
         {
-            $months[] = substr($note->created_at,0,7); //0000-00
+            $months[] = substr($note->publication_at,0,7); //0000-00
         }
         $months = array_unique($months); //重複の削除
 
@@ -296,7 +377,7 @@ class Note extends Model
             $months_list[] = [
                 'name' => 'month',
                 'value' => $month_value, //0000-00
-                'text' => str_replace('-','年',$month_value).'月', //0000年00月
+                'text' => $month_value !==""? str_replace('-','年',$month_value).'月': '未公開', //0000年00月
                 'checked' => 0,
                 'count' => $this::monthsListCount($mypage_master,$month_value), //同じ月の投稿数
             ];

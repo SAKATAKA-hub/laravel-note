@@ -91,12 +91,25 @@
 @section('main.center_container')
 
 
-    <!-- notes list heading -->
+    <!-- 見出しの表示 -->
     <h5 class="d-flex justify-content-between align-items-center mb-3" style="padding-right:.5em">
-        @if (isset($seach_heading))
-            <div class="fs-3"><i class="bi bi-file-earmark-text"></i>{{$seach_heading}}</div>
+
+        <!-- 通常の見出し -->
+        @if (!isset($seach_heading))
+
+            <!-- マイページ管理者ログイン中 -->
+            @if ( Auth::check() && (Auth::user()->id == $mypage_master->id) )
+                <div class="fs-3"><i class="bi bi-file-earmark-text"></i> 新規作成順ノート一覧</div>
+
+            <!-- 上記以外 -->
+            @else
+                <div class="fs-3"><i class="bi bi-file-earmark-text"></i> 公開中ノート一覧</div>
+            @endif
+
+
+        <!-- 検索機能を利用した時の見出し -->
         @else
-            <div class="fs-3"><i class="bi bi-file-earmark-text"></i> 新着ノート一覧</div>
+            <div class="fs-3"><i class="bi bi-file-earmark-text"></i>{{$seach_heading}}</div>
         @endif
         <a href="{{route('create_note_title',$mypage_master)}}" class="note_master_only btn btn-lg btn-primary" style="font-size:.8em;">
             <i class="bi bi-file-earmark-plus"></i> 新規ノート作成

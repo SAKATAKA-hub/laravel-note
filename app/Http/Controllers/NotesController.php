@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
 use App\Models\Note;
@@ -29,7 +30,8 @@ class NotesController extends Controller
 
 
         # ノート一覧データの取得
-        //(マイページの管理者がログインしていなければ、非公開ノートの非表示)
+        // マイページ管理者のログイン中のとき {マイページ管理者のノートを、作成日時順で全て取得}
+        // 上記以外 {マイページ管理者のノートを、公開日時順で公開中のみ取得}
         $notes = Note::mypageNotes($mypage_master)->paginate(8);
 
 
@@ -68,7 +70,9 @@ class NotesController extends Controller
         $notes = [];
         switch ($list_type) {
 
+            // ノートのタイトルから検索
             case 'seach_title':
+
                 #検索見出し
                 $seach_heading = 'タイトルに”'. $seach_value. '”を含むノート一覧';
 
@@ -77,8 +81,10 @@ class NotesController extends Controller
                 ->where('title','like',"%".$seach_value."%")->paginate(8);
                 break;
 
-            //
+
+            // タグ検索
             case 'tag':
+
                 #検索見出し
                 $seach_heading = 'タグ ”'. str_replace("'",'', $seach_value). '”を含むノート一覧';
 
@@ -87,15 +93,34 @@ class NotesController extends Controller
                 ->where('tags','like',"%".$seach_value."%")->paginate(8);
                 break;
 
-            //
+
+            // 月検索
             case 'month':
+
                 #検索見出し
                 $seach_heading = '投稿月'. $seach_value. 'のノート一覧';
 
                 # ノート一覧データの取得
                 $notes = Note::mypageNotes($mypage_master)
-                ->where('created_at','like',$seach_value."%")->paginate(8);
+                ->where('publication_at','like',$seach_value."%")->paginate(8);
                 break;
+
+
+
+            // 公開中ノート一覧
+            case 'publishing':
+
+                #検索見出し
+                $seach_heading = '公開中ノート一覧';
+
+                # ノート一覧データの取得
+                $notes = Note::publicationOrderMypageNotes($mypage_master)->paginate(8);
+                break;
+
+
+            // 未公開中ノート一覧
+            // case 'unpublished':
+
 
             //
             default:
@@ -216,7 +241,7 @@ class NotesController extends Controller
     {
         # サイドコンテンツのリスト一式取得
         return [
-            'new_notes' => Note::mypageNotes($mypage_master)->limit(5)->get(),
+            'new_notes' => Note::publicationOrderMypageNotes($mypage_master)->limit(5)->get(), //公開日時順
             'tags' => Tag::tagsList($mypage_master),
             'months' => Note::monthsList($mypage_master),
         ];

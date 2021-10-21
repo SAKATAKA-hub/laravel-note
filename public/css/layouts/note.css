@@ -3,9 +3,6 @@
   margin-bottom: 5rem;
   box-sizing: border-box;
 }
-.display_note_container_blue .title_box {
-  margin-bottom: 3rem;
-}
 .display_note_container_blue .title_box .title {
   font-size: 3em;
   font-weight: bold;
@@ -113,9 +110,6 @@
   max-width: 100%;
   margin-bottom: 5rem;
   box-sizing: border-box;
-}
-.print_note_container_blue .title_box {
-  margin-bottom: 3rem;
 }
 .print_note_container_blue .title_box .title {
   font-size: 3em;
@@ -256,9 +250,6 @@
   margin-bottom: 5rem;
   box-sizing: border-box;
 }
-.display_note_container_indigo .title_box {
-  margin-bottom: 3rem;
-}
 .display_note_container_indigo .title_box .title {
   font-size: 3em;
   font-weight: bold;
@@ -366,9 +357,6 @@
   max-width: 100%;
   margin-bottom: 5rem;
   box-sizing: border-box;
-}
-.print_note_container_indigo .title_box {
-  margin-bottom: 3rem;
 }
 .print_note_container_indigo .title_box .title {
   font-size: 3em;
@@ -509,9 +497,6 @@
   margin-bottom: 5rem;
   box-sizing: border-box;
 }
-.display_note_container_purple .title_box {
-  margin-bottom: 3rem;
-}
 .display_note_container_purple .title_box .title {
   font-size: 3em;
   font-weight: bold;
@@ -619,9 +604,6 @@
   max-width: 100%;
   margin-bottom: 5rem;
   box-sizing: border-box;
-}
-.print_note_container_purple .title_box {
-  margin-bottom: 3rem;
 }
 .print_note_container_purple .title_box .title {
   font-size: 3em;
@@ -762,9 +744,6 @@
   margin-bottom: 5rem;
   box-sizing: border-box;
 }
-.display_note_container_pink .title_box {
-  margin-bottom: 3rem;
-}
 .display_note_container_pink .title_box .title {
   font-size: 3em;
   font-weight: bold;
@@ -872,9 +851,6 @@
   max-width: 100%;
   margin-bottom: 5rem;
   box-sizing: border-box;
-}
-.print_note_container_pink .title_box {
-  margin-bottom: 3rem;
 }
 .print_note_container_pink .title_box .title {
   font-size: 3em;
@@ -1015,9 +991,6 @@
   margin-bottom: 5rem;
   box-sizing: border-box;
 }
-.display_note_container_red .title_box {
-  margin-bottom: 3rem;
-}
 .display_note_container_red .title_box .title {
   font-size: 3em;
   font-weight: bold;
@@ -1125,9 +1098,6 @@
   max-width: 100%;
   margin-bottom: 5rem;
   box-sizing: border-box;
-}
-.print_note_container_red .title_box {
-  margin-bottom: 3rem;
 }
 .print_note_container_red .title_box .title {
   font-size: 3em;
@@ -1268,9 +1238,6 @@
   margin-bottom: 5rem;
   box-sizing: border-box;
 }
-.display_note_container_orange .title_box {
-  margin-bottom: 3rem;
-}
 .display_note_container_orange .title_box .title {
   font-size: 3em;
   font-weight: bold;
@@ -1378,9 +1345,6 @@
   max-width: 100%;
   margin-bottom: 5rem;
   box-sizing: border-box;
-}
-.print_note_container_orange .title_box {
-  margin-bottom: 3rem;
 }
 .print_note_container_orange .title_box .title {
   font-size: 3em;
@@ -1521,9 +1485,6 @@
   margin-bottom: 5rem;
   box-sizing: border-box;
 }
-.display_note_container_yellow .title_box {
-  margin-bottom: 3rem;
-}
 .display_note_container_yellow .title_box .title {
   font-size: 3em;
   font-weight: bold;
@@ -1631,9 +1592,6 @@
   max-width: 100%;
   margin-bottom: 5rem;
   box-sizing: border-box;
-}
-.print_note_container_yellow .title_box {
-  margin-bottom: 3rem;
 }
 .print_note_container_yellow .title_box .title {
   font-size: 3em;
@@ -1774,9 +1732,6 @@
   margin-bottom: 5rem;
   box-sizing: border-box;
 }
-.display_note_container_green .title_box {
-  margin-bottom: 3rem;
-}
 .display_note_container_green .title_box .title {
   font-size: 3em;
   font-weight: bold;
@@ -1884,9 +1839,6 @@
   max-width: 100%;
   margin-bottom: 5rem;
   box-sizing: border-box;
-}
-.print_note_container_green .title_box {
-  margin-bottom: 3rem;
 }
 .print_note_container_green .title_box .title {
   font-size: 3em;
@@ -2027,9 +1979,6 @@
   margin-bottom: 5rem;
   box-sizing: border-box;
 }
-.display_note_container_teal .title_box {
-  margin-bottom: 3rem;
-}
 .display_note_container_teal .title_box .title {
   font-size: 3em;
   font-weight: bold;
@@ -2137,9 +2086,6 @@
   max-width: 100%;
   margin-bottom: 5rem;
   box-sizing: border-box;
-}
-.print_note_container_teal .title_box {
-  margin-bottom: 3rem;
 }
 .print_note_container_teal .title_box .title {
   font-size: 3em;
@@ -2280,9 +2226,6 @@
   margin-bottom: 5rem;
   box-sizing: border-box;
 }
-.display_note_container_cyan .title_box {
-  margin-bottom: 3rem;
-}
 .display_note_container_cyan .title_box .title {
   font-size: 3em;
   font-weight: bold;
@@ -2390,9 +2333,6 @@
   max-width: 100%;
   margin-bottom: 5rem;
   box-sizing: border-box;
-}
-.print_note_container_cyan .title_box {
-  margin-bottom: 3rem;
 }
 .print_note_container_cyan .title_box .title {
   font-size: 3em;

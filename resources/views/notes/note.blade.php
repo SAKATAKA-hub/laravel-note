@@ -85,7 +85,7 @@
 
 
             <!-- 投稿タイトル -->
-            <h3 class="title">{{$note->title}}</h3>
+            <h3 class="title ">{{$note->title}}</h3>
 
 
             <!-- 関連タグ -->

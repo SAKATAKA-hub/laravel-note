@@ -119,7 +119,14 @@ class NotesController extends Controller
 
 
             // 未公開中ノート一覧
-            // case 'unpublished':
+            case 'unpublished':
+
+                #検索見出し
+                $seach_heading = '非公開ノート一覧';
+
+                # ノート一覧データの取得
+                $notes = Note::unpublishedOrderMypageNotes($mypage_master)->paginate(8);
+                break;
 
 
             //

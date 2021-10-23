@@ -228,7 +228,7 @@ class Note extends Model
     public function  scopeCreatedOrderMypageNotes($query, $mypage_master)
     {
         $query->where('user_id',$mypage_master->id) //マイページ管理者の投稿ノートのみ
-        ->orderBy('created_at','desc'); //作成日時順に表示
+        ->orderBy('created_at','desc'); //作成日時順に並び替え
 
         return $query;
     }
@@ -261,13 +261,24 @@ class Note extends Model
     */
     public function  scopeUnpublishedOrderMypageNotes($query, $mypage_master)
     {
-        # 現在日時
-        $now_at = \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s');
+        # 'publication_at'カラム = nullのとき
+        $query->where( function($query) use($mypage_master)
+        {
+            $query->where('user_id',$mypage_master->id) //マイページ管理者の投稿ノートのみ
+            ->where('publication_at',null); //'publication_at'カラム = null
+        });
 
-        return $query->where('user_id',$mypage_master->id) //マイページ管理者の投稿ノートのみ
-        ->where('publication_at',null) //非公開を除く
-        // ->where('publication_at','>',$now_at) //非公開を除く
-        ->orderBy('created_at','desc'); //作成日時順に表示
+        # 'publication_at'カラム > 現在時間($now_at)
+        $query->orWhere( function($query) use($mypage_master)
+        {
+            $now_at = \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'); //現在日時
+
+            $query->where('user_id',$mypage_master->id) //マイページ管理者の投稿ノートのみ
+            ->where('publication_at','>',$now_at); //'publication_at'カラム > 現在時間($now_at)
+        });
+
+
+        return $query->orderBy('created_at','desc'); //作成日時順に並び替え
     }
 
 
@@ -342,9 +353,22 @@ class Note extends Model
      */
     public function scopeMonthsListCount($query,$mypage_master,$month)
     {
-        $count =  $this::mypageNotes($mypage_master)
-        ->where('publication_at','like', $month.'%')
-        ->count();
+        # 現在日時
+        $now_at = \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s');
+
+        #
+        if($month !== '')
+        {
+            # 各月の投稿数
+            $count =  $this::mypageNotes($mypage_master)
+            ->where('publication_at','like', $month.'%')
+            ->count();
+        }
+        else
+        {
+            # 未公開ノートの投稿数
+            $count =  $this::unpublishedOrderMypageNotes($mypage_master)->count();
+        }
 
         return $count;
     }
@@ -359,17 +383,21 @@ class Note extends Model
      */
     public function scopemonthsList($query,$mypage_master)
     {
+        # 現在日時
+        $now_at = \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s');
+
         # 投稿したノートの取得
-        $notes = $this::mypageNotes($mypage_master)->orderBy('publication_at','desc')->orderBy('id','desc')->get();
+        $notes = $this::mypageNotes($mypage_master)->orderBy('publication_at','desc')->get();
 
         # 投稿月の配列
         $months = [];
         foreach ($notes as $note)
         {
-            $months[] = substr($note->publication_at,0,7); //0000-00
+            $month_text = $note->publication_at < $now_at? substr($note->publication_at,0,7): '';
+            $months[] = $month_text; //0000-00
+
         }
         $months = array_unique($months); //重複の削除
-
 
         $months_list = [];
         foreach ($months as $month_value)
@@ -378,10 +406,11 @@ class Note extends Model
                 'name' => 'month',
                 'value' => $month_value, //0000-00
                 'text' => $month_value !==""? str_replace('-','年',$month_value).'月': '未公開', //0000年00月
-                'checked' => 0,
                 'count' => $this::monthsListCount($mypage_master,$month_value), //同じ月の投稿数
             ];
         }
+
+
 
         return $months_list;
     }

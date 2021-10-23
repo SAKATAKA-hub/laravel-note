@@ -48,7 +48,7 @@ class AuthController extends Controller
     # ログアウト処理(logout)
     public function logout(Request $request)
     {
-        $logout_user = Auth::user();
+        $user = Auth::user();
 
         Auth::logout(); //ユーザーセッションの削除
 
@@ -57,7 +57,7 @@ class AuthController extends Controller
         $request->session()->regenerateToken(); //セッションの再作成(二重送信の防止)
 
 
-        return back()->with('logout_alert',$logout_user->name);
+        return redirect()->route('mypage_top',$user)->with('logout_alert',$user->name);
     }
 
 

@@ -8,7 +8,7 @@
 }
 
 
-.preview_note_container .hidden {
+.hidden {
     display: none;
 }
 
@@ -24,6 +24,7 @@
 /* 編集中テキストボックスの枠表示 */
 .preview_note_container .editing_textbox {
     padding: 1rem;
+    margin-top: 1em;
     margin-bottom: 1em;
     border: solid 1px #dc3545;
     border-radius: 10px;

@@ -50,10 +50,13 @@ class EditTextboxController extends Controller
      *
      *
      * @param \Illuminate\Http\EditTextboxFormRequest $request
-     * @param \App\Models\Note $note
+     * @param Int $note
      * @return \Illuminate\View\View
      */
-    public function store_textbox(EditTextboxFormRequest $request, Note $note){
+    public function store_textbox(EditTextboxFormRequest $request, $note){
+
+        # 編集ノート
+        $note = Note::find($note);
 
         # 保存データ
         $save_data = [
@@ -107,10 +110,11 @@ class EditTextboxController extends Controller
      * テキストボックス編集ページの表示(edit_textbox)
      *
      *
+     * @param Int $note (マイページ管理者のチェックに利用)
      * @param App\Models\Textbox $textbox
      * @return \Illuminate\View\View
      */
-    public function edit_textbox(Textbox $textbox){
+    public function edit_textbox($note, Textbox $textbox){
 
         # 編集中のテキストボックス(変数名変更)
         $edit_textbox = $textbox;
@@ -147,11 +151,13 @@ class EditTextboxController extends Controller
      * テキストボックスの更新(update_textbox)
      *
      *
+     *
      * @param \Illuminate\Http\EditTextboxFormRequest $request
+     * @param Int $note(マイページ管理者のチェックに利用)
      * @param App\Models\Textbox $edit_textbox　(編集中のテキストボックス)
      * @return \Illuminate\View\View
      */
-    public function update_textbox(EditTextboxFormRequest $request, Textbox $edit_textbox){
+    public function update_textbox(EditTextboxFormRequest $request, $note, Textbox $edit_textbox){
 
         # ノートデータ
         $note = Note::find($edit_textbox->note_id);
@@ -213,10 +219,14 @@ class EditTextboxController extends Controller
      *
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Note $note
+     * @param Int $note
      * @return \Illuminate\View\View
      */
-    public function destroy_textbox(Request $request, Note $note){
+    public function destroy_textbox(Request $request, $note){
+
+        # 削除するテキストボックスのノート
+        $note = Note::find($note);
+
 
         # 削除するテキストボックスの取得
         $textbox = Textbox::find($request->textbox_id);

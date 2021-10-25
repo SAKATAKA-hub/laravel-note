@@ -3,7 +3,7 @@
 
 
 
-<div class="input_group_container mb-6">
+<div class="input_group_container mb-5">
 
     <!-- エラー表示 -->
     @if ($errors->all())
@@ -42,7 +42,7 @@
     <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputHeading">
         @csrf
     @else <!-- ( edit ) -->
-    <form method="POST" action="{{route('update_textbox',$edit_textbox)}}" id="inputHeading"
+    <form method="POST" action="{{route('update_textbox',compact('note','edit_textbox') )}}" id="inputHeading"
         class="input_box {{$edit_textbox_case->group === 'heading'? '': 'hidden'}}">
         @method('PATCH')
         @csrf
@@ -83,7 +83,7 @@
     <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputText">
         @csrf
     @else <!-- ( edit ) -->
-    <form method="POST" action="{{route('update_textbox',$edit_textbox)}}" id="inputText"
+    <form method="POST" action="{{route('update_textbox',compact('note','edit_textbox') )}}" id="inputText"
         class="input_box {{$edit_textbox_case->group === 'text'? '': 'hidden'}}">
         @method('PATCH')
         @csrf
@@ -125,7 +125,7 @@
     <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputLink">
         @csrf
     @else <!-- ( edit ) -->
-    <form method="POST" action="{{route('update_textbox',$edit_textbox)}}" id="inputLink"
+    <form method="POST" action="{{route('update_textbox',compact('note','edit_textbox') )}}" id="inputLink"
         class="input_box {{$edit_textbox_case->group === 'link'? '': 'hidden'}}">
         @method('PATCH')
         @csrf
@@ -166,7 +166,7 @@
     <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputImage" enctype="multipart/form-data">
         @csrf
     @else <!-- ( edit ) -->
-    <form method="POST" action="{{route('update_textbox',$edit_textbox)}}" id="inputImage" enctype="multipart/form-data"
+    <form method="POST" action="{{route('update_textbox',compact('note','edit_textbox') )}}" id="inputImage" enctype="multipart/form-data"
         class="input_box {{$edit_textbox_case->group === 'image'? '': 'hidden'}}">
         @method('PATCH')
         @csrf

@@ -1,11 +1,16 @@
 'use strict';
-
 // ----------------------------------------------
 // 公開設定スイッチの切り替え
 // ----------------------------------------------
 
+// 公開設定ボタンの表示
 const publishingInput = document.getElementById('inputPublishing');
 const publishingLabel = document.querySelector('label[for="inputPublishing"]');
+
+// 公開日予約入力の表示
+const releaseDatetimeInput = document.getElementById('inputReleaseDatetime');
+const releaseDatetimeLabel = document.querySelector('label[for="inputReleaseDatetime"]');
+
 
 publishingInput.onchange = ()=> {
 
@@ -14,12 +19,22 @@ publishingInput.onchange = ()=> {
         publishingLabel.textContent = '公開';
         publishingLabel.classList.add('text-primary');
         publishingLabel.classList.remove('text-secondary');
-        // 'text-primary'
+
+        releaseDatetimeInput.value = null;
+        releaseDatetimeInput.readOnly = true;
+        releaseDatetimeInput.classList.add('text-secondary');
+        releaseDatetimeLabel.classList.add('text-secondary');
+
     }
     else{
         publishingLabel.textContent = '非公開';
         publishingLabel.classList.remove('text-primary');
         publishingLabel.classList.add('text-secondary');
+
+        releaseDatetimeInput.readOnly = false;
+        releaseDatetimeInput.classList.remove('text-secondary');
+        releaseDatetimeLabel.classList.remove('text-secondary');
+
     }
 
 };
@@ -94,15 +109,12 @@ function changeTags()
     if(tagsArray.length)
     {
         document.getElementById('noteTag').textContent =  tagsArray.join('　');
-        tags[0].required = ""; //requiredを無効にする。
+        // tags[0].required = ""; //requiredを無効にする。
     }
     else
     {
         document.getElementById('noteTag').textContent =  noInputTags;
-        tags[0].required = "required"; //requiredを有効にする。
+        // tags[0].required = "required"; //requiredを有効にする。
     }
 }
-
-
-
 

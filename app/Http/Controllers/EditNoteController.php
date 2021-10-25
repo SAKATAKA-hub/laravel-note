@@ -105,10 +105,14 @@ class EditNoteController extends Controller
      *
      *
      * @param \App\Models\User $mypage_master (マイページの管理者)
-     * @param \App\Models\Note $note
+     * @param Int $note
      * @return \Illuminate\View\View
      */
-    public function edit_note_title( User $mypage_master, Note $note){
+    public function edit_note_title( User $mypage_master, $note){
+
+        # notesテーブルとtextboxsテーブルのリレーション
+        $note = Note::with('Textboxes')->find($note);
+
 
         # マイページ管理者
         $mypage_master = User::find($note->user_id);
@@ -160,11 +164,13 @@ class EditNoteController extends Controller
      *
      *
      * @param \Illuminate\Http\EditNoteTitleFormRequest $request
-     * @param \App\Models\Note $note
+     * @param Int $note
      * @return \Illuminate\View\View
      */
-    public function update_note_title(EditNoteTitleFormRequest $request, Note $note){
+    public function update_note_title(EditNoteTitleFormRequest $request, $note){
 
+        # note(ミドルウェア利用の為、$noteパラメーターは全てInt型で統一)
+        $note = Note::find($note);
 
         # ノート基本情報の更新
         $note->update([
@@ -200,9 +206,10 @@ class EditNoteController extends Controller
      *
      *
      * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User $mypage_master (マイページの管理者:マイページ管理者のチェックに利用)
      * @return \Illuminate\View\View
      */
-    public function destroy_note(Request $request){
+    public function destroy_note(Request $request, User $mypage_master){
 
         # 削除するノート
         $note = Note::find($request->note_id);

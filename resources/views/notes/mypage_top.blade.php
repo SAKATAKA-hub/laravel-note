@@ -200,7 +200,7 @@
 
 
     <!-- Modal(データ削除モーダル) -->
-    <form action="{{route('destroy_note')}}" method="POST">
+    <form action="{{route('destroy_note',$mypage_master)}}" method="POST">
         @method('DELETE')
         @csrf
         <input type="hidden" name="note_id" value="aaa" id="modalInputElement">

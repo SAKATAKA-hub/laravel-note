@@ -48,8 +48,8 @@
 
 @section('main.breadcrumb')
 
-    {{-- {{ Breadcrumbs::render('edit_note', $mypage_master) }} --}}
     {{ Breadcrumbs::render('edit_note',$mypage_master,$note) }}
+
 @endsection
 
 
@@ -165,7 +165,7 @@
 
 
                 <div class="w-25 ms-2">
-                    <a href="{{route('edit_textbox',$textbox)}}" class="btn btn-outline-primary d-block mb-3"><i class="bi bi-eraser-fill"></i> 修正</a>
+                    <a href="{{route('edit_textbox',compact('note','textbox'))}}" class="btn btn-outline-primary d-block mb-3"><i class="bi bi-eraser-fill"></i> 修正</a>
                     <form method="POST" action="{{route('destroy_textbox',$note)}}">
                         @method('delete')
                         @csrf
@@ -187,34 +187,6 @@
                     <i class="bi bi-plus-square-fill"></i> テキストボックスの挿入
                 </a>
             </div>
-
-
-
-
-
-            {{-- <div class=" edit_textbox">
-                @include('includes.main_container.textbox_cases')
-            </div> --}}
-
-            {{-- <div class="edit_btn_box">
-                <div class="update_delete_btn">
-                    <a href="{{route('edit_textbox',$textbox)}}" class="btn btn-outline-primary"><i class="bi bi-eraser-fill"></i> 修正</a>
-                    <form method="POST" action="{{route('destroy_textbox',$note)}}">
-                        @method('delete')
-                        @csrf
-                        <input type="hidden" name="textbox_id" value="{{$textbox->id}}"> <!-- テキストボックスのID -->
-                        <input type="hidden" name="order" value="{{$textbox->order}}"> <!-- テキストボックスの採番 -->
-                        <button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash"></i> 削除</button>
-                    </form>
-
-                </div>
-
-                <p>{{$textbox->order}}</p>
-
-                <a href="{{route('create_textbox',compact('note')+['order'=> $textbox->order+1])}}"  class="btn btn-primary">
-                    <i class="bi bi-plus-square-fill"></i> テキストボックスの挿入
-                </a>
-            </div> --}}
 
         @endforeach
 

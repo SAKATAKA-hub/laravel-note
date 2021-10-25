@@ -2,18 +2,18 @@
 // ベースのスタイル
 //-----------------------------------------
 
+// タイトルbox
+.title_box .title{
+    min-height: 1.4em;
+    line-height: 1.4em;
+    font-size: 3em;
+    font-weight: bold;
+    margin: 0;
+}
+
+
 
 @mixin basic_style($color) {
-
-    // タイトルbox
-    .title_box{
-        .title{
-            font-size: 3em;
-            font-weight: bold;
-            margin: 0;
-        }
-        // margin-bottom: 3rem;
-    }
 
     // 見出し1
     .heading1{

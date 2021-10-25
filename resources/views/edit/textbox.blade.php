@@ -12,6 +12,20 @@
     <!-- edit_form.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/edit_form.css')}}">
 
+
+    <style>
+        .hidden{
+            display: none;
+        }
+
+    </style>
+    <style>
+        .editing_textbox {
+            margin-top: 1em;
+        }
+
+    </style>
+
 @endsection
 
 

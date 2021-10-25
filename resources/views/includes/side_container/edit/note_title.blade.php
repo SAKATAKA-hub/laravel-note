@@ -1,4 +1,4 @@
-<div class="input_group_container">
+<div class="input_group_container mb-5">
 
     @if (!$note)
     <form action="{{route('store_note_title',$mypage_master)}}" method="POST">

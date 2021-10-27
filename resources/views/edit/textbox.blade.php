@@ -123,12 +123,25 @@
         <!-- タイトルボックスの表示 -->
         <div class="title_box">
             {{-- 投稿日 --}}
-            <small>{{$note->created_at}}</small>
+            <small class="d-flex">
 
-            {{-- タイトル --}}
+                <!-- 公開設定 (マイページ管理者ログイン時以外は非表示)-->
+                @if ($note && $note->chake_publishing)
+                <span class="badge rounded-pill bg-success me-3" style="height:2em">公開中</span>
+                @else
+                <span class="badge rounded-pill bg-danger  me-3" style="height:2em">非公開</span>
+                @endif
+
+                <!-- 作成日時・公開日時・更新日時 -->
+                <div>{{!$note? \Carbon\Carbon::parse('tomorrow')->format('作成日:Y年m月d日').' 00:00': $note->time_text}}</div>
+
+            </small>
+
+
+            <!-- 投稿タイトル -->
             <h3 class="title">{{$note->title}}</h3>
 
-            {{-- タグ --}}
+            <!-- 関連タグ -->
             <small class="d-flex">
                 <i class="bi bi-tag-fill me-2"></i>
                 @foreach ($note->tags_array as $tag)

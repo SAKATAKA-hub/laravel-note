@@ -17,14 +17,32 @@
 </div>
 @endif
 
-
-<!-- register -->
-@if ( session('register_alert') )
+{{-- ユーザー登録操作処理のアラート --}}
+<!-- ユーザー登録 -->
+@if ( session('register_alert')==='store' )
 <div class="alert alert-success alert-dismissible fade show fs-5" role="alert"> <!-- alert-success -->
     {{Auth::user()->name}}さんの<strong>新規登録が完了</strong>しました。
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
+
+<!-- ユーザー情報更新 -->
+@if ( session('register_alert')==='update' )
+<div class="alert alert-info alert-dismissible fade show fs-5" role="alert"> <!-- alert-info -->
+    {{Auth::user()->name}}さんの<strong>登録内容を更新</strong>しました。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+<!-- ユーザー情報削除 -->
+@if ( session('destroy_register_alert') )
+<div class="alert alert-warning alert-dismissible fade show fs-5" role="alert"> <!-- alert-warning -->
+    {{session('destroy_register_alert')}}さんの<strong>登録内容を全て削除</strong>しました。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+
 
 
 <!-- error -->

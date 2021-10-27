@@ -41,6 +41,25 @@ Route::post('post_register',[AuthController::class,'post_register'])
 
 
 
+Route::middleware(['auth'])->group(function () //ログインしていなければ、ログインページへリダイレクトする
+{
+    # ユーザー情報変更ページの表示(edit_register)
+    Route::get('edit_register',[AuthController::class,'edit_register'])
+    ->name('edit_register');
+
+    # ユーザー情報の更新(update_register)
+    Route::patch('update_register',[AuthController::class,'update_register'])
+    ->name('update_register');
+
+    # ユーザー情報の削除(destroy_register)
+    Route::delete('destroy_register',[AuthController::class,'destroy_register'])
+    ->name('destroy_register');
+
+});
+
+
+
+
 /*
 | --------------------------------------------------------
 | 閲覧ページの処理 (NotesController)
@@ -154,3 +173,20 @@ Route::middleware(['check_mypage_master'])->group(function () //マイページ�
     ->name('destroy_textbox');
 
 });
+
+
+
+
+
+/*
+| --------------------------------------------------------
+| アプリケーション管理者ページの処理 (AppAdminController)
+| --------------------------------------------------------
+*/
+# アプリケーション管理者ページの表示(app_admin)
+Route::get('app_admin',function(){
+    return view('test.app_admin');
+})
+->name('app_admin');
+
+

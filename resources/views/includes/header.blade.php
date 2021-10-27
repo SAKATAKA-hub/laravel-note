@@ -72,12 +72,17 @@
                             <li><hr class="dropdown-divider"></li>
 
                             <li>
-                                <a class="dropdown-item" href="#">プロフィール変更</a>
+                                <a class="dropdown-item" href="{{route('edit_register')}}">プロフィール変更</a>
                             </li>
 
                             <li>
-                                <a class="dropdown-item" href="#">パスワード変更</a>
+                                <a class="dropdown-item" href="{{route('edit_register')}}">パスワード変更</a>
                             </li>
+
+                            <li>
+                                <a class="dropdown-item" href="{{route('edit_register')}}">退会する</a>
+                            </li>
+
 
                             <li><hr class="dropdown-divider"></li>
 

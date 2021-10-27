@@ -12,6 +12,7 @@
 
 
 </head>
+
 <body class="bg-light">
 
     <div class="container">
@@ -24,7 +25,7 @@
         <div class="row g-3 w-50">
             <div class="col-lg-12">
             <h4 class="mb-3">情報の入力</h4>
-            <form method="POST" action="{{ route('post_register') }}" class="needs-validation" novalidate>
+            <form method="post" action="{{ route('post_register') }}" class="needs-validation" novalidate>
                 @csrf
                 <div class="row g-3">
                     <div class="col-12">

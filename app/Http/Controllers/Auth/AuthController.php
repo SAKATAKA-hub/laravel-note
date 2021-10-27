@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginFormRequest;
 use App\Http\Requests\RegisterFormRequest;
+use App\Http\Requests\EditRegisterFormRequest;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -76,7 +79,7 @@ class AuthController extends Controller
     public function post_register(RegisterFormRequest $request)
     {
         // ユーザー情報の保存
-        $user = new \App\Models\User([
+        $user = new User([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -90,9 +93,122 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->route('mypage_top',$user)->with('register_alert','新規登録成功');
+            return redirect()->route('mypage_top',$user)->with('register_alert','store');
         }
 
         return redirect()->route('mypage_top',$user)->with('error_alert','ログインに失敗しました。');
     }
+
+
+
+
+    # ユーザー情報の変更ページの表示(edit_register)
+    public function edit_register()
+    {
+        $user = Auth::user();
+
+        return view('user.edit_register',compact('user'));
+    }
+
+
+
+
+
+    # ユーザー情報の更新(update_register)
+    public function update_register(EditRegisterFormRequest $request){
+
+        # 保存データ(パスワード変更処理の時は、空配列になる)
+        $save_data = $request->only('name','email','comment');
+
+
+        # パスワードの変更処理
+        if($request->password)
+        {
+            $save_data['password'] = Hash::make($request->password);
+        }
+
+
+        # 画像アップロード処理
+        if($request->file('image')) //ファイルの添付があれば、アップロード
+        {
+            $save_data['image'] = $this::uploadImage($request); //画像のパスを'image'カラムに保存
+        }
+        elseif($request->old_image) //アップ―ド画像に変更が無ければ、画像パスを更新しない。
+        {
+            $save_data['image'] = $request->old_image;
+        }
+
+
+        # ユーザー情報の更新
+        User::find($request->user_id)->update($save_data);
+
+
+
+        return redirect()->route('mypage_top',$mypage_master = Auth::user()->id)
+        ->with('register_alert','update');
+
+    }
+
+
+
+
+    # ユーザー情報の削除(destroy_register)
+    public function destroy_register(Request $request)
+    {
+        # 削除するユーザーの名前
+        $user_name = Auth::user()->name;
+
+        # ログアウト処理
+        Auth::logout(); //ユーザーセッションの削除
+        $request->session()->invalidate(); //全セッションの削除
+        $request->session()->regenerateToken(); //セッションの再作成(二重送信の防止)
+
+        # ユーザー情報の削除
+        // $user->delete();
+        User::find($request->user_id)->delete();
+
+
+
+        return redirect()->route('mypage_top',$mypage_master = 1) //ユーザー１のマイページへリダイレクト
+        ->with('destroy_register_alert',$user_name);
+    }
+
+
+
+
+
+
+
+
+    /*
+    |
+    |　コントローラー内で利用するメソッド
+    |
+    |
+    */
+
+    /**
+     * 画像のアップロード(uploadImage)
+     *
+     *
+     * @param \Illuminate\Http\EditTextboxFormRequest $request
+     * @return String $image_path; //アプロードした画像のパスを返す
+     */
+    public function uploadImage($request)
+    {
+        $upload_image = $request->file('image');
+
+        $dir = 'upload/user_img'; //アップロード先ディレクトリ名
+
+        $extension = $upload_image->extension(); //拡張子
+
+        $file_name = sprintf('%04d', Auth::user()->id).'.'.$extension; //ファイル名
+
+        $image_path = $upload_image->storeAs($dir,$file_name); //画像のアップロード
+
+
+        return $image_path;
+
+    }
+
 }

@@ -128,16 +128,15 @@
 
                     <!-- 公開設定 (マイページ管理者ログイン時以外は非表示)-->
                     @if ($note->chake_publishing)
-                    <p class="note_master_only badge rounded-pill bg-success me-3">公開中</p>
+                    <p class="note_master_only badge rounded-pill bg-success me-3"style="height:2em">公開中</p>
                     @else
-                    <p class="note_master_only badge rounded-pill bg-danger me-3">非公開</p>
+                    <p class="note_master_only badge rounded-pill bg-danger me-3"style="height:2em">非公開</p>
                     @endif
 
                     <!-- 作成日時・公開日時・更新日時 -->
                     <div>{{$note->time_text}}</div>
 
                 </small>
-
 
 
                 <div class="col-md-9">

@@ -17,6 +17,22 @@ class NotesController extends Controller
 {
 
     /**
+     * ホームページの表示(home))
+     *
+     *
+     * @return \Illuminate\View\View
+     */
+    public function home()
+    {
+        $users = User::get();
+
+        return view('notes.home',compact('users'));
+    }
+
+
+
+
+    /**
      * マイページの表示(mypage_top)
      *
      *

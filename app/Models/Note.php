@@ -82,9 +82,6 @@ class Note extends Model
     |
     */
 
-
-
-
     /**
      * $note->time_text
      * ノートの公開日等を表示する

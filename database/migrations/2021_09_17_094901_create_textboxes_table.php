@@ -18,7 +18,7 @@ class CreateTextboxesTable extends Migration
             $table->unsignedBigInteger('note_id');
             $table->unsignedBigInteger('textbox_case_id');
 
-            $table->string('main_value');
+            $table->string('main_value',100);
             $table->string('sub_value',100)->nullable()->default(null);
             $table->integer('order');
             $table->timestamps();

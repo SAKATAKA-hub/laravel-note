@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,19 +19,43 @@ class User extends Authenticatable
         'name','email','image','comment','password','locked_flg','error_count',
     ];
 
-    // /**
-    //  * The attributes that should be hidden for arrays.
-    //  *
-    //  * @var array
-    //  */
-    // protected $hidden = [
-    // ];
 
-    // /**
-    //  * The attributes that should be cast to native types.
-    //  *
-    //  * @var array
-    //  */
-    // protected $casts = [
-    // ];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | アクセサー
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+
+    /**
+     * $user->open_post
+     * ユーザーの公開中投稿数を表示
+     *
+     *
+     * @return String
+     */
+    public function getOpenPostAttribute()
+    {
+        return Note::publicationOrderMypageNotes($this)->count();
+    }
+
+
+
+    /**
+     * $user->private_post
+     * ユーザーの非公開投稿数を表示
+     *
+     *
+     * @return String
+     */
+    public function getPrivatePostAttribute()
+    {
+        return Note::unpublishedOrderMypageNotes($this)->count();
+    }
+
+
+
 }

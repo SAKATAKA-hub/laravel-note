@@ -1,5 +1,8 @@
-{{-- ログイン処理関係のアラート --}}
-
+<!--
+*---------------------------------------------
+* ログイン処理関係のアラート
+*---------------------------------------------
+-->
 <!-- login -->
 @if ( session('login_alert') )
 <div class="alert alert-info alert-dismissible fade show fs-5" role="alert">　<!-- alert-info -->
@@ -56,7 +59,12 @@
 
 
 
-{{-- ノート・テキストボックス操作処理のアラート --}}
+<!--
+*---------------------------------------------
+* ノート・テキストボックス操作処理のアラート
+*---------------------------------------------
+-->
+
 <!-- store_note_title -->
 @if ( session('note_alert') === 'store_note_title' )
 <div class="alert alert-success alert-dismissible fade show fs-5" role="alert"> <!-- alert-success -->
@@ -109,6 +117,40 @@
 @if ( session('note_alert') === 'destroy_textbox' )
 <div class="alert alert-warning alert-dismissible fade show fs-5" role="alert"> <!-- alert-warning -->
     テキストボックスを一つ削除しました。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+
+
+
+<!--
+*---------------------------------------------
+* アプリケーション管理者ページ処理のアラート
+*---------------------------------------------
+-->
+<!-- パスワードのリセット -->
+@if ( session('app_admin.reset_password.alert') )
+<div class="alert alert-warning alert-dismissible fade show fs-5" role="alert"> <!-- alert-warning -->
+    {{session('app_admin.reset_password.alert')}}さんのパスワードを初期値に設定いたしました。。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+<!-- ユーザー投稿の削除 -->
+@if ( session('app_admin.destroy_notes.alert') )
+<div class="alert alert-danger alert-dismissible fade show fs-5" role="alert"> <!-- alert-danger -->
+    {{session('app_admin.destroy_notes.alert')}}さんの全投稿ノートを削除しました。
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+
+
+<!-- ユーザー登録の削除 -->
+@if ( session('app_admin.destroy_user.alert') )
+<div class="alert alert-danger alert-dismissible fade show fs-5" role="alert"> <!-- alert-danger -->
+    {{session('app_admin.destroy_user.alert')}}さんのユーザー登録を削除しました。
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif

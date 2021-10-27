@@ -5,7 +5,7 @@
 
             <!-- rogo icon -->
             <h1 class="navbar-brand">
-                <a class="navbar-brand text-primary" href="#">
+                <a class="navbar-brand text-primary" href="{{route('home')}}">
                     <img src="{{ asset('storage/common/logo_image.png') }}" alt="" width="30" height="24" class="d-inline-block align-top">
                     note
                 </a>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\NotesController;
 use App\Http\Controllers\EditNoteController;
 use App\Http\Controllers\EditTextboxController;
+use App\Http\Controllers\AppAdminController;
 
 use App\Http\Middleware\CheckMypageMaster;
 
@@ -67,9 +68,11 @@ Route::middleware(['auth'])->group(function () //ログインしていなけれ�
 */
 
 # ホームページの表示(home)
-Route::get('home',function(){
-    return '<h1>Home(準備中)</h1>';
-})->name('home');
+Route::get('/',[NotesController::class,'home'])
+->name('home');
+
+
+
 
 # マイページの表示(mypage_top)
 Route::get('/mypage_top/{mypage_master}',[NotesController::class,'mypage_top'])
@@ -143,6 +146,7 @@ Route::middleware(['check_mypage_master'])->group(function () //マイページ�
 | テキストボックス編集ページの処理 (EditTextboxController)
 | --------------------------------------------------------
 */
+
 Route::middleware(['check_mypage_master'])->group(function () //マイページ管理者ログイン時以外は表示不可
 {
 
@@ -183,10 +187,25 @@ Route::middleware(['check_mypage_master'])->group(function () //マイページ�
 | アプリケーション管理者ページの処理 (AppAdminController)
 | --------------------------------------------------------
 */
-# アプリケーション管理者ページの表示(app_admin)
-Route::get('app_admin',function(){
-    return view('test.app_admin');
-})
-->name('app_admin');
+# アプリケーション管理者ページの表示(app_admin.top)
+Route::get('app_admin.top',[AppAdminController::class,'top'])
+->name('app_admin.top');
+
+
+# パスワードのリセット(reset_password)
+Route::patch('app_admin.reset_password',[AppAdminController::class,'reset_password'])
+->name('app_admin.reset_password');
+
+
+# ユーザー投稿の削除(destroy_notes)
+Route::delete('app_admin.destroy_notes',[AppAdminController::class,'destroy_notes'])
+->name('app_admin.destroy_notes');
+
+
+# ユーザー登録の削除(destroy_user)
+Route::delete('app_admin.destroy_user',[AppAdminController::class,'destroy_user'])
+->name('app_admin.destroy_user');
+
+
 
 

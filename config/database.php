@@ -50,10 +50,15 @@ return [
             'url' => env('DATABASE_URL'),
 
 
-            'host' => $db['host'],
-            'database' => ltrim($db['path'],'/'),
-            'username' => $db['user'],
-            'password' => $db['pass'],
+            'host' => 'b8618646be6cce',
+            'database' => '643ba015',
+            'username' => 'us-cdbr-east-04.cleardb.com',
+            'password' => 'heroku_c5b0d5bf127ece8',
+
+            // 'host' => $db['host'],
+            // 'database' => ltrim($db['path'],'/'),
+            // 'username' => $db['user'],
+            // 'password' => $db['pass'],
 
             // 'host' => env('DB_HOST', '127.0.0.1'),
             // 'database' => env('DB_DATABASE', 'forge'),

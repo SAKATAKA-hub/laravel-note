@@ -46,6 +46,10 @@ return [
         ],
 
         'mysql' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+
+
             'host' => $db['host'],
             'database' => ltrim($db['path'],'/'),
             'username' => $db['user'],
@@ -56,12 +60,9 @@ return [
             // 'username' => env('DB_USERNAME', 'forge'),
             // 'password' => env('DB_PASSWORD', ''),
 
-
-            'driver' => 'mysql',
-            'url' => env('DATABASE_URL'),
+            'charset' => 'utf8mb4',
             'port' => env('DB_PORT', '3306'),
             'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'prefix_indexes' => true,

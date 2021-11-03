@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+
 
 use App\Models\User;
 use App\Models\Note;
@@ -36,6 +38,7 @@ class AppAdminController extends Controller
      * パスワードのリセット(app_admin.reset_password)
      *
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\View\View
      */
     public function reset_password(Request $request)
@@ -61,6 +64,7 @@ class AppAdminController extends Controller
      * ユーザー投稿の削除(app_admin.destroy_notes)
      *
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\View\View
      */
     public function destroy_notes(Request $request)
@@ -89,6 +93,7 @@ class AppAdminController extends Controller
      * ユーザー登録の削除(app_admin.destroy_user)
      *
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\View\View
      */
     public function destroy_user(Request $request)
@@ -115,6 +120,88 @@ class AppAdminController extends Controller
     }
 
 
+    // ----------------------------------------------
+    // AWS s3のファイル操作
+    // ----------------------------------------------
+
+    /**
+     * ファイル編集ページの表示(edit_file)
+     *
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit_file()
+    {
+        $mode = 'edit_file';
+        return view('app_admin.s3.edit_file',compact('mode'));
+    }
+
+
+
+
+    /**
+     * ファイルの表示(show_file)
+     *
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
+    public function show_file(Request $request)
+    {
+        $mode = 'show_file';
+        $path = $request->path;
+        $url = Storage::disk('s3')->url($path);
+
+        return view( 'app_admin.s3.edit_file',compact('mode','url','path') );
+    }
+
+
+
+
+    /**
+     * ファイルの保存(upload_file)
+     *
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
+    public function upload_file(Request $request)
+    {
+        $mode = 'upload_file';
+
+        # ファイルのアップロード
+        $file = $request->file('file');
+        $dir = '/'.$request->dir;
+        $path = Storage::disk('s3')->putFile($dir, $file, 'public');
+
+        $url = Storage::disk('s3')->url($path);
+
+        return view( 'app_admin.s3.edit_file',compact('mode','url','path') );
+    }
+
+
+    /**
+     * ファイルの削除(delete_file)
+     *
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
+    public function delete_file(Request $request)
+    {
+        $mode = 'delete_file';
+        $path = $request->path;
+
+
+        # ファイルが存在するか確認
+        $text = '指定したファイルは存在しません。';
+        if ( Storage::disk('s3')->exists($path) )
+        {
+            Storage::disk('s3')->delete($path);
+            $text = 'ファイルを1件削除しました。';
+        }
+        return view( 'app_admin.s3.edit_file',compact('mode','text') );
+    }
 
 
 }

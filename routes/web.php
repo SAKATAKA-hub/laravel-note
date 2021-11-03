@@ -11,6 +11,17 @@ use App\Http\Controllers\AppAdminController;
 use App\Http\Middleware\CheckMypageMaster;
 
 
+//test
+Route::post('read_test',[NotesController::class,'read_test'])
+->name('read_test');
+
+Route::get('form_test',[NotesController::class,'form_test'])
+->name('form_test');
+
+Route::post('put_test',[NotesController::class,'put_test'])
+->name('put_test');
+
+
 /*
 | --------------------------------------------------------
 | ログイン認証
@@ -187,6 +198,7 @@ Route::middleware(['check_mypage_master'])->group(function () //マイページ�
 | アプリケーション管理者ページの処理 (AppAdminController)
 | --------------------------------------------------------
 */
+
 # アプリケーション管理者ページの表示(app_admin.top)
 Route::get('app_admin.top',[AppAdminController::class,'top'])
 ->name('app_admin.top');
@@ -208,4 +220,24 @@ Route::delete('app_admin.destroy_user',[AppAdminController::class,'destroy_user'
 
 
 
+
+# s3のファイル操作
+// ファイル編集ページの表示(edit_file)
+Route::get('app_admin.s3.edit_file',[AppAdminController::class,'edit_file'])
+->name('app_admin.s3.edit_file');
+
+
+// ファイルの表示(show_file)
+Route::post('app_admin.s3.show_file',[AppAdminController::class,'show_file'])
+->name('app_admin.s3.show_file');
+
+
+// ファイルの保存(upload_file)
+Route::post('app_admin.s3.upload_file',[AppAdminController::class,'upload_file'])
+->name('app_admin.s3.upload_file');
+
+
+// ファイルの削除(delete_file)
+Route::post('app_admin.s3.delete_file',[AppAdminController::class,'delete_file'])
+->name('app_admin.s3.delete_file');
 

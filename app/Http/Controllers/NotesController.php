@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\User;
 use App\Models\Note;
@@ -15,6 +16,57 @@ use TCPDF_FONTS;
 
 class NotesController extends Controller
 {
+
+    #read_test(画像読み込み)
+    public function read_test(Request $request)
+    {
+        # ファイル読み込み
+        $file = $request->file;
+        // $file = 'common/YJolOkQzz7wGR8f1UZXAOQ11IgLONwHoTIcWthSy.png';
+        // $file = 'Gc3CdUbviE5HtZI8Ypwf862Te5cXRNDh8VixH85T.jpg';
+        $url = Storage::disk('s3')->url($file);
+
+        return <<<__
+        <h1>テスト</h1>
+        <img src="$url">
+        <div>$url</div>
+        <div>$file</div>
+        __;
+    }
+
+        #form_test(画像読み込み)
+        public function form_test()
+        {
+            return view('test.test');
+        }
+
+        #put_test(画像保存)
+        public function put_test(Request $request)
+        {
+            if($file = $request->file('file'))
+            {
+                $file = $request->file('file');
+                $dir = "people";
+
+                $path = Storage::disk('s3')->putFile($dir, $file, 'public');
+
+                $url = Storage::disk('s3')->url($path);
+
+                return <<<__
+                    <h1>テスト</h1>
+                    <img src="$url">
+                    <div>$url</div>
+                    <div>$path</div>
+                    <br><br>
+                __;
+            }
+
+            return 'ファイル無し';
+        }
+
+
+
+
 
     /**
      * ホームページの表示(home))
@@ -28,6 +80,7 @@ class NotesController extends Controller
 
         return view('notes.home',compact('users'));
     }
+
 
 
 

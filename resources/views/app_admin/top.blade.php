@@ -103,6 +103,10 @@
         </tbody>
     </table>
 
+    <div class="pt-5 pb-5 ">
+        <a href="{{route('app_admin.s3.edit_file')}}" class="btn btn-link">ファイル管理</a>
+    </div>
+
 
 
 @endsection

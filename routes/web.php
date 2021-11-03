@@ -11,17 +11,6 @@ use App\Http\Controllers\AppAdminController;
 use App\Http\Middleware\CheckMypageMaster;
 
 
-//test
-Route::post('read_test',[NotesController::class,'read_test'])
-->name('read_test');
-
-Route::get('form_test',[NotesController::class,'form_test'])
-->name('form_test');
-
-Route::post('put_test',[NotesController::class,'put_test'])
-->name('put_test');
-
-
 /*
 | --------------------------------------------------------
 | ログイン認証

@@ -61,8 +61,7 @@
     <table class="table text-center">
         <thead>
             <tr>
-                <th scope="col">ユーザーID</th>
-                <th scope="col">ユーザー</th>
+                <th scope="col" colspan="3">ユーザー</th>
                 <th scope="col">公開中投稿数</th>
                 <th scope="col">コメント</th>
                 <th scope="col"></th>
@@ -75,9 +74,9 @@
                 <tr>
                     <th scope="row">{{sprintf('%04d',$user->id)}}</th>
                     <td>
-                        <img src="{{ asset('storage/'.$user->image) }}" alt=""class="userslist_userimage me-3">
-                        {{$user->name}}
+                        <img src="{{ $user->image_url }}" alt=""class="userslist_userimage me-3">
                     </td>
+                    <td>{{$user->name}}</td>
                     <td>{{$user->open_post}}</td><!-- 公開中投稿数 -->
                     <td>{{$user->comment}}</td>
                     <td class="">

@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Http\ViewComposers\S3ImageUrlComposer;
+
 
 class CreateUsersTable extends Migration
 {
@@ -13,11 +15,14 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
+        //デフォルトのユーザー画像パス
+        // $default_image = S3ImageUrlComposer::filePath()['no_image'];
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name',100);
             $table->string('email',100)->unique();
-            $table->string('image',100)->default('people/no_image.png');
+            $table->string('image',150)->nullable()->default(null);
             $table->string('comment',100)->nullable()->default(null);
             $table->string('password',100);
             $table->boolean('app_dministrator')->default(0);

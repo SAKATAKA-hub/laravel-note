@@ -20,15 +20,15 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'sakataka',
                 'email' => 'sakataka@mail.co.jp',
-                'image' => 7777,
+                'image' => 'people/XEAn7eZNutmZwS6Vujaccl5ZIHr4GO4RkItWZ7xz.png',
             ],[
                 'name' => '佐々木 直子',
                 'email' => 'sasaki@mail.co.jp',
-                'image' => 7,
+                'image' => 'people/ZDb0IafPzLMq1vmeyAC41VX0heXJOSKqxOeazDbZ.png',
             ],[
                 'name' => '杉山 聡太郎',
                 'email' => 'sugiyama@mail.co.jp',
-                'image' => 7,
+                'image' => 'people/Xo3lL2SA37QELQepwDarBXAidBUMrloFeuwwNYxS.png',
             ],
 
         ];
@@ -38,7 +38,7 @@ class UsersTableSeeder extends Seeder
                 'name' => $item['name'],
                 'email' => $item['email'],
                 'password' => Hash::make('password'),
-                'image' => sprintf('people/%04d.png',$item['image']),
+                'image' => $item['image'],
                 'comment' => 'ヨロシクオネガイシマス。',
                 'app_dministrator' => $i == 0? 1: 0,
             ]);

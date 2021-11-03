@@ -13,7 +13,7 @@ class TagsTableSeeder extends Seeder
      */
     public function run()
     {
-        $user_id = 1;
+        $user_id = 2;
         $tag_vals=['Laravel','アプリ開発','学習ノート','制作メモ'];
 
         foreach ($tag_vals as $tag_val) {

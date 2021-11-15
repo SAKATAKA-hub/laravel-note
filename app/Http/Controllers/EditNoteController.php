@@ -217,6 +217,8 @@ class EditNoteController extends Controller
         # マイページ管理者
         $mypage_master = $note->user_id;
 
+        # 指定されたnoteに関連するS3保存画像の削除
+        $this::deleteNoteImages($note);
 
         # ノートの削除
         $note->delete();
@@ -319,14 +321,15 @@ class EditNoteController extends Controller
      * @param String $mypage_master_id
      * @return Array
      */
-    public function deleteTags($mypage_master_id){
+    public function deleteTags($mypage_master_id)
+    {
         $tags =  Tag::where('user_id',$mypage_master_id)->get();// '登録済みのタグ'を取得
         foreach ($tags as $tag)
         {
             $mypage_master = User::find($mypage_master_id);
             $count = Note::TagsListCount($mypage_master,$tag->value); //タグが利用される投稿数
 
-            if($count === 0){ $tag->delete();} //タグが利用される投稿数が０なら、そのタグを削除
+            if($count === 0){ $tag->delete();} //タグが利用される投稿数が0なら、そのタグを削除
         }
 
     }
@@ -358,6 +361,36 @@ class EditNoteController extends Controller
 
     }
 
+
+
+
+    /**
+     * 指定されたnoteに関連する投稿画像の削除(deleteNoteImages)
+     *
+     *
+     * @param \App\Models\Note $note
+     */
+    public static function deleteNoteImages($note)
+    {
+        # 指定されたnoteに関連する画像関係のテキストボックス($image_text_boxes)の取得
+        $textbox = new Textbox;
+        $image_text_boxes = $textbox->where('note_id',$note->id)
+        ->where( function($textbox){
+            $textbox->where('textbox_case_id',10)->orWhere('textbox_case_id',11);
+        })
+        ->get();
+
+
+        # 画像の削除処理
+        foreach ($image_text_boxes as $image_text_box)
+        {
+            // 削除する画像のS3内のパス
+            $delete_image_path = $image_text_box->main_value;
+
+            // S3から画像を削除(EditTextboxControllerのメソッドを利用)
+            EditTextboxController::deleteImage($delete_image_path);
+        }
+    }
 
 
 

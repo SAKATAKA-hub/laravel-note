@@ -50,7 +50,8 @@
 
 
                         @if (Auth::check())
-                            <img src="{{ asset('storage/'.Auth::user()->image) }}" alt=""class="user_image d-inline-block align-top">
+                            {{-- <img src="{{ asset('storage/'.Auth::user()->image) }}" alt=""class="user_image d-inline-block align-top"> --}}
+                            <img src="{{ Auth::user()->image_url }}" alt=""class="user_image d-inline-block align-top">
                             <span><strong>{{Auth::user()->name}}</strong> さん</span>
 
                         @else

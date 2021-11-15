@@ -85,9 +85,8 @@
 
                             <div class="col-12">
                                 <label class="form-label d-block" for="">画像</label>
-                                {{-- <img src="{{ asset('storage/upload/sample.jpg') }}" class="img-thumbnail mb-3" alt=""  id="preview"> --}}
-                                <img src="{{ asset('storage/'.$user->image) }}" class="img-thumbnail mb-3" alt=""  id="preview">
-                                <input type="hidden" name="old_image" value = "$user->image"> <!-- 以前登録した画像 -->
+                                <img src="{{ $user->image_url }}" class="img-thumbnail mb-3" alt=""  id="preview">
+                                <input type="hidden" name="old_image" value = "{{ $user->image }}"> <!-- 以前登録した画像 -->
                                 <input class="form-control" type="file" name="image" id="" onchange="setImage(this);" onclick="this.value = '';">
 
 

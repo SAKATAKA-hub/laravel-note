@@ -28,7 +28,7 @@ class UsersTableSeeder extends Seeder
             ],[
                 'name' => '杉山 聡太郎',
                 'email' => 'sugiyama@mail.co.jp',
-                'image' => 'people/Xo3lL2SA37QELQepwDarBXAidBUMrloFeuwwNYxS.png',
+                'image' => 'people/xvy4286IS55i6pnNWtpaCAx9KroaPstamZhIDiaN.png',
             ],
 
         ];

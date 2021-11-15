@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+
 
 class Textbox extends Model
 {
@@ -27,8 +29,8 @@ class Textbox extends Model
     */
 
     /**
+     * $textbox->replace_main_value
      * 'main_value'カラムの表示に'改行'と'<strong>タグ'を反映させる
-     * ($textbox->replace_main_value)
      *
      *
      * @return String
@@ -42,6 +44,23 @@ class Textbox extends Model
 
 
         return $value;
+    }
+
+
+
+
+    /**
+     * $textbox->image_url
+     * S3に保存された画像のURLを表示
+     *
+     *
+     * @return String
+     */
+    public function getImageUrlAttribute()
+    {
+        $path = $this->main_value;
+        return Storage::disk('s3')->exists($path)? Storage::disk('s3')->url($path): '';
+
     }
 
 
@@ -70,6 +89,7 @@ class Textbox extends Model
         ->orderBy('order','asc')->get();
 
     }
+
 
 
 

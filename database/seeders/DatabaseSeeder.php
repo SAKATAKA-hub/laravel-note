@@ -16,10 +16,11 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(3)->create();
         // $this->call(NotePartNamesTableSeeder::class);
 
-        $this->call(UsersTableSeeder::class);
 
         $this->call(ColorsTableSeeder::class);
         $this->call(TextboxCasesTableSeeder::class);
+
+        $this->call(UsersTableSeeder::class);
 
         $this->call(NotesTableSeeder::class);
         $this->call(TagsTableSeeder::class);

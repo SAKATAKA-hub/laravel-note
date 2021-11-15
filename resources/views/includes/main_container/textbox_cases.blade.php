@@ -77,17 +77,23 @@
         @break
     @case(10)
         <div class="image">
-            <img src="{{ asset('storage/'.$textbox->main_value) }}" alt="">
+            <img src="{{ $textbox->image_url }}" alt="">
+            {{-- <img src="{{ asset('storage/'.$textbox->main_value) }}" alt=""> --}}
+
+            {{-- $textbox->image_url --}}
             <p class="title">{{$textbox->sub_value}}</p>
         </div>
         @break
     @case(11)
         <div class="image_litle">
-            <img src="{{ asset('storage/'.$textbox->main_value) }}" alt="">
+            <img src="{{ $textbox->image_url }}" alt="">
+
+            {{-- <img src="{{ asset('storage/'.$textbox->main_value) }}" alt=""> --}}
             <p class="title">{{$textbox->sub_value}}</p>
         </div>
         @break
     @default
+
 
 
 @endswitch

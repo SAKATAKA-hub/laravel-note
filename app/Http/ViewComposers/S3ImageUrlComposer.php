@@ -51,7 +51,7 @@ class S3ImageUrlComposer
             // ゲストユーザー
             'gest_user' => 'people/mMU8CNbJtMfnjF5hjmgooUaZ1r4kwpyvQYWPmCmR.png',
             // 画像なし
-            'no_image' => 'people/ueMiLEZ6aMsGx3yoMg287dJIishbLXrpfnapjruT.png',
+            'no_image' => 'people/bPB1YDah6eoZMPTL5tKXX1XnW8P3rxEbOifqxMaM.png',
         ];
     }
 

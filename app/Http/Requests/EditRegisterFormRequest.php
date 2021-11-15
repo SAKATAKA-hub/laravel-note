@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\User;
+
 
 class EditRegisterFormRequest extends FormRequest
 {
@@ -17,17 +19,26 @@ class EditRegisterFormRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'name' => 'max:255',
+            'name' => 'max:100',
             'email' => 'email',
-            'password' => 'regex:/\A[a-z\d]{8,255}+\z/i|confirmed',
-            // 'password_confirmation' => 'required',
+            'password' => 'regex:/\A[a-z\d]{8,100}+\z/i|confirmed', //'conf_password'の値と一致する
         ];
 
-        # 画像のアップロードがあるとき
+        # フォームの入力値をすべて取得
         $request = $this->all();
+
+
+        # 画像のアップロードがあるとき
         if( isset($request['image']))
         {
-            $rules['image'] = 'file|max:1600|mimes:jpeg,png,jpg';
+            $rules['image'] = 'file|max:100|mimes:jpeg,png,jpg';
+        }
+
+        # 他のユーザーが登録しているメールアドレスの重複登録不可
+        $user = User::find($request['user_id']);
+        if( isset($request['email']) && ($user->email !== $request['email']) )
+        {
+            $rules['email'] = 'email|unique:users';
         }
 
         return $rules;
@@ -45,11 +56,12 @@ class EditRegisterFormRequest extends FormRequest
             'name.max' => '255文字以内で入力してください。',
 
             'email.email' => 'メールアドレスは、メールの記述形式になるように入力してください。',
+            'email.unique' => '別ユーザーが登録したメールアドレスは利用できません。',
 
             'password.regex' => 'パスワードは、8文字以上の半角英数字のみで入力してください。',
-            'password.confirmed' => 'パスワードが異なります。',
+            'password.confirmed' => '入力したパスワードが確認用と異なります。',
 
-            'image.max' => '1.6MBを超えるファイルは添付できません。',
+            'image.max' => '100KBを超えるファイルは添付できません。',
             'image.mimes' => '添付画像のファイル形式は、jpeg、png、ipg以外では保存できません。',
         ];
     }

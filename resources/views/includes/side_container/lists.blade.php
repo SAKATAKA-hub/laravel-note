@@ -2,7 +2,8 @@
     <h5><i class="bi bi-file-earmark-person"></i> 筆者プロフィール</h5>
     <div class="plofile">
 
-        <img class="writer_image" src="{{ asset('storage/'.$mypage_master->image) }}" alt="">
+        <img class="writer_image" src="{{ $mypage_master->image_url }}" alt="">
+
         <div class="writer_text">
             <p class="text-center"><strong>{{$mypage_master->name}} さん</strong></p>
             <p><strong>{{$mypage_master->comment}}</strong></p>

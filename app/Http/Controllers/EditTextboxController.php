@@ -82,7 +82,7 @@ class EditTextboxController extends Controller
         # 画像アップロード処理
         if($upload_image = $request->file('image'))
         {
-            $save_data['main_value'] = $this::uploadImage($request,$edit_textbox = null); //画像のパスを'main_value'カラムに保存
+            $save_data['main_value'] = $this::uploadImage($request); //画像のパスを'main_value'カラムに保存
         }
 
 
@@ -176,7 +176,7 @@ class EditTextboxController extends Controller
         # 画像アップロード処理
         if($request->file('image')) //ファイルの添付があれば、アップロード
         {
-            $save_data['main_value'] = $this::uploadImage($request,$edit_textbox); //画像のパスを'main_value'カラムに保存
+            $save_data['main_value'] = $this::uploadImage($request); //画像のパスを'main_value'カラムに保存
         }
         elseif($request->old_image) //アップ―ド画像に変更が無ければ、画像パスを更新しない。
         {
@@ -189,9 +189,8 @@ class EditTextboxController extends Controller
         $old_group = TextboxCase::find( $edit_textbox->textbox_case_id )->group; //'編集後'のテキストボックスの種類グループ名
         if ( ($old_group === 'image')&&($new_group !== 'image') )
         {
-            Storage::delete( $edit_textbox->main_value );
+            $this::deleteImage( $edit_textbox->main_value );
         }
-
 
 
         # テキストボックスの更新
@@ -234,10 +233,7 @@ class EditTextboxController extends Controller
 
         # 画像の削除
         $pus = str_replace(["\r\n", "\r", "\n"], '', $textbox->main_value); //改行の削除
-        if ( Storage::disk('public')->exists($pus) )
-        {
-            Storage::delete($textbox->main_value);
-        }
+        $this::deleteImage( $pus );
 
         # 採番の更新 (削除するテキストボックスより後のテキストボックスの採番を'1'減算)
         $textboxes = Textbox::changeOrders($request, $note);
@@ -273,30 +269,41 @@ class EditTextboxController extends Controller
     */
 
     /**
-     * 画像のアップロード(uploadImage)
+     * S3に画像をアップロード(uploadImage)
      *
      *
      * @param \Illuminate\Http\EditTextboxFormRequest $request
-     * @param App\Models\Textbox $edit_textbox　(編集中のテキストボックス)
-     * @return String $image_path; //アプロードした画像のパスを返す
+     * @return String $path (アプロードした画像のs3内パスを返す)
      */
-    public function uploadImage($request,$edit_textbox)
+    public function uploadImage($request)
     {
-        $upload_image = $request->file('image');
+        $upload_image = $request->file('image'); //保存画像
+        $dir = 'upload_image'; //アップロード先ディレクトリ名
+        $delete_image_path = isset($request->old_image)? $request->old_image : ''; //古いアップロード画像のパス
 
-        $dir = 'upload/textbox_img'; //アップロード先ディレクトリ名
+        # 画像のアップロード
+        $path = Storage::disk('s3')->putFile($dir, $upload_image, 'public');
 
-        $new_id = !isset($edit_textbox)? Textbox::orderBy('id','desc')->first()->id +1//テキストボックスのID(新規)
-        : $edit_textbox->id; //テキストボックスのID(編集)
-
-        $extension = $upload_image->extension(); //拡張子
-
-        $file_name = sprintf('%06d', $new_id).'.'.$extension; //ファイル名
-
-        $image_path = $upload_image->storeAs($dir,$file_name); //画像のアップロード
+        # 古いアップロード画像の削除
+        $this:: deleteImage($delete_image_path);
 
 
-        return $image_path;
-
+        return $path;
     }
+
+
+    /**
+     * S3から画像を削除(deleteImage)
+     *
+     *
+     * @param $delete_image_path (削除する画像のS3内のパス)
+     */
+    public static function deleteImage($delete_image_path)
+    {
+        if ( Storage::disk('s3')->exists($delete_image_path) ) // 画像が存在するか確認
+        {
+            Storage::disk('s3')->delete($delete_image_path); //画像の削除
+        }
+    }
+
 }

@@ -3,14 +3,21 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\EditNoteController;
+
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginFormRequest;
 use App\Http\Requests\RegisterFormRequest;
 use App\Http\Requests\EditRegisterFormRequest;
 
+use App\Models\Note;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+
 use App\Models\User;
+
 
 class AuthController extends Controller
 {
@@ -83,6 +90,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+
         ]);
         $user->save();
 
@@ -107,7 +115,7 @@ class AuthController extends Controller
     {
         $user = Auth::user();
 
-        return view('user.edit_register',compact('user'));
+        return view('login.edit_register',compact('user'));
     }
 
 
@@ -131,9 +139,9 @@ class AuthController extends Controller
         # 画像アップロード処理
         if($request->file('image')) //ファイルの添付があれば、アップロード
         {
-            $save_data['image'] = $this::uploadImage($request); //画像のパスを'image'カラムに保存
+            $save_data['image'] = $this::uploadUserImage($request); //画像のパスを'image'カラムに保存
         }
-        elseif($request->old_image) //アップ―ド画像に変更が無ければ、画像パスを更新しない。
+        else //アップ―ド画像に変更が無ければ、画像パスを更新しない。
         {
             $save_data['image'] = $request->old_image;
         }
@@ -155,21 +163,32 @@ class AuthController extends Controller
     # ユーザー情報の削除(destroy_register)
     public function destroy_register(Request $request)
     {
-        # 削除するユーザーの名前
-        $user_name = Auth::user()->name;
 
         # ログアウト処理
         Auth::logout(); //ユーザーセッションの削除
         $request->session()->invalidate(); //全セッションの削除
         $request->session()->regenerateToken(); //セッションの再作成(二重送信の防止)
 
+
+        # 削除するユーザー
+        $delete_user = User::find($request->user_id);
+
+        # アラート表示する、削除ユーザーの名前
+        $user_name = $delete_user->name;
+
+
+        # S3からユーザー画像を削除
+        $this::deleteUserImage($delete_user->image);
+
+        # S3からユーザーが投稿した画像を削除
+        $this::deleteUserUplordImages($delete_user->id);
+
+
         # ユーザー情報の削除
-        // $user->delete();
-        User::find($request->user_id)->delete();
+        $delete_user->delete();
 
 
-
-        return redirect()->route('mypage_top',$mypage_master = 1) //ユーザー１のマイページへリダイレクト
+        return redirect()->route('home')
         ->with('destroy_register_alert',$user_name);
     }
 
@@ -188,27 +207,62 @@ class AuthController extends Controller
     */
 
     /**
-     * 画像のアップロード(uploadImage)
+     * S3にユーザー画像をアップロード(uploadUserImage)
      *
      *
      * @param \Illuminate\Http\EditTextboxFormRequest $request
-     * @return String $image_path; //アプロードした画像のパスを返す
+     * @return String $path (アプロードした画像のs3内パスを返す)
      */
-    public function uploadImage($request)
+    public function uploadUserImage($request)
     {
-        $upload_image = $request->file('image');
+        $upload_image = $request->file('image'); //保存画像
+        $dir = 'people'; //アップロード先ディレクトリ名
+        $delete_image_path = $request->old_image; //古いアップロード画像のパス
 
-        $dir = 'upload/user_img'; //アップロード先ディレクトリ名
+        # 画像のアップロード
+        $path = Storage::disk('s3')->putFile($dir, $upload_image, 'public');
 
-        $extension = $upload_image->extension(); //拡張子
-
-        $file_name = sprintf('%04d', Auth::user()->id).'.'.$extension; //ファイル名
-
-        $image_path = $upload_image->storeAs($dir,$file_name); //画像のアップロード
+        # 古いアップロード画像の削除
+        $this:: deleteUserImage($delete_image_path);
 
 
-        return $image_path;
-
+        return $path;
     }
+
+
+    /**
+     * S3からユーザー画像を削除(deleteUserImage)
+     *
+     *
+     * @param $delete_image_path (削除する画像のＳ3内パス)
+     */
+    public function deleteUserImage($delete_image_path)
+    {
+        if ( Storage::disk('s3')->exists($delete_image_path) ) // 画像が存在するか確認
+        {
+            Storage::disk('s3')->delete($delete_image_path); //画像の削除
+        }
+    }
+
+
+    /**
+     * S3からユーザーが投稿した画像を削除(deleteUserUplordImages)
+     *
+     *
+     * @param $delete_user_id (削除するユーザーIDID)
+     */
+    public function deleteUserUplordImages($delete_user_id)
+    {
+        # 削除ユーザーの投稿ノートの取得
+        $notes = Note::where('user_id',$delete_user_id)->get();
+
+        # 画像の削除処理(EditNoteControllerのメソッドを利用)
+        foreach ($notes as $note)
+        {
+            EditNoteController::deleteNoteImages($note);
+        }
+    }
+
+
 
 }

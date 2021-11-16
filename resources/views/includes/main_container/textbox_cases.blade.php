@@ -1,5 +1,6 @@
-@switch($textbox->textbox_case_id )
+<p>{{$textbox->textbox_case_id}}</p>
 
+@switch($textbox->textbox_case_id)
 
     @case(1)
         <br>
@@ -78,17 +79,12 @@
     @case(10)
         <div class="image">
             <img src="{{ $textbox->image_url }}" alt="">
-            {{-- <img src="{{ asset('storage/'.$textbox->main_value) }}" alt=""> --}}
-
-            {{-- $textbox->image_url --}}
             <p class="title">{{$textbox->sub_value}}</p>
         </div>
         @break
     @case(11)
         <div class="image_litle">
             <img src="{{ $textbox->image_url }}" alt="">
-
-            {{-- <img src="{{ asset('storage/'.$textbox->main_value) }}" alt=""> --}}
             <p class="title">{{$textbox->sub_value}}</p>
         </div>
         @break
@@ -97,3 +93,9 @@
 
 
 @endswitch
+
+
+
+
+
+

@@ -141,10 +141,10 @@ class AuthController extends Controller
         {
             $save_data['image'] = $this::uploadUserImage($request); //画像のパスを'image'カラムに保存
         }
-        else //アップ―ド画像に変更が無ければ、画像パスを更新しない。
-        {
-            $save_data['image'] = $request->old_image;
-        }
+        // else //アップ―ド画像に変更が無ければ、画像パスを更新しない。
+        // {
+        //     $save_data['image'] = $request->old_image;
+        // }
 
 
         # ユーザー情報の更新

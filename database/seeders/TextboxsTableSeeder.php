@@ -14,8 +14,7 @@ class TextboxsTableSeeder extends Seeder
      */
     public function run()
     {
-        // $note_id = DatabaseSeeder::getNoteId();
-        $note_id = 15;
+        $note_id = DatabaseSeeder::getNoteId();
 
 
         $items =[
@@ -66,13 +65,14 @@ class TextboxsTableSeeder extends Seeder
             ],
         ];
 
+
         foreach ($items as $n => $item)
         {
             $data = new Textbox([
 
                 'note_id' => $note_id,
 
-                'textbox_case_id' => $n,
+                'textbox_case_id' => DatabaseSeeder::textboxCaseId($n),
 
                 'main_value' => $item['main_value'],
 

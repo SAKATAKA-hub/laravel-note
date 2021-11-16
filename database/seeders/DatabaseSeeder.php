@@ -42,4 +42,11 @@ class DatabaseSeeder extends Seeder
         // return 1;
         return 5;
     }
+
+    public static function textboxCaseId($n)
+    {
+        // return $n;
+        return ($n-1)*10+5;
+    }
+
 }

@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
         return 5;
     }
 
+    # herokuのclearDBのテーブルIDは、($n-1)*10+5で附番される
     public static function textboxCaseId($n)
     {
         // return $n;

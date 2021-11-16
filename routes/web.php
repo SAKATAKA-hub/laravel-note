@@ -99,8 +99,8 @@ Route::get('/print/{note}',[NotesController::class,'print'])
 | ノート編集ページの処理 (EditNoteController)
 | --------------------------------------------------------
 */
-
-Route::middleware(['check_mypage_master'])->group(function () //マイページ管理者ログイン時以外は表示不可
+//マイページ管理者ログイン時以外は閲覧不可
+Route::middleware(['check_mypage_master'])->group(function ()
 {
 
     # ノート編集ページの表示(edit_note)
@@ -187,46 +187,52 @@ Route::middleware(['check_mypage_master'])->group(function () //マイページ�
 | アプリケーション管理者ページの処理 (AppAdminController)
 | --------------------------------------------------------
 */
+//ログインユーザーにアプリケーション管理者権限が無ければ閲覧不可
 
-# アプリケーション管理者ページの表示(app_admin.top)
-Route::get('app_admin.top',[AppAdminController::class,'top'])
-->name('app_admin.top');
+Route::middleware(['check_app_dministrator'])->group(function ()
+{
 
-
-# パスワードのリセット(reset_password)
-Route::patch('app_admin.reset_password',[AppAdminController::class,'reset_password'])
-->name('app_admin.reset_password');
-
-
-# ユーザー投稿の削除(destroy_notes)
-Route::delete('app_admin.destroy_notes',[AppAdminController::class,'destroy_notes'])
-->name('app_admin.destroy_notes');
+    # アプリケーション管理者ページの表示(app_admin.top)
+    Route::get('app_admin.top',[AppAdminController::class,'top'])
+    ->name('app_admin.top');
 
 
-# ユーザー登録の削除(destroy_user)
-Route::delete('app_admin.destroy_user',[AppAdminController::class,'destroy_user'])
-->name('app_admin.destroy_user');
+    # パスワードのリセット(reset_password)
+    Route::patch('app_admin.reset_password',[AppAdminController::class,'reset_password'])
+    ->name('app_admin.reset_password');
+
+
+    # ユーザー投稿の削除(destroy_notes)
+    Route::delete('app_admin.destroy_notes',[AppAdminController::class,'destroy_notes'])
+    ->name('app_admin.destroy_notes');
+
+
+    # ユーザー登録の削除(destroy_user)
+    Route::delete('app_admin.destroy_user',[AppAdminController::class,'destroy_user'])
+    ->name('app_admin.destroy_user');
 
 
 
 
-# s3のファイル操作
-// ファイル編集ページの表示(edit_file)
-Route::get('app_admin.s3.edit_file',[AppAdminController::class,'edit_file'])
-->name('app_admin.s3.edit_file');
+    # s3のファイル操作
+    // ファイル編集ページの表示(edit_file)
+    Route::get('app_admin.s3.edit_file',[AppAdminController::class,'edit_file'])
+    ->name('app_admin.s3.edit_file');
 
 
-// ファイルの表示(show_file)
-Route::post('app_admin.s3.show_file',[AppAdminController::class,'show_file'])
-->name('app_admin.s3.show_file');
+    // ファイルの表示(show_file)
+    Route::post('app_admin.s3.show_file',[AppAdminController::class,'show_file'])
+    ->name('app_admin.s3.show_file');
 
 
-// ファイルの保存(upload_file)
-Route::post('app_admin.s3.upload_file',[AppAdminController::class,'upload_file'])
-->name('app_admin.s3.upload_file');
+    // ファイルの保存(upload_file)
+    Route::post('app_admin.s3.upload_file',[AppAdminController::class,'upload_file'])
+    ->name('app_admin.s3.upload_file');
 
 
-// ファイルの削除(delete_file)
-Route::post('app_admin.s3.delete_file',[AppAdminController::class,'delete_file'])
-->name('app_admin.s3.delete_file');
+    // ファイルの削除(delete_file)
+    Route::post('app_admin.s3.delete_file',[AppAdminController::class,'delete_file'])
+    ->name('app_admin.s3.delete_file');
 
+
+});

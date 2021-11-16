@@ -41,7 +41,6 @@
 .display_note_container_blue .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -51,7 +50,6 @@
 .display_note_container_blue .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #b7d7f3;
 }
 .display_note_container_blue .emphasized_text strong {
@@ -60,7 +58,6 @@
 .display_note_container_blue .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .display_note_container_blue .quote_text strong {
@@ -144,7 +141,6 @@
 .print_note_container_blue .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -154,7 +150,6 @@
 .print_note_container_blue .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #b7d7f3;
 }
 .print_note_container_blue .emphasized_text strong {
@@ -163,7 +158,6 @@
 .print_note_container_blue .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .print_note_container_blue .quote_text strong {
@@ -278,7 +272,6 @@
 .display_note_container_indigo .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -288,7 +281,6 @@
 .display_note_container_indigo .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #d9dcf3;
 }
 .display_note_container_indigo .emphasized_text strong {
@@ -297,7 +289,6 @@
 .display_note_container_indigo .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .display_note_container_indigo .quote_text strong {
@@ -381,7 +372,6 @@
 .print_note_container_indigo .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -391,7 +381,6 @@
 .print_note_container_indigo .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #d9dcf3;
 }
 .print_note_container_indigo .emphasized_text strong {
@@ -400,7 +389,6 @@
 .print_note_container_indigo .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .print_note_container_indigo .quote_text strong {
@@ -515,7 +503,6 @@
 .display_note_container_purple .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -525,7 +512,6 @@
 .display_note_container_purple .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #ece2fa;
 }
 .display_note_container_purple .emphasized_text strong {
@@ -534,7 +520,6 @@
 .display_note_container_purple .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .display_note_container_purple .quote_text strong {
@@ -618,7 +603,6 @@
 .print_note_container_purple .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -628,7 +612,6 @@
 .print_note_container_purple .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #ece2fa;
 }
 .print_note_container_purple .emphasized_text strong {
@@ -637,7 +620,6 @@
 .print_note_container_purple .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .print_note_container_purple .quote_text strong {
@@ -752,7 +734,6 @@
 .display_note_container_pink .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -762,7 +743,6 @@
 .display_note_container_pink .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #fffdfe;
 }
 .display_note_container_pink .emphasized_text strong {
@@ -771,7 +751,6 @@
 .display_note_container_pink .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .display_note_container_pink .quote_text strong {
@@ -855,7 +834,6 @@
 .print_note_container_pink .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -865,7 +843,6 @@
 .print_note_container_pink .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #fffdfe;
 }
 .print_note_container_pink .emphasized_text strong {
@@ -874,7 +851,6 @@
 .print_note_container_pink .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .print_note_container_pink .quote_text strong {
@@ -989,7 +965,6 @@
 .display_note_container_red .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -999,7 +974,6 @@
 .display_note_container_red .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #f5b8b6;
 }
 .display_note_container_red .emphasized_text strong {
@@ -1008,7 +982,6 @@
 .display_note_container_red .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .display_note_container_red .quote_text strong {
@@ -1092,7 +1065,6 @@
 .print_note_container_red .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -1102,7 +1074,6 @@
 .print_note_container_red .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #f5b8b6;
 }
 .print_note_container_red .emphasized_text strong {
@@ -1111,7 +1082,6 @@
 .print_note_container_red .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .print_note_container_red .quote_text strong {
@@ -1226,7 +1196,6 @@
 .display_note_container_orange .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -1236,7 +1205,6 @@
 .display_note_container_orange .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #fde7d1;
 }
 .display_note_container_orange .emphasized_text strong {
@@ -1245,7 +1213,6 @@
 .display_note_container_orange .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .display_note_container_orange .quote_text strong {
@@ -1329,7 +1296,6 @@
 .print_note_container_orange .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -1339,7 +1305,6 @@
 .print_note_container_orange .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #fde7d1;
 }
 .print_note_container_orange .emphasized_text strong {
@@ -1348,7 +1313,6 @@
 .print_note_container_orange .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .print_note_container_orange .quote_text strong {
@@ -1463,7 +1427,6 @@
 .display_note_container_yellow .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -1473,7 +1436,6 @@
 .display_note_container_yellow .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #fffce3;
 }
 .display_note_container_yellow .emphasized_text strong {
@@ -1482,7 +1444,6 @@
 .display_note_container_yellow .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .display_note_container_yellow .quote_text strong {
@@ -1566,7 +1527,6 @@
 .print_note_container_yellow .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -1576,7 +1536,6 @@
 .print_note_container_yellow .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #fffce3;
 }
 .print_note_container_yellow .emphasized_text strong {
@@ -1585,7 +1544,6 @@
 .print_note_container_yellow .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .print_note_container_yellow .quote_text strong {
@@ -1700,7 +1658,6 @@
 .display_note_container_green .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -1710,7 +1667,6 @@
 .display_note_container_green .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #abe7c4;
 }
 .display_note_container_green .emphasized_text strong {
@@ -1719,7 +1675,6 @@
 .display_note_container_green .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .display_note_container_green .quote_text strong {
@@ -1803,7 +1758,6 @@
 .print_note_container_green .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -1813,7 +1767,6 @@
 .print_note_container_green .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #abe7c4;
 }
 .print_note_container_green .emphasized_text strong {
@@ -1822,7 +1775,6 @@
 .print_note_container_green .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .print_note_container_green .quote_text strong {
@@ -1937,7 +1889,6 @@
 .display_note_container_teal .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -1947,7 +1898,6 @@
 .display_note_container_teal .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #bee8e4;
 }
 .display_note_container_teal .emphasized_text strong {
@@ -1956,7 +1906,6 @@
 .display_note_container_teal .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .display_note_container_teal .quote_text strong {
@@ -2040,7 +1989,6 @@
 .print_note_container_teal .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -2050,7 +1998,6 @@
 .print_note_container_teal .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #bee8e4;
 }
 .print_note_container_teal .emphasized_text strong {
@@ -2059,7 +2006,6 @@
 .print_note_container_teal .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .print_note_container_teal .quote_text strong {
@@ -2174,7 +2120,6 @@
 .display_note_container_cyan .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -2184,7 +2129,6 @@
 .display_note_container_cyan .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #f3f9fd;
 }
 .display_note_container_cyan .emphasized_text strong {
@@ -2193,7 +2137,6 @@
 .display_note_container_cyan .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .display_note_container_cyan .quote_text strong {
@@ -2277,7 +2220,6 @@
 .print_note_container_cyan .important_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border: 2px solid red;
   border-radius: 2px;
 }
@@ -2287,7 +2229,6 @@
 .print_note_container_cyan .emphasized_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   background-color: #f3f9fd;
 }
 .print_note_container_cyan .emphasized_text strong {
@@ -2296,7 +2237,6 @@
 .print_note_container_cyan .quote_text {
   margin: 1em;
   padding: 1rem;
-  padding-top: 0;
   border-left: .4em solid #aaa;
 }
 .print_note_container_cyan .quote_text strong {

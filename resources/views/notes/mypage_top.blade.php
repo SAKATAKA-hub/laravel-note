@@ -144,7 +144,7 @@
                     <!-- 投稿タイトル -->
                     <div class="">
                         <a href="{{route( 'note',$note )}}"  class="text-primary">
-                            <h3 class="">{{$note->title}} id:{{$note->id}}</h3>
+                            <h3 class="">{{$note->title}}</h3>
                         </a>
                     </div>
 

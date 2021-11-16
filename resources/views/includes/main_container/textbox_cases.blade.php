@@ -1,11 +1,9 @@
 <!-- Heading -->
 @if ( $textbox->textboxCase->group === 'heading' )
 
-    <br>
     <div class="{{$textbox->textboxCase->value}}">
         <p class="mainValue">{!!$textbox->replace_main_value!!}</p>
     </div>
-    <br>
 
 <!-- Text -->
 @elseif ( $textbox->textboxCase->group === 'text' )

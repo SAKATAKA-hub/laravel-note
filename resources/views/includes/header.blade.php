@@ -25,9 +25,6 @@
 
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li>
-                        <a href="{{route('app_admin.top')}}" >管理者ページ</a>
-                    </li>
                     {{-- <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
@@ -74,6 +71,12 @@
                             </li>
 
                             <li><hr class="dropdown-divider"></li>
+
+                            @if (Auth::user()->app_dministrator)
+                            <li>
+                                <a class="dropdown-item" href="{{route('app_admin.top')}}">管理者ページ</a>
+                            </li>
+                            @endif
 
                             <li>
                                 <a class="dropdown-item" href="{{route('edit_register')}}">プロフィール変更</a>

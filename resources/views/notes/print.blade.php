@@ -14,15 +14,19 @@
 </head>
 <body>
     <div class="print_note_container_{{$note->color}}"> <!-- (クラスからページカラーを指定できる) -->
+
+
         <div class="title_box">
-            <span>{{$note->time_text}}</span>
-            <div class="title">{{' '.$note->title}}</div> <!-- (タイトル) -->
-            <span>
-                タグ：
+            <p>{{$note->time_text}}</p>
+
+             <!-- (タイトル) -->
+            <h3 class="title">{{$note->title}}</h3>
+
+            <p>タグ：
                 @foreach ($note->tags_array as $tag)
                 <span>{{$tag}}</span>
                 @endforeach
-            </span>
+            </p>
         </div>
 
         <br><br>

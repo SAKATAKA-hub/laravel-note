@@ -213,6 +213,8 @@ class NotesController extends Controller
         $css = file_get_contents( asset('css/layouts/note.css') );
 
 
+        // return view('notes.print', compact('mypage_master','note','css') );
+
         # PDF設定
         // ページ設定
         $pdf = new TCPDF("P", "mm", "A4", true, "UTF-8" );// PDF 生成メイン　－　A4 縦に設定

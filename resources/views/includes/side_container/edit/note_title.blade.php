@@ -129,9 +129,11 @@
 
             <div class="form-check form-switch fs-5 mt-2">
                 <input class="form-check-input" type="checkbox" name="publishing" id="inputPublishing"
-                {{ !($note && !$note->chake_publishing)? 'checked': ''}}>
+                {{ ($note && $note->chake_publishing)? 'checked': ''}}>
 
-                @if( !($note && !$note->chake_publishing) ) <!-- 公開 -->
+
+                @if($note && $note->chake_publishing) <!-- 公開 -->
+
                     <label class="form-check-label fs-5 fw-bold text-primary" for="inputPublishing">公開</label>
                 @else <!-- 非公開 -->
                     <label class="form-check-label fs-5 fw-bold text-secondary" for="inputPublishing">非公開</label>

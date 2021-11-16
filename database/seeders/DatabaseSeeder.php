@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(NotesTableSeeder::class);
         $this->call(TagsTableSeeder::class);
-        $this->call(TextboxsTableSeeder::class);
+        // $this->call(TextboxsTableSeeder::class);
     }
 
 

@@ -179,6 +179,7 @@ class NotesController extends Controller
         # notesテーブルとtextboxsテーブルのリレーション
         $note = Note::with('Textboxes')->find($note);
 
+
         # マイページ管理者
         $mypage_master = User::find($note->user_id);
 

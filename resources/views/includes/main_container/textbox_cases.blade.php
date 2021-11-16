@@ -1,6 +1,38 @@
-<p>{{$textbox->textbox_case_id}}</p>
+<!-- Heading -->
+@if ( $textbox->textboxCase->group === 'heading' )
 
-@switch($textbox->textbox_case_id)
+    <br>
+    <div class="{{$textbox->textboxCase->value}}">
+        <p class="mainValue">{!!$textbox->replace_main_value!!}</p>
+    </div>
+    <br>
+
+<!-- Text -->
+@elseif ( $textbox->textboxCase->group === 'text' )
+
+    <br>
+    <div class="{{$textbox->textboxCase->value}}">
+        <p class="mainValue">{!!$textbox->replace_main_value!!}</p>
+    </div>
+    <br>
+
+<!-- Link -->
+@elseif ( $textbox->textboxCase->group === 'link' )
+
+    <div class="{{$textbox->textboxCase->value}}">
+        <a href="{{$textbox->main_value}}">{{$textbox->sub_value}}</a>
+    </div>
+
+<!-- Image -->
+@elseif ( $textbox->textboxCase->group === 'image' )
+    <div class="{{$textbox->textboxCase->value}}">
+        <img id="previewImage" src="{{ $textbox->image_url }}" alt="">
+        <p class="subValue title">{{$textbox->sub_value}}</p>
+    </div>
+@endif
+
+
+{{-- @switch($textbox->textbox_case_id)
 
     @case(1)
         <br>
@@ -93,7 +125,7 @@
 
 
 @endswitch
-
+ --}}
 
 
 

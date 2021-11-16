@@ -14,7 +14,7 @@ class NotesTableSeeder extends Seeder
      */
     public function run()
     {
-        $user_id = 15;
+        $user_id = DatabaseSeeder::getUserId();
 
 
         $note = new Note([

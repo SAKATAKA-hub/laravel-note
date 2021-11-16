@@ -29,4 +29,17 @@ class DatabaseSeeder extends Seeder
 
 
 
+    # 投稿のフェイクデータを挿入するユーザーのID
+    public static function getUserId()
+    {
+        // return 2;
+        return 15;
+    }
+
+    # テキストボックスを挿入する投稿ノートのID
+    public static function getNoteId()
+    {
+        // return 1;
+        return 5;
+    }
 }

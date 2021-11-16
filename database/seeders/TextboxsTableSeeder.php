@@ -14,7 +14,7 @@ class TextboxsTableSeeder extends Seeder
      */
     public function run()
     {
-        $note_id = 5;
+        $note_id = DatabaseSeeder::getNoteId();
 
         $items =[
            '1' => [

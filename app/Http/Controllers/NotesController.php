@@ -25,6 +25,7 @@ class NotesController extends Controller
      */
     public function home()
     {
+
         $users = User::get();
 
         return view('notes.home',compact('users'));

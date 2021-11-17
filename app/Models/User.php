@@ -72,6 +72,9 @@ class User extends Authenticatable
      */
     public function getImageUrlAttribute()
     {
+        // *S3利用節約中
+        return '';
+
         // テーブルに保存された画像のパスを参照。NULLなら'no-image'画像のパスを参照。
         $path = empty($this->image)? S3ImageUrlComposer::filePath()['no_image']: $this->image;
 

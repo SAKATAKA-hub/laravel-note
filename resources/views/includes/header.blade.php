@@ -7,7 +7,7 @@
             <h1 class="navbar-brand">
                 <a class="navbar-brand text-primary" href="{{route('home')}}">
                     <img src="{{ $image_url['rogo'] }}" alt="" width="30" height="24" class="d-inline-block align-top">
-                    note
+                    my note
                 </a>
             </h1>
 
@@ -47,13 +47,13 @@
 
 
                         @if (Auth::check())
-                            {{-- <img src="{{ asset('storage/'.Auth::user()->image) }}" alt=""class="user_image d-inline-block align-top"> --}}
-                            <img src="{{ Auth::user()->image_url }}" alt=""class="user_image d-inline-block align-top">
+
+                            {{-- <img src="{{ Auth::user()->image_url }}" alt=""class="user_image d-inline-block align-top"> --}}
                             <span><strong>{{Auth::user()->name}}</strong> さん</span>
 
                         @else
 
-                            <img src="{{ $image_url['gest_user'] }}" alt=""class="user_image d-inline-block align-top">
+                            {{-- <img src="{{ $image_url['gest_user'] }}" alt=""class="user_image d-inline-block align-top"> --}}
                             <span><strong>ゲスト</strong> さん</span>
 
                         @endif

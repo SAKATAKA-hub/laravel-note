@@ -229,7 +229,7 @@ $theme-colors: (
         box-sizing: border-box;
 
         @include basic_style($color);
-        @include print_style($color);
+        @include pdf_style($color);
     }
 
 

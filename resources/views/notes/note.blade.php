@@ -104,13 +104,12 @@
 
 
             <div class="mt-3 d-flex">
-                <a class="btn btn-outline-primary" href="{{route('print',$note)}}">
+                <button class="btn btn-outline-primary" onclick="window.open('{{route('print',$note)}}');">
                     <i class="bi bi-printer"></i> 印刷
-                </a>
+                </button>
             </div>
 
         </div>
-
 
 
 

@@ -23,7 +23,7 @@
 
 @section('script')
 
-    <!-- modal -->>
+    <!-- modal -->
     {{-- <script src="{ aseet('js/includes/modal.js') }}"></script> --}}
     <script>
         'use strict';

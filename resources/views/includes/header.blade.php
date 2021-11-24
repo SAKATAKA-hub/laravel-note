@@ -13,119 +13,88 @@
 
 
 
-            <!-- hanburger icon -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+
+            <!-- user menu -->
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle mb-2" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 
 
+                    @if (Auth::check())
+
+                        {{-- <img src="{{ Auth::user()->image_url }}" alt=""class="user_image d-inline-block align-top"> --}}
+                        <span><strong>{{Auth::user()->name}}</strong> さんがログイン中</span>
+
+                    @else
+
+                        {{-- <img src="{{ $image_url['gest_user'] }}" alt=""class="user_image d-inline-block align-top"> --}}
+                        <span><strong>ゲスト</strong> さん</span>
+
+                    @endif
 
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                    @if (Auth::check())
+
+                        <li>
+                            <a class="dropdown-item" href="{{route('mypage_top',Auth::user()->id)}}">
+                                <i class="bi bi-person"></i> マイページ
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        @if (Auth::user()->app_dministrator)
+                        <li>
+                            <a class="dropdown-item" href="{{route('app_admin.top')}}">管理者ページ</a>
+                        </li>
+                        @endif
+
+                        <li>
+                            <a class="dropdown-item" href="{{route('edit_register')}}">プロフィール変更</a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="{{route('edit_register')}}">パスワード変更</a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="{{route('edit_register')}}">退会する</a>
+                        </li>
 
 
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {{-- <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
+                        <li><hr class="dropdown-divider"></li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li> --}}
-                </ul>
-
-
-
-
-                <!-- user menu -->
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-
-
-                        @if (Auth::check())
-
-                            {{-- <img src="{{ Auth::user()->image_url }}" alt=""class="user_image d-inline-block align-top"> --}}
-                            <span><strong>{{Auth::user()->name}}</strong> さん</span>
+                        <li>
+                            <form method="POST" action="{{route('logout')}}" lass="dropdown-item">
+                                @csrf
+                                <button class="dropdown-item"><i class="bi bi-box-arrow-right"></i> ログアウト</button>
+                            </form>
+                        </li>
 
                         @else
 
-                            {{-- <img src="{{ $image_url['gest_user'] }}" alt=""class="user_image d-inline-block align-top"> --}}
-                            <span><strong>ゲスト</strong> さん</span>
+                        <li>
+                            <a class="dropdown-item" href="{{route('login_form')}}">
+                                <i class="bi bi-box-arrow-right"></i> ログイン
+                            </a>
+                        </li>
 
-                        @endif
-
-
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-
-                        @if (Auth::check())
-
-                            <li>
-                                <a class="dropdown-item" href="{{route('mypage_top',Auth::user()->id)}}">
-                                    <i class="bi bi-person"></i> マイページ
-                                </a>
-                            </li>
-
-                            <li><hr class="dropdown-divider"></li>
-
-                            @if (Auth::user()->app_dministrator)
-                            <li>
-                                <a class="dropdown-item" href="{{route('app_admin.top')}}">管理者ページ</a>
-                            </li>
-                            @endif
-
-                            <li>
-                                <a class="dropdown-item" href="{{route('edit_register')}}">プロフィール変更</a>
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item" href="{{route('edit_register')}}">パスワード変更</a>
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item" href="{{route('edit_register')}}">退会する</a>
-                            </li>
+                        <li>
+                            <a class="dropdown-item" href="{{route('get_register')}}">
+                                <i class="bi bi-person-plus"></i> 新規会員登録
+                            </a>
+                        </li>
 
 
-                            <li><hr class="dropdown-divider"></li>
+                    @endif
 
-                            <li>
-                                <form method="POST" action="{{route('logout')}}" lass="dropdown-item">
-                                    @csrf
-                                    <button class="dropdown-item"><i class="bi bi-box-arrow-right"></i> ログアウト</button>
-                                </form>
-                            </li>
-
-                            @else
-
-                            <li>
-                                <a class="dropdown-item" href="{{route('login_form')}}">
-                                    <i class="bi bi-box-arrow-right"></i> ログイン
-                                </a>
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item" href="{{route('get_register')}}">
-                                    <i class="bi bi-person-plus"></i> 新規会員登録
-                                </a>
-                            </li>
+                </ul>
+            </div><!--end user menu -->
 
 
-                        @endif
-
-
-
-
-
-                    </ul>
-                </div>
-
-
-            </div>
         </div>
     </nav>
 </header>

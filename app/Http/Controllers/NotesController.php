@@ -180,7 +180,6 @@ class NotesController extends Controller
         # notesテーブルとtextboxsテーブルのリレーション
         $note = Note::with('Textboxes')->find($note);
 
-
         # マイページ管理者
         $mypage_master = User::find($note->user_id);
 
@@ -193,15 +192,39 @@ class NotesController extends Controller
 
 
 
-
     /**
-     * ノート印刷ページの表示(print)
+     * 印刷ページの表示(print))
      *
      *
      * @param \App\Models\Note $note
      * @return \Illuminate\View\View
      */
     public function print($note){
+
+        # notesテーブルとtextboxsテーブルのリレーション
+        $note = Note::with('Textboxes')->find($note);
+
+        # ノートの管理者
+        $mypage_master = User::find($note->user_id);
+
+
+        return view('notes.print', compact('mypage_master','note',) );
+
+    }
+
+
+
+
+
+    /**
+     * <---　工事中 --->
+     * PDFページの表示(pdf)
+     *
+     *
+     * @param \App\Models\Note $note
+     * @return \Illuminate\View\View
+     */
+    public function pdf($note){
 
         # notesテーブルとtextboxsテーブルのリレーション
         $note = Note::with('Textboxes')->find($note);
@@ -233,7 +256,7 @@ class NotesController extends Controller
 
         // HTMLを描画、viewの指定と変数代入 - pdf_test.blade.php
         $pdf->writeHTML(
-            view('notes.print', compact('mypage_master','note','css') )->render()
+            view('notes.pdf', compact('mypage_master','note','css') )->render()
         );
 
         // 出力指定 ファイル名、拡張子、I(ブラウザー表示)

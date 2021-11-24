@@ -3,12 +3,16 @@
 //-----------------------------------------
 
 // タイトルbox
-.title_box .title{
-    min-height: 1.4em;
-    line-height: 1.4em;
-    font-size: 3em;
-    font-weight: bold;
-    margin: 0;
+.title_box{
+    margin-bottom: 2em;
+
+    .title{
+        min-height: 1.4em;
+        line-height: 1.4em;
+        font-size: 2em;
+        font-weight: bold;
+        margin: 0;
+    }
 }
 
 
@@ -22,8 +26,9 @@
         border-left: .4em solid $color;
         padding-left: .5em;
         line-height: 1.6em;
-        // margin-top: 1em;
-        // margin-bottom: 1em;
+        margin-top: 2em;
+        margin-bottom: 1em;;
+        background-color: lighten($color, 30%);
         strong{ color: $color;}
     }
 
@@ -31,8 +36,9 @@
     .heading2{
         font-size: 1.5em;
         font-weight: bold;
-        // margin-top: 1em;
-        // margin-bottom: 1em;
+        margin-top: 2em;
+        margin-bottom: 1em;;
+        border-bottom: solid 1px #ccc;
         strong{ color: $color;}
     }
 
@@ -40,75 +46,53 @@
     .heading3{
         font-size: 1.2em;
         font-weight: bold;
-        // margin-bottom: 1rem;
+        margin-top: 2em;
+        margin-bottom: 1em;;
         strong{ color: $color;}
     }
 
     // 文章
     .normal_text{
-        // margin-bottom: 1rem;
+        margin-bottom: 1em;
         strong{ color: $color;}
     }
 
     // 重要な文章
     .important_text{
-        margin: 1em;
+        margin: 2em 1em;
         padding: 1rem;
-        // padding-top: 0;
 
         border : 2px solid red;
         border-radius: 2px;
-        // margin-bottom: 1rem;
         strong{ color: red;}
     }
 
     //強調する文章
     .emphasized_text{
-        margin: 1em;
+        margin: 2em 1em;
         padding: 1rem;
-        // padding-top: 0;
-
         background-color: lighten($color, 30%);
-        // margin-bottom: 1rem;
         strong{ color: red;}
     }
 
     // 引用文
     .quote_text{
-        margin: 1em;
+        margin: 2em 1em;
         padding: 1rem;
-        // padding-top: 0;
-
         border-left: .4em solid #aaa;
-        // margin-bottom: 1rem;
         strong{ color: red;}
     }
 
     // コード文
     .code_text{
-        .title{
-            display: inline-block;
-            margin-left: 1em;
-            padding: 0 1em;
-
-            border: solid 2px #eee;
-            border-bottom: none;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-        }
-        .text{
-            margin: 0 1em;
-            padding: 1rem;
-            padding-top: 0;
-
-            background-color: #eee;
-            // margin-bottom: 1rem;
-        }
+        margin: 2em 1em;
+        padding: 1rem;
+        background-color: #ccc;
     }
 
     // リンク
     .link{
-        // margin-bottom: 1rem;
+        margin: 2em 1em;
         a{
             font-weight: bold;
             color: $color;
@@ -119,23 +103,21 @@
 
     // 大きい画像
     .image{
-        // margin-bottom: 1rem;
+        margin: 2em 0;
         img{
             width: 100%;
         }
         .title{
             margin-top: .5em;
-            // text-align: center;
             font-size: .8em;
             color: #aaa;
         }
     }
     // 小さい画像
     .image_litle{
-        margin-right: 10px;
-        // margin-bottom: 1rem;
         display: inline-block;
         width: 210px;
+        margin: 2em 0;
 
         img{
             width: 100%;
@@ -143,7 +125,6 @@
         .title{
             width: 100%;
             margin-top: .5em;
-            // text-align: center;
             font-size: .8em;
             color: #aaa;
         }
@@ -157,10 +138,10 @@
 
 
 //-----------------------------------------
-// 印刷ページ用スタイル
+// pdfページ用スタイル
 //-----------------------------------------
 
-@mixin print_style($color) {
+@mixin pdf_style($color) {
 
     .heading1{
         font-size: 1.5em;

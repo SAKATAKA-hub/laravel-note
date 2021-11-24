@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="{{asset('css/layouts/base.css')}}">
 
         @yield('style')
+
 </head>
 
 <body>
@@ -53,7 +54,7 @@
 
 
             <!-- main_center_container -->
-            <div class="main_center_container col-md-9 mb-5"><!-- col-md-8 -->
+            <div class="main_center_container col-lg-9 mb-5">
 
                 @yield('main.center_container')
 
@@ -61,7 +62,7 @@
 
 
             <!-- main_side_container -->
-            <div class="main_side_container col-md-3"><!-- col-md-4 -->
+            <div class="main_side_container col-lg-3">
 
                 @yield('main.side_container')
 

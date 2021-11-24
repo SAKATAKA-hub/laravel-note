@@ -74,12 +74,12 @@
 @section('main.top_container')
 
     <!-- page title -->
-    <h2 class="pt-2 pb-2 mb-3">
+    <h2 class="pt-2 pb-2 mb-2">
         <p class="me-2 d-inline bg-primary border border-primary border-5" border-5" style="border-radius:.5em;"></p>
         "{{$note->title}}"の編集
     </h2>
 
-    <h4 class="mb-3 text-secondary">編集の操作内容をプレビュー枠内のボタンより選択してください。</h4>
+    <h4 class="mb-2 text-secondary">編集の操作内容をプレビュー枠内のボタンより選択してください。</h4>
 
     <h5 class="preview_note_tag"><i class="bi bi-eye"></i>プレビュー</h5>
 
@@ -98,13 +98,11 @@
 
 
         <!-- タイトルボックスの表示 -->
-
-        <div class="edit_textbox d-flex align-items-center mb-5">
+        <div class="edit_textbox d-flex align-items-center mb-2">
 
 
             <div class="title_box w-75">
                 <!-- 投稿日 -->
-                {{-- <small>{{$note->created_at}}</small> --}}
                 <small class="d-flex">
 
                     <!-- 公開設定 (マイページ管理者ログイン時以外は非表示)-->
@@ -133,20 +131,24 @@
             </div>
 
 
-            <div class="w-25 ms-2">
-                <a href="{{route('edit_note_title',$note)}}" class="btn btn-outline-primary d-block mb-3">
-                    <i class="bi bi-eraser-fill"></i> 基本情報の修正
+            <div class="w-25 ms-2 text-center">
+
+                <a href="{{route('edit_note_title',$note)}}" class="btn btn-outline-primary d-block mb-2">
+                    <i class="bi bi-eraser-fill d-none d-md-inline"></i>
+                    <span class="d-none d-md-inline">基本情報修正</span>
+                    <span class="d-md-none">修正</span>
+
                 </a>
+
+                <a href="{{route('create_textbox',compact('note')+['order'=> 1])}}"  class="btn btn-primary d-block">
+                    <i class="bi bi-plus-square-fill d-none d-md-inline"></i>
+                    <span>挿入</span>
+                </a>
+
             </div>
 
 
-        </div>
 
-
-        <div class="text-center mb-5">
-            <a href="{{route('create_textbox',compact('note')+['order'=> 1])}}"  class="btn btn-primary p-2 ps-4 pe-4">
-                <i class="bi bi-plus-square-fill"></i>テキストボックスの挿入
-            </a>
         </div>
 
 
@@ -156,7 +158,7 @@
         @foreach ($note->textboxes as $textbox)
 
 
-            <div class=" edit_textbox d-flex align-items-center  mb-5">
+            <div class=" edit_textbox d-flex align-items-center  mb-2">
 
 
                 <div class="w-75">
@@ -165,14 +167,27 @@
 
 
                 <div class="w-25 ms-2">
-                    <a href="{{route('edit_textbox',compact('note','textbox'))}}" class="btn btn-outline-primary d-block mb-3"><i class="bi bi-eraser-fill"></i> 修正</a>
+
+                    <a href="{{route('edit_textbox',compact('note','textbox'))}}" class="btn btn-outline-primary d-block mb-2">
+                        <i class="bi bi-eraser-fill d-none d-md-inline"></i>
+                        <span>修正</span>
+                    </a>
+
                     <form method="POST" action="{{route('destroy_textbox',$note)}}">
                         @method('delete')
                         @csrf
                         <input type="hidden" name="textbox_id" value="{{$textbox->id}}"> <!-- テキストボックスのID -->
                         <input type="hidden" name="order" value="{{$textbox->order}}"> <!-- テキストボックスの採番 -->
-                        <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-trash"></i> 削除</button>
+                        <button type="submit" class="btn btn-outline-primary w-100 mb-2">
+                            <i class="bi bi-trash d-none d-md-inline"></i>
+                            <span>削除</span>
+                        </button>
                     </form>
+
+                    <a href="{{route('create_textbox',compact('note')+['order'=> $textbox->order+1])}}" class="btn btn-primary d-block mb-2">
+                        <i class="bi bi-plus-square-fill d-none d-md-inline"></i>
+                        <span>挿入</span>
+                    </a>
 
                 </div>
 
@@ -182,11 +197,6 @@
 
 
 
-            <div class="text-center mb-5">
-                <a href="{{route('create_textbox',compact('note')+['order'=> $textbox->order+1])}}" class="btn btn-primary p-2 ps-4 pe-4">
-                    <i class="bi bi-plus-square-fill"></i> テキストボックスの挿入
-                </a>
-            </div>
 
         @endforeach
 

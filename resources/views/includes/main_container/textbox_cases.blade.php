@@ -1,33 +1,35 @@
-<!-- Heading -->
+
 @if ( $textbox->textboxCase->group === 'heading' )
 
+    <!-- Heading -->
     <div class="{{$textbox->textboxCase->value}}">
         <p class="mainValue">{!!$textbox->replace_main_value!!}</p>
     </div>
 
-<!-- Text -->
 @elseif ( $textbox->textboxCase->group === 'text' )
 
-    <br>
+    <!-- Text -->
     <div class="{{$textbox->textboxCase->value}}">
         <p class="mainValue">{!!$textbox->replace_main_value!!}</p>
     </div>
-    <br>
 
-<!-- Link -->
 @elseif ( $textbox->textboxCase->group === 'link' )
 
+    <!-- Link -->
     <div class="{{$textbox->textboxCase->value}}">
         <a href="{{$textbox->main_value}}">{{$textbox->sub_value}}</a>
     </div>
 
-<!-- Image -->
 @elseif ( $textbox->textboxCase->group === 'image' )
+
+    <!-- Image -->
     <div class="{{$textbox->textboxCase->value}}">
         <img id="previewImage" src="{{ $textbox->image_url }}" alt="">
         <p class="subValue title">{{$textbox->sub_value}}</p>
     </div>
 @endif
+
+
 
 
 {{-- @switch($textbox->textbox_case_id)

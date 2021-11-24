@@ -236,3 +236,8 @@ Route::middleware(['check_app_dministrator'])->group(function ()
 
 
 });
+
+
+Route::get('test',function(){
+    return view('test.test');
+})->name('test');

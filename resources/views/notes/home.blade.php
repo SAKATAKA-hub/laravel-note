@@ -171,6 +171,12 @@
                     <p class="lead text-start m-3">
                         もちろん、マイページからは”タイトルキーワード検索”、”日付絞り込み”、”公開・非公開別表示”など、ブログの様な簡単管理が可能！
                     </p>
+                    <p class="lead text-start m-3">
+                        <a class="btn btn-outline-secondary" href="https://sakataka-laravel-note.herokuapp.com/mypage_top/15">
+                            サンプルユーザーのマイページはこちら
+                        </a>
+                    </p>
+
 
                 </div>
                 <div class="col-md-5">

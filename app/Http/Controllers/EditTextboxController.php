@@ -55,6 +55,7 @@ class EditTextboxController extends Controller
      */
     public function store_textbox(EditTextboxFormRequest $request, $note){
 
+
         # 編集ノート
         $note = Note::find($note);
 

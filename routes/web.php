@@ -40,6 +40,13 @@ Route::post('post_register',[AuthController::class,'post_register'])
 ->name('post_register');
 
 
+# 簡単ユーザー登録(easy_post_register)
+Route::post('easy_post_register',[AuthController::class,'easy_post_register'])
+->name('easy_post_register');
+
+
+
+
 
 
 Route::middleware(['auth'])->group(function () //ログインしていなければ、ログインページへリダイレクトする

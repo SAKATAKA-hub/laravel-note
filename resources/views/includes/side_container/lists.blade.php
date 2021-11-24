@@ -6,7 +6,8 @@
 
         <div class="writer_text">
             <p class="text-center"><strong>{{$mypage_master->name}} さん</strong></p>
-            <p><strong>{{$mypage_master->comment}}</strong></p>
+            <p>{!!$mypage_master->replace_comment!!}</p>
+
         </div>
 
     </div>

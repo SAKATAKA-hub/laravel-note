@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name','email','image','comment','password','app_dministrator','locked_flg','error_count',
+        'name','email','image','comment','password','app_dministrator','easy_user',
     ];
 
 
@@ -48,6 +48,7 @@ class User extends Authenticatable
 
 
 
+
     /**
      * $user->private_post
      * ユーザーの非公開投稿数を表示
@@ -61,6 +62,21 @@ class User extends Authenticatable
     }
 
 
+
+    /**
+     * $user->replace_comment
+     * 'comment'カラムの表示に'改行'を反映させる
+     *
+     *
+     * @return String
+     */
+    public function getReplaceCommentAttribute()
+    {
+        $value = e($this->comment);
+        $value = nl2br($value);
+
+        return $value;
+    }
 
     /**
      * $user->image_url

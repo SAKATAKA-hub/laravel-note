@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\User;
+use Carbon\Carbon;
 
 
 class AuthController extends Controller
@@ -24,6 +25,22 @@ class AuthController extends Controller
     # ログイン画面の表示(login_form)
     public function login_form()
     {
+        // 24時間後の日時
+        $date_time = Carbon::parse('-1 day')->format('Y-m-d H:i:s');
+
+        # 24h経過した簡単ユーザー登録ユーザーの削除
+        $users = User::where('easy_user',1)
+        ->where('created_at','<',$date_time)
+        ->get();
+
+        if(count($users))
+        {
+            foreach ($users as  $user)
+            {
+                $user->delete();
+            }
+        }
+
         return view('login.login_form');
     }
 
@@ -85,6 +102,7 @@ class AuthController extends Controller
     # ユーザー登録処理(post_register)
     public function post_register(RegisterFormRequest $request)
     {
+
         // ユーザー情報の保存
         $user = new User([
             'name' => $request->name,
@@ -141,10 +159,6 @@ class AuthController extends Controller
         {
             $save_data['image'] = $this::uploadUserImage($request); //画像のパスを'image'カラムに保存
         }
-        // else //アップ―ド画像に変更が無ければ、画像パスを更新しない。
-        // {
-        //     $save_data['image'] = $request->old_image;
-        // }
 
 
         # ユーザー情報の更新
@@ -192,6 +206,43 @@ class AuthController extends Controller
         ->with('destroy_register_alert',$user_name);
     }
 
+
+
+
+    # 簡単ユーザー登録(easy_post_register)
+    public function easy_post_register(Request $request)
+    {
+        // ユーザー情報の保存
+        $user = new User([
+            'name' => '簡単ユーザー登録ゲスト',
+            'email' => sprintf("%08d", mt_rand(1,99999999)).'@email.co.jp',
+            'password' => Hash::make('password'),
+            'easy_user' => 1,
+            'comment' => <<<_comment_
+                簡単ユーザー登録で登録したゲストさんです。
+                アカウントの利用期限は24時間です。
+
+                メールアドレス：プロフィール変更より確認
+                パスワード：password
+            _comment_,
+        ]);
+        $user->save();
+
+        // ログイン処理
+        $credentials = [
+            'email' => $user->email ,
+            'password' => 'password',
+        ];
+
+        if (Auth::attempt($credentials)) {
+
+            $request->session()->regenerate();
+
+            return redirect()->route('mypage_top',$user)->with('register_alert','store');
+        }
+
+        return redirect()->route('mypage_top',$user)->with('error_alert','ログインに失敗しました。');
+    }
 
 
 

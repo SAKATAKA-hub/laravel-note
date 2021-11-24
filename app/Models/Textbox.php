@@ -20,6 +20,7 @@ class Textbox extends Model
 
 
 
+
     /*
     |--------------------------------------------------------------------------
     | アクセサー
@@ -41,7 +42,6 @@ class Textbox extends Model
         $value = str_replace('{{','<strong>',$value);
         $value = str_replace('}}','</strong>',$value);
         $value = nl2br($value);
-
 
         return $value;
     }

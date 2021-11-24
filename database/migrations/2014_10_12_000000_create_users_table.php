@@ -23,8 +23,8 @@ class CreateUsersTable extends Migration
             $table->string('comment',100)->nullable()->default(null);
             $table->string('password',100);
             $table->boolean('app_dministrator')->default(0);
-            $table->tinyInteger('locked_flg')->default(0);
-            $table->integer('error_count')->unsigned()->default(0);
+            $table->boolean('easy_user')->default(0);
+
             $table->timestamps();
         });
     }

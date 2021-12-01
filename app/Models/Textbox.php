@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
+use App\Models\TextboxCase;
+
+
 
 class Textbox extends Model
 {
@@ -58,6 +61,11 @@ class Textbox extends Model
      */
     public function getImageUrlAttribute()
     {
+        return $this->main_value;
+
+
+
+
         $path = $this->main_value;
         return Storage::disk('s3')->exists($path)? Storage::disk('s3')->url($path): '';
 
@@ -97,6 +105,43 @@ class Textbox extends Model
     |
     |
     */
+    /**
+     * apiData($note)
+     * 一つのnoteに関連するtextboxの非同期通信用のデータを取得
+     *
+     *
+     * @return Array
+    */
+    public function scopeApiData($query, $note)
+    {
+        // textboxデータの取得
+        $textboxes = $query->where('note_id',$note->id)->orderBy('order','asc')->get();
+
+        //　パラメーターの追加
+        for ($i=0; $i < count($textboxes); $i++)
+        {
+            // textboxのデータ
+            $textbox = $textboxes[$i];
+
+            // 追加データ
+            $add_items = TextboxCase::find( $textbox->textbox_case_id );
+
+            // 追加データの挿入
+            $textbox->replace_main_value = $this::getReplaceMainValueAttribute();
+            $textbox->image_url = $this::getImageUrlAttribute();
+            $textbox->group = $add_items->group;
+            $textbox->case_name = $add_items->value;
+            $textbox->mode ='selectTextbox';
+
+
+        }
+
+        return $textboxes;
+    }
+
+
+
+
 
     /**
      * changeOrders($request, $note)

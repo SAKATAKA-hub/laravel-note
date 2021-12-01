@@ -7,6 +7,7 @@ use App\Http\Controllers\NotesController;
 use App\Http\Controllers\EditNoteController;
 use App\Http\Controllers\EditTextboxController;
 use App\Http\Controllers\AppAdminController;
+use App\Http\Controllers\TestController;
 
 use App\Http\Middleware\CheckMypageMaster;
 
@@ -245,6 +246,26 @@ Route::middleware(['check_app_dministrator'])->group(function ()
 });
 
 
+
+
+# test
 Route::get('test',function(){
     return view('test.test');
 })->name('test');
+
+# API受取り
+Route::post('api',[TestController::class,'api'])
+->name('api');
+
+
+
+
+
+# ノート編集ページの表示(test_edit_note)
+Route::get('/test_edit_note/{note}',[TestController::class,'test_edit_note'])
+->name('test_edit_note');
+
+# textboxのjsonデータを返す。(textbox_json)
+Route::post('/textbox_json/{note}',[TestController::class,'textbox_json'])
+->name('textbox_json');
+

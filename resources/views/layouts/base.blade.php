@@ -28,7 +28,8 @@
 
 
 
-    <main>
+    <main id="app">
+
         <!-- breadcrumb -->
         <div class="mt-2 ms-3">
             <i class="bi bi-house-fill"></i>

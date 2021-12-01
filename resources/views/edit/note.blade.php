@@ -61,6 +61,11 @@
 
 @section('main.side_container')
 
+    <a href="{{route('edit_note_title',$note)}}" class="btn btn-outline-primary d-block mb-2">
+        <span class="">基本情報修正</span>
+    </a>
+
+
     @include('includes.side_container.edit.back_buttons')
 
 @endsection
@@ -132,13 +137,6 @@
 
 
             <div class="w-25 ms-2 text-center">
-
-                <a href="{{route('edit_note_title',$note)}}" class="btn btn-outline-primary d-block mb-2">
-                    <i class="bi bi-eraser-fill d-none d-md-inline"></i>
-                    <span class="d-none d-md-inline">基本情報修正</span>
-                    <span class="d-md-none">修正</span>
-
-                </a>
 
                 <a href="{{route('create_textbox',compact('note')+['order'=> 1])}}"  class="btn btn-primary d-block">
                     <i class="bi bi-plus-square-fill d-none d-md-inline"></i>

@@ -8,6 +8,7 @@ use App\Http\Requests\EditNoteTitleFormRequest;
 use App\Models\User;
 use App\Models\Note;
 use App\Models\Textbox;
+use App\Models\TextboxCase;
 use App\Models\Tag;
 use App\Models\Color;
 
@@ -391,6 +392,9 @@ class EditNoteController extends Controller
             EditTextboxController::deleteImage($delete_image_path);
         }
     }
+
+
+
 
 
 

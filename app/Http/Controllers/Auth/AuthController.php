@@ -25,22 +25,6 @@ class AuthController extends Controller
     # ログイン画面の表示(login_form)
     public function login_form()
     {
-        // 24時間後の日時
-        $date_time = Carbon::parse('-1 day')->format('Y-m-d H:i:s');
-
-        # 24h経過した簡単ユーザー登録ユーザーの削除
-        $users = User::where('easy_user',1)
-        ->where('created_at','<',$date_time)
-        ->get();
-
-        if(count($users))
-        {
-            foreach ($users as  $user)
-            {
-                $user->delete();
-            }
-        }
-
         return view('login.login_form');
     }
 

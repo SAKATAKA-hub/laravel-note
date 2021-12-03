@@ -63,7 +63,9 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        'check_mypage_master' => \App\Http\Middleware\CheckMypageMaster::class,
-        'check_app_dministrator' => \App\Http\Middleware\CheckAppDministrator::class,
+        'check_mypage_master' => \App\Http\Middleware\CheckMypageMaster::class, //ユーザー専用ページの表示
+        'check_app_dministrator' => \App\Http\Middleware\CheckAppDministrator::class, //App管理者専用ページ
+        'delete_easy_user' => \App\Http\Middleware\DeleteEasyUser::class, //簡単ログインユーザーの削除
+ 
     ];
 }

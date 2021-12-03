@@ -61,14 +61,27 @@ class Textbox extends Model
      */
     public function getImageUrlAttribute()
     {
-        return $this->main_value;
+        //-----------------------------------------------------
+        // 開発環境時には、local stragの'sample.jpg'を表示
+        // デプロイ後は、S3に保存した画像を表示
+        //-----------------------------------------------------
 
+        $local_path = 'img/sample.jpg';
+        $s3_path = $this->main_value;
+        $url = '';
 
+        // 開発環境のとき、
+        if( Storage::disk('local')->exists($local_path) )
+        {
+            $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
+        }
+        // デプロイ後で、S3に保存データがあるとき、
+        elseif( Storage::disk('s3')->exists($s3_path) )
+        {
+            Storage::disk('s3')->url($s3_path);
+        }
 
-
-        $path = $this->main_value;
-        return Storage::disk('s3')->exists($path)? Storage::disk('s3')->url($path): '';
-
+        return $url;
     }
 
 
@@ -105,44 +118,6 @@ class Textbox extends Model
     |
     |
     */
-    /**
-     * apiData($note)
-     * 一つのnoteに関連するtextboxの非同期通信用のデータを取得
-     *
-     *
-     * @return Array
-    */
-    public function scopeApiData($query, $note)
-    {
-        // textboxデータの取得
-        $textboxes = $query->where('note_id',$note->id)->orderBy('order','asc')->get();
-
-        //　パラメーターの追加
-        for ($i=0; $i < count($textboxes); $i++)
-        {
-            // textboxのデータ
-            $textbox = $textboxes[$i];
-
-            // 追加データ
-            $add_items = TextboxCase::find( $textbox->textbox_case_id );
-
-            // 追加データの挿入
-            $textbox->replace_main_value = $this::getReplaceMainValueAttribute();
-            $textbox->image_url = $this::getImageUrlAttribute();
-            $textbox->group = $add_items->group;
-            $textbox->case_name = $add_items->value;
-            $textbox->mode ='selectTextbox';
-
-
-        }
-
-        return $textboxes;
-    }
-
-
-
-
-
     /**
      * changeOrders($request, $note)
      * マイページ管理者のノートを取得

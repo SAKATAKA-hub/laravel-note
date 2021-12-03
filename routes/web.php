@@ -74,30 +74,36 @@ Route::middleware(['auth'])->group(function () //ログインしていなけれ�
 | 閲覧ページの処理 (NotesController)
 | --------------------------------------------------------
 */
+Route::middleware(['delete_easy_user'])->group(function ()
+//期限切れ簡単ログインユーザーの削除
+{
 
-# ホームページの表示(home)
-Route::get('/',[NotesController::class,'home'])
-->name('home');
-
-
-
-
-# マイページの表示(mypage_top)
-Route::get('/mypage_top/{mypage_master}',[NotesController::class,'mypage_top'])
-->name('mypage_top');
-
-# マイページの検索表示(mypage_seach)
-Route::get('/mypage_seach/{mypage_master}',[NotesController::class,'mypage_seach'])
-->name('mypage_seach');
+    # ホームページの表示(home)
+    Route::get('/',[NotesController::class,'home'])
+    ->middleware(['delete_easy_user']) //期限切れ簡単ログインユーザーの削除
+    ->name('home');
 
 
-# ノート閲覧ページの表示(note)
-Route::get('/note/{note}',[NotesController::class,'note'])
-->name('note');
 
-# ノート印刷ページの表示(print)
-Route::get('/print/{note}',[NotesController::class,'print'])
-->name('print');
+
+    # マイページの表示(mypage_top)
+    Route::get('/mypage_top/{mypage_master}',[NotesController::class,'mypage_top'])
+    ->name('mypage_top');
+
+    # マイページの検索表示(mypage_seach)
+    Route::get('/mypage_seach/{mypage_master}',[NotesController::class,'mypage_seach'])
+    ->name('mypage_seach');
+
+
+    # ノート閲覧ページの表示(note)
+    Route::get('/note/{note}',[NotesController::class,'note'])
+    ->name('note');
+
+    # ノート印刷ページの表示(print)
+    Route::get('/print/{note}',[NotesController::class,'print'])
+    ->name('print');
+
+});
 
 
 
@@ -107,8 +113,8 @@ Route::get('/print/{note}',[NotesController::class,'print'])
 | ノート編集ページの処理 (EditNoteController)
 | --------------------------------------------------------
 */
-//マイページ管理者ログイン時以外は閲覧不可
 Route::middleware(['check_mypage_master'])->group(function ()
+//マイページ管理者ログイン時以外は閲覧不可
 {
 
     # ノート編集ページの表示(edit_note)
@@ -268,4 +274,7 @@ Route::get('/test_edit_note/{note}',[TestController::class,'test_edit_note'])
 # textboxのjsonデータを返す。(textbox_json)
 Route::post('/textbox_json/{note}',[TestController::class,'textbox_json'])
 ->name('textbox_json');
+
+
+
 

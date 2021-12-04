@@ -6,7 +6,7 @@
             <!-- rogo icon -->
             <h1 class="navbar-brand">
                 <a class="navbar-brand text-primary" href="{{route('home')}}">
-                    <img src="{{ $image_url['rogo'] }}" alt="" width="30" height="24" class="d-inline-block align-top">
+                    {{-- <img src="{{ $image_url['rogo'] }}" alt="" width="30" height="24" class="d-inline-block align-top"> --}}
                     my note
                 </a>
             </h1>

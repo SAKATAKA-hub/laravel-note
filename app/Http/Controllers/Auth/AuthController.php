@@ -196,6 +196,8 @@ class AuthController extends Controller
     # 簡単ユーザー登録(easy_post_register)
     public function easy_post_register(Request $request)
     {
+
+
         // ユーザー情報の保存
         $user = new User([
             'name' => '簡単ユーザー登録ゲスト',
@@ -211,6 +213,14 @@ class AuthController extends Controller
             _comment_,
         ]);
         $user->save();
+
+        // dd($user);
+
+        // ログアウト処理
+        Auth::logout(); //ユーザーセッションの削除
+        $request->session()->invalidate(); //全セッションの削除
+        $request->session()->regenerateToken(); //セッションの再作成(二重送信の防止)
+
 
         // ログイン処理
         $credentials = [

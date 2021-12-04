@@ -88,14 +88,43 @@ class User extends Authenticatable
      */
     public function getImageUrlAttribute()
     {
-        // *S3利用節約中
-        return '';
 
-        // テーブルに保存された画像のパスを参照。NULLなら'no-image'画像のパスを参照。
-        $path = empty($this->image)? S3ImageUrlComposer::filePath()['no_image']: $this->image;
+        $local_path = 'img/user0001.png';// ローカル環境画像
+        $s3_path = $this->image; //ユーザー登録画像
+        $no_image = 'people/bPB1YDah6eoZMPTL5tKXX1XnW8P3rxEbOifqxMaM.png'; //ユーザー画像の登録なしのパス
+        $url = '';
 
-        // S3に画像が保存されていれば表示、なければ非表示
-        return Storage::disk('s3')->exists($path)? Storage::disk('s3')->url($path):'';
+        // 開発環境のとき、
+        if( Storage::disk('local')->exists($local_path) )
+        {
+            $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
+        }
+
+        // テーブルに保存された画像のパスがNULL
+        elseif(empty($s3_path))
+        {
+            $url = Storage::disk('s3')->exists($path);
+        }
+
+        // S3に保存データがあるとき、
+        elseif (Storage::disk('s3')->exists($s3_path))
+        {
+            $url = Storage::disk('s3')->url($s3_path);
+        }
+
+        return $url;
+
+
+
+
+
+
+
+        // // テーブルに保存された画像のパスを参照。NULLなら'no-image'画像のパスを参照。
+        // $path = empty($this->image)? S3ImageUrlComposer::filePath()['no_image']: $this->image;
+
+        // // S3に画像が保存されていれば表示、なければ非表示
+        // return Storage::disk('s3')->exists($path)? Storage::disk('s3')->url($path):'';
     }
 
 }

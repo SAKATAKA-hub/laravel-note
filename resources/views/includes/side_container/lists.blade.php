@@ -5,6 +5,7 @@
         <img class="writer_image" src="{{ $mypage_master->image_url }}" alt="">
 
         <div class="writer_text">
+
             <p class="text-center"><strong>{{$mypage_master->name}} さん</strong></p>
             <p>{!!$mypage_master->replace_comment!!}</p>
 

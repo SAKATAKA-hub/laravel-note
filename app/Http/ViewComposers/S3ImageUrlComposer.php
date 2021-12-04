@@ -25,8 +25,10 @@ class S3ImageUrlComposer
         $image_url = [];
         foreach ($s3_image_path as $key => $path)
         {
-            $image_url[$key] = Storage::disk('s3')->exists($path)?
-            Storage::disk('s3')->url($path): '';
+            $image_url[$key] = '';
+
+            // $image_url[$key] = Storage::disk('s3')->exists($path)?
+            // Storage::disk('s3')->url($path): '';
         }
 
         # viewに変数を追加

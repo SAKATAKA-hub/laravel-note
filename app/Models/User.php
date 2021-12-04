@@ -91,7 +91,7 @@ class User extends Authenticatable
 
         $local_path = 'img/user0001.png';// ローカル環境画像
         $s3_path = $this->image; //ユーザー登録画像
-        $no_image = 'people/bPB1YDah6eoZMPTL5tKXX1XnW8P3rxEbOifqxMaM.png'; //ユーザー画像の登録なしのパス
+        $no_image = 'people/mMU8CNbJtMfnjF5hjmgooUaZ1r4kwpyvQYWPmCmR.png'; //ユーザー画像の登録なしのパス
         $url = '';
 
         // 開発環境のとき、
@@ -103,7 +103,7 @@ class User extends Authenticatable
         // テーブルに保存された画像のパスがNULL
         elseif(empty($s3_path))
         {
-            $url = Storage::disk('s3')->exists($path);
+            $url = Storage::disk('s3')->url($no_image);
         }
 
         // S3に保存データがあるとき、

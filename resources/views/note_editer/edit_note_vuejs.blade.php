@@ -3,8 +3,12 @@
         'use strict';
         // token
         const token = document.querySelector('meta[name="token"]').content;
+
         // route
         const jsonNote = document.querySelector('meta[name="json_note"]').content;
+        const ajax_store_textbox = document.querySelector('meta[name="ajax_store_textbox"]').content;
+        const ajax_destroy_textbox = document.querySelector('meta[name="ajax_destroy_textbox"]').content;
+
         // param
         const mypageMasterId = document.querySelector('meta[name="mypage_master_id"]').content;
 
@@ -16,9 +20,11 @@
 
             el: '#app',
 
-            //------------------------
-            // data
-            //------------------------
+            /*
+            | ------------------------------------------
+            | data
+            | ------------------------------------------
+            */
             data: {
 
 
@@ -61,19 +67,26 @@
 
                 //<-- バリデーションのエラーメッセージ -->
                 error:{
+                    strMax:'',
                     imageFile:''
                 },
 
-            },
+            }, //end data
 
 
-            //------------------------
-            // mounted
-            //------------------------
+
+
+            /*
+            | ------------------------------------------
+            | mounted
+            | ------------------------------------------
+            */
             mounted:function(){
 
                 // editingTextboxの初期化
-                this.editingTextbox = this.retarnResetEditingTextbox();
+                this.editingTextbox = this.returnResetEditingTextbox();
+
+
 
                 // 非同期通信
                 fetch(jsonNote, {
@@ -94,12 +107,16 @@
                 });
 
 
-            },
+            }, //end mounted
 
 
-            //------------------------
-            // methods
-            //------------------------
+
+
+            /*
+            | ------------------------------------------
+            | methods
+            | ------------------------------------------
+            */
             methods:{
 
                 /**
@@ -114,9 +131,6 @@
                         index = index > this.editingIndex? index-1: index;
                     }
 
-                    // editingTextboxの初期化
-                    this.editingTextbox = this.retarnResetEditingTextbox();
-
                     // textboxの表示変更
                     this.textboxes.forEach(thisTextbox => {
 
@@ -126,7 +140,7 @@
 
 
                     // 新規テキストボックスの挿入
-                    this.editingTextbox = this.retarnResetEditingTextbox();
+                    this.editingTextbox = this.returnResetEditingTextbox();
                     this.textboxes.splice(index+1, 0, this.editingTextbox);
 
                     // 編集中テキストボックスデータの保存
@@ -135,6 +149,9 @@
 
                     // エディターの表示変更
                     this.inputMode = 'create_textbox';
+
+                    //エラー文のリセット
+                    this.error = this.returnResetError();
                 },
 
 
@@ -166,6 +183,10 @@
 
                     // エディターの表示変更
                     this.inputMode = 'edit_textbox';
+
+                    //エラー文のリセット
+                    this.error = this.returnResetError();
+
                 },
 
 
@@ -190,7 +211,7 @@
                     }
 
                     // editingTextboxの初期化
-                    this.editingTextbox = this.retarnResetEditingTextbox();
+                    this.editingTextbox = this.returnResetEditingTextbox();
 
                     // エディターの表示変更
                     this.inputMode = '';
@@ -200,16 +221,35 @@
 
 
                 /**
-                 * 編集中テキストボックスの保存(saveTextbox())
+                 * テキストボックスの保存(saveTextbox())
                  *
                  */
                  saveTextbox:function(){
+
+                    console.log(this.editingTextbox);
 
                     //DBへ保存
                     switch (this.inputMode) {
 
                         case 'create_textbox':
-                            console.log('this.inputMode:"create_textbox"');
+                            let index = this.editingIndex;
+
+                            // 非同期通信
+                            fetch(ajax_store_textbox, {
+                                method: 'POST',
+                                body: new URLSearchParams({
+                                    _token: token,
+                                    case_name:this.editingTextbox.case_name,
+                                    main_value: this.editingTextbox.main_value,
+                                    sub_value: this.editingTextbox.sub_value,
+                                    order: this.editingIndex,
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(json => {
+                                this.textboxes[index].id = json.id ||[]; //textboxesテーブルのID登録
+                            });
+
                             break;
 
                         case 'edit_textbox':
@@ -225,13 +265,11 @@
 
                     // textboxの表示変更
                     this.textboxes.forEach(textbox => {
-
                         textbox.mode = 'select_textbox';
-
                     });
 
                     // editingTextboxの初期化
-                    this.editingTextbox = this.retarnResetEditingTextbox();
+                    this.editingTextbox = this.returnResetEditingTextbox();
 
                     // エディターの表示変更
                     this.inputMode = '';
@@ -248,7 +286,32 @@
                  deleteTextbox:function(textbox,index){
                     if( window.confirm('選択中のテキストボックスを削除しますか？') ){
 
+                        // 非同期通信
+                        fetch(ajax_destroy_textbox, {
+                            method: 'POST',
+                            body: new URLSearchParams({
+                                _method: 'DELETE',
+                                _token: token,
+                                id:this.editingTextbox.id,
+                                order: this.editingIndex,
+                            }),
+                        });
+
+
+                        // プレビュー表示の削除
                         this.textboxes.splice(this.editingIndex, 1);
+
+                        // textboxの表示変更
+                        this.textboxes.forEach(textbox => {
+                            textbox.mode = 'select_textbox';
+                        });
+
+                        // editingTextboxの初期化
+                        this.editingTextbox = this.returnResetEditingTextbox();
+
+                        // エディターの表示変更
+                        this.inputMode = '';
+
 
                     }
                 },
@@ -256,10 +319,10 @@
 
 
                 /**
-                 * 編集中テキストボックスの初期値を返す(retarnResetEditingTextbox)
+                 * 編集中テキストボックスの初期値を返す(returnResetEditingTextbox)
                  *
                  */
-                 retarnResetEditingTextbox:function(){
+                 returnResetEditingTextbox:function(){
 
                     return {
                         mode: 'editing_textbox',
@@ -281,11 +344,21 @@
 
 
 
+
+
+
+
+                /*
+                | ---------------------------------------
+                | エディター入力で実行されるchangeメソッド
+                | ---------------------------------------
+                */
+
                 /**
-                 * テキストボックスの種類選択の変更(changeInputTextboxCase())
+                 * テキストボックスの種類選択の変更(changeTextboxCase())
                  *
                  */
-                 changeInputTextboxCase:function(){
+                 changeTextboxCase:function(){
 
                     // テキストボックスの種類名 (editingTextboxCaseName)
                     const editingTextboxCaseName = this.editingTextbox.case_name;
@@ -303,9 +376,12 @@
                     // データのリセット(テキストボックスのグループが変更するとき)
                     if(this.editingTextbox.group !== editingTextboxCaseGroup){
 
-                        this.editingTextbox = this.retarnResetEditingTextbox();
+                        this.editingTextbox = this.returnResetEditingTextbox();
                         this.editingTextbox.case_name = editingTextboxCaseName;
                     }
+
+                    //エラー文のリセット
+                    this.error = this.returnResetError();
 
 
                     // テキストボックスのグループ名の更新
@@ -320,12 +396,13 @@
 
 
                 /**
-                 * Heading要素入力(inputHeadingMainValue())
+                 * Heading要素入力(changeReplaceMainValue())
                  * main_valueの値を表示用(replace_main_value)に置き換える
                  */
-                 inputHeadingMainValue: function(){
+                 changeReplaceMainValue: function(){
 
-                    this.editingTextbox.replace_main_value = 'replace';
+                    this.editingTextbox.main_value = this.validateStrMax(this.editingTextbox.main_value,100);
+
 
 
                     // 改行・<strong>タグの差替え関数
@@ -352,18 +429,54 @@
 
 
                 /**
-                 * imageファイル要素入力(inputImageFile())
+                 * imageファイル要素入力(changeImageFile())
                  *
                  */
-                 inputImageFile: function(){
+                 changeImageFile: function(){
 
-                    // 保存可能なファイル形式
+                    //バリデーションチェック
+                    if(!this.validateImageFile()){ return; }
+
+                    // 読込んだ画像ファイルをプレビューに表示
+                    var reader = new FileReader(this.editingTextbox.image_url);
+                    let imageFilePreview = document.getElementById('imageFilePreview');
+
+                    reader.onload = function(){
+                        imageFilePreview.src = reader.result;
+                    }
+                    let fileData = document.getElementById('imageFile').files;
+                    reader.readAsDataURL(fileData[0]);
+
+
+
+                    this.editingTextbox.image_url = imageFilePreview.src
+                    console.log(this.editingTextbox.image_url);
+                },
+
+
+
+
+                /*
+                | --------------------------
+                | バリデーションメソッド
+                | --------------------------
+                */
+
+                /**
+                 * imageファイル入力のバリデーションvalidateImageFile())
+                 *
+                 * @return bool
+                 */
+                 validateImageFile: function(){
+
+                    // 保存可能な条件
                     const fileTypesArray = ['jpeg','png','jpg'];
                     const maxFileSize = '100000';
 
                     // ファイル情報の取得
                     let inputImageElement = document.getElementById('imageFile');
                     let imageFilePreview = document.getElementById('imageFilePreview');
+
                     let fileData = inputImageElement.files;
                     let fileType = fileData[0].name.split('.').pop();
                     let fileSize = fileData[0].size;
@@ -375,30 +488,57 @@
                         this.error.imageFile = 'ファイル形式が違います。'
                         inputImageElement.value = '';
 
+                        return false;
+
                     }else if(fileSize > maxFileSize){
 
                         this.error.imageFile = 'ファイルサイズが100kbを超えています。'
                         inputImageElement.value = '';
 
+                        return false;
 
                     // エラーなしの処理
                     }else{
                         this.error.imageFile = ''
-
-                        // 読込んだ画像ファイルをプレビューに表示
-                        var reader = new FileReader();
-                        reader.onload = function(){
-                            imageFilePreview.src = reader.result;
-                        }
-                        reader.readAsDataURL(fileData[0]);
-
+                        return true;
                     }
-
-
 
                 },
 
-            },
+
+
+
+                /**
+                 * 文字数100文字以内のバリデーション(validateStrMax(str,num))
+                 *
+                 * @param String str
+                 * @param Int num
+                 * @return String num文字以上の文字を返す
+                 */
+                 validateStrMax: function(str,num){
+
+                    if(str.length >num){
+
+                        str = str.substring(0,num); //num文字以上の文字を削除
+                        this.error.strMax = '文字数が'+num+'文字を超えて超えています'; //エラー文
+                    }else{
+                        this.error.strMax = '';
+                    }
+
+                    console.log(str+'('+str.length+')')
+                    return str
+                },
+
+
+                /**
+                 * エラー文の初期値を返す(returnResetError)
+                 *
+                 */
+                 returnResetError:function(){
+                    return { strMax:'', imageFile:'' };
+                },
+
+            }, //end methods
         });
 
 

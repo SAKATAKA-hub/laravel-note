@@ -280,7 +280,14 @@ Route::post('api',[TestController::class,'api'])
 Route::get('/note_editer/{note}',[NoteEditerController::class,'note_editer'])
 ->name('note_editer');
 
-# 編集用のノートのjsonデータを返す。(json_note_editer)
+# 編集用のノートのjsonデータを返す。(json_note)
 Route::post('/json_note/{note}',[NoteEditerController::class,'json_note'])
 ->name('json_note');
 
+# 新規作成テキストボックスの保存(ajax_store_textbox)
+Route::post('/ajax_store_textbox/{note}',[NoteEditerController::class,'ajax_store_textbox'])
+->name('ajax_store_textbox');
+
+# テキストボックスの削除(ajax_destroy_textbox)
+Route::delete('/ajax_destroy_textbox/{note}',[NoteEditerController::class,'ajax_destroy_textbox'])
+->name('ajax_destroy_textbox');

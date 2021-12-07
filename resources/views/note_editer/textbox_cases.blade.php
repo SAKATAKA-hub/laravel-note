@@ -23,8 +23,6 @@
         <!-- image -->
         <img :src="textbox.image_url" :alt="textbox.sub_value">
         <p class="subValue title">@{{textbox.sub_value}}</p>
-
-        <p>@{{textbox.image_url}}</p>
     </div>
 </div>
 
@@ -55,7 +53,5 @@
         <!-- image -->
         <img :src="editingTextbox.image_url" :alt="editingTextbox.sub_value" id="imageFilePreview">
         <p class="subValue title">@{{editingTextbox.sub_value}}</p>
-
-        <p>@{{editingTextbox.image_url}}</p>
     </div>
 </div>

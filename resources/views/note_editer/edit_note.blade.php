@@ -9,8 +9,12 @@
 
     <!-- token -->
     <meta name="token" content="{{ csrf_token() }}">
+
     <!-- route -->
     <meta name="json_note" content="{{route('json_note',$note)}}">
+    <meta name="ajax_store_textbox" content="{{route('ajax_store_textbox',$note)}}">
+    <meta name="ajax_destroy_textbox" content="{{route('ajax_destroy_textbox',$note)}}">
+
 
     <!-- param -->
     <meta name="mypage_master_id" content="{{$mypage_master->id}}">
@@ -65,6 +69,12 @@
 
 @section('main.side_container')
 
+    <form action="{{route('ajax_destroy_textbox',$note)}}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button>test</button>
+    </form>
+
     <div class="fw-bold text-primary"
     v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
     >テキストボックスの編集</div>
@@ -77,7 +87,7 @@
             <label class="fw-bold text-primary" for="inputTextBoxCase">テキストボックスの種類選択</label>
             <select class="form-control text-primary fw-bold" name="age_group" id="inputTextBoxCase"
             v-model="editingTextbox.case_name"
-            @change=" changeInputTextboxCase()"
+            @change="changeTextboxCase()"
             >
                 <option value="">-- 選択 --</option>
 
@@ -97,35 +107,35 @@
         <div class="input_group_container d-grid gap-2 mb-3"
         v-if=" editingTextbox.group==='heading' "
         >
-            <form action="">
-                <div class="form_group mb-3">
 
-                    <label class="fw-bold" for="inputHeadingMainValue">見出しを入力して下さい。 <br>(100文字以内)</label>
+            <div class="form_group mb-3">
 
-                    <input type="text" name="main_value" class="form-control" required
-                    v-model="editingTextbox.main_value"
-                    @change="inputHeadingMainValue()"
-                    >
+                <label class="fw-bold" for="inputHeadingMainValue">見出しを入力して下さい。 <br>(100文字以内)</label>
 
-
-                    <p>※重要な言葉は @{{ '{'+'{' }}  @{{ '}'+'}' }} (半角記号) で囲むことで強調させることができます。</p>
-
-                </div>
+                <input type="text" name="main_value" class="form-control" required
+                v-model="editingTextbox.main_value"
+                @change="changeReplaceMainValue()"
+                >
+                <p style="color:red;">@{{error.strMax}}</p>
 
 
-                <div class="form_group d-grid gap-2">
-                    <button type="button" class="btn btn-primary btn-lg"
-                    v-if=" inputMode==='create_textbox' "
-                    @click="saveTextbox()"
-                    >テキストボックスの挿入</button>
+                <p>※重要な言葉は @{{ '{'+'{' }}  @{{ '}'+'}' }} (半角記号) で囲むことで強調させることができます。</p>
 
-                    <button type="button" class="btn btn-primary btn-lg"
-                    v-if=" inputMode==='edit_textbox' "
-                    @click="saveTextbox()"
-                    >編集内容を保存</button>
-                </div>
+            </div>
 
-            </form>
+
+            <div class="form_group d-grid gap-2">
+                <button type="button" class="btn btn-primary btn-lg"
+                v-if=" inputMode==='create_textbox' "
+                @click="saveTextbox()"
+                >テキストボックスの挿入</button>
+
+                <button type="button" class="btn btn-primary btn-lg"
+                v-if=" inputMode==='edit_textbox' "
+                @click="saveTextbox()"
+                >編集内容を保存</button>
+            </div>
+
         </div>
 
 
@@ -141,7 +151,7 @@
                 <textarea name="main_value" class="form-control" style="height:12rem;"
                 placeholder="※重要な言葉は  (半角記号) で囲む。" required
                 v-model="editingTextbox.main_value"
-                @change="inputHeadingMainValue()"
+                @change="changeReplaceMainValue()"
                 ></textarea>
 
                 <p>※重要な言葉は @{{ '{'+'{' }}  @{{ '}'+'}' }} (半角記号) で囲むことで強調させることができます。</p>
@@ -203,7 +213,7 @@
             <div class="form_group mb-3">
                 <label class="form-label" for="fileImage">挿入する画像を選択してください。<br>(100Kb以内,jpeg・pngファイルのみ)</label>
                 <input type="file" name="image" class="form-control" id="imageFile"
-                @change="inputImageFile()"
+                @change="changeImageFile()"
                 ><!-- 画像編集の時は、入力必須ではない -->
                 <p style="color:red;">@{{error.imageFile}}</p>
             </div>

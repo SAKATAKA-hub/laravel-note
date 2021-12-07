@@ -1,0 +1,83 @@
+/* プレビュー枠内の表示 */
+.preview_note_container {
+    height: 80vh;
+    overflow-y: scroll;
+    padding: 1rem;
+    border: solid 3px #bbb;
+    border-radius: 5px;
+    list-style: none;
+}
+
+
+.hidden {
+    display: none;
+}
+
+
+/* テキストボックスの枠表示 (edit>note.blade.php)*/
+.preview_note_container .select_title,
+.preview_note_container .editing_title,
+.preview_note_container .inoperable_title,
+.preview_note_container .select_textbox,
+.preview_note_container .editing_textbox,
+.preview_note_container .inoperable_textbox {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    margin-bottom: .5em;
+
+    /* display: flex;
+    align-items: center;
+    justify-content: space-between; */
+
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+    background: #fff;
+}
+
+
+    /* ボタンコンテナ―*/
+    .btns_container{
+        width: 6em;
+        margin-left: .5em;
+    }
+
+
+/* 編集中テキストボックスの枠表示 */
+.preview_note_container .editing_title,
+.preview_note_container .editing_textbox {
+    padding: 1rem;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px #dc3545;
+}
+
+
+/* 編集中以外のテキストボックスの枠表示 */
+.preview_note_container .inoperable_title,
+.preview_note_container .inoperable_textbox {
+    background: #eee;
+    color:#aaa;
+}
+.preview_note_container .inoperable_textbox *{
+    background: #eee;
+    border-color: #aaa;
+}
+
+
+/* マウスオーバー*/
+.preview_note_container .select_textbox:hover,
+.preview_note_container .inoperable_textbox:hover
+{
+    background: #aff;
+    cursor: pointer;
+}
+.preview_note_container .inoperable_textbox:hover *{
+    background: #aff;
+}
+
+.preview_note_container .editing_textbox:hover
+{
+    box-shadow: 0 2px 5px #aaa;
+    cursor: pointer;
+}

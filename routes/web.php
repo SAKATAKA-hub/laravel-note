@@ -4,12 +4,13 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\NotesController;
+use App\Http\Controllers\NoteEditerController;
+
 use App\Http\Controllers\EditNoteController;
 use App\Http\Controllers\EditTextboxController;
 use App\Http\Controllers\AppAdminController;
 use App\Http\Controllers\TestController;
 
-use App\Http\Middleware\CheckMypageMaster;
 
 
 /*
@@ -267,14 +268,19 @@ Route::post('api',[TestController::class,'api'])
 
 
 
-# ノート編集ページの表示(test_edit_note)
-Route::get('/test_edit_note/{note}',[TestController::class,'test_edit_note'])
-->name('test_edit_note');
-
-# textboxのjsonデータを返す。(textbox_json)
-Route::post('/textbox_json/{note}',[TestController::class,'textbox_json'])
-->name('textbox_json');
 
 
 
+/*
+| --------------------------------------------------------
+| 非同期通信によるノート編集ページの処理 (NoteediterController)
+| --------------------------------------------------------
+*/
+# ノート編集ページの表示(note_editer)
+Route::get('/note_editer/{note}',[NoteEditerController::class,'note_editer'])
+->name('note_editer');
+
+# 編集用のノートのjsonデータを返す。(json_note_editer)
+Route::post('/json_note/{note}',[NoteEditerController::class,'json_note'])
+->name('json_note');
 

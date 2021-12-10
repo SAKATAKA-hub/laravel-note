@@ -103,7 +103,7 @@ class NoteEditerController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param Note $note
-     * @return \Illuminate\View\View
+     * @return JSON
      */
     public function ajax_store_textbox(Request $request, Note $note)
     {
@@ -146,11 +146,65 @@ class NoteEditerController extends Controller
 
 
         # JSONデータを返す
-        return [
-            'id' => $textbox->id,
-        ];
+        return ['id' => $textbox->id,];
     }
 
+
+
+
+    /**
+     * テキストボックスの更新(ajax_update_textbox)
+     *
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param Note $note
+     * @return JSON
+     */
+    public function ajax_update_textbox(Request $request, Note $note)
+    {
+        # 更新するテキストボックス
+        $textbox = Textbox::find($request->id);
+
+
+
+        # 保存データ
+        $save_data = [
+            'note_id' => $note->id, //ノートID
+            'textbox_case_id' => TextboxCase::where('value',$request->case_name)->first()->id, //テキストボックスの種類ID
+            'main_value' => $request->main_value, //mein_value
+            'sub_value' => $request->sub_value, //sub_value
+            'order' => $request->order, //採番
+        ];
+
+
+
+        // # 画像アップロード処理
+        // if($request->file('image')) //ファイルの添付があれば、アップロード
+        // {
+        //     $save_data['main_value'] = $this::uploadImage($request); //画像のパスを'main_value'カラムに保存
+        // }
+        // elseif($request->old_image) //アップ―ド画像に変更が無ければ、画像パスを更新しない。
+        // {
+        //     $save_data['main_value'] = $request->old_image;
+        // }
+
+
+        // # 画像の削除(テキストボックスの種類グループが、'image'からそれ以外に変更されるとき)
+        // $new_group = TextboxCase::find( $save_data['textbox_case_id'] )->group; //'編集前'のテキストボックスの種類グループ名
+        // $old_group = TextboxCase::find( $textbox->textbox_case_id )->group; //'編集後'のテキストボックスの種類グループ名
+        // if ( ($old_group === 'image')&&($new_group !== 'image') )
+        // {
+        //     $this::deleteImage( $textbox->main_value );
+        // }
+
+
+        # テキストボックスの更新
+        $textbox->update($save_data);
+
+        # ノートの更新日の更新
+        $note->update(['updated_at' => $textbox->updated_at]);
+
+    }
 
 
 

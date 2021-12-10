@@ -288,6 +288,11 @@ Route::post('/json_note/{note}',[NoteEditerController::class,'json_note'])
 Route::post('/ajax_store_textbox/{note}',[NoteEditerController::class,'ajax_store_textbox'])
 ->name('ajax_store_textbox');
 
+# テキストボックスの更新(ajax_update_textbox)
+Route::patch('/ajax_update_textbox/{note}',[NoteEditerController::class,'ajax_update_textbox'])
+->name('ajax_update_textbox');
+
+
 # テキストボックスの削除(ajax_destroy_textbox)
 Route::delete('/ajax_destroy_textbox/{note}',[NoteEditerController::class,'ajax_destroy_textbox'])
 ->name('ajax_destroy_textbox');

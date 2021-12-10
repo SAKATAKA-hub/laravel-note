@@ -13,7 +13,9 @@
     <!-- route -->
     <meta name="json_note" content="{{route('json_note',$note)}}">
     <meta name="ajax_store_textbox" content="{{route('ajax_store_textbox',$note)}}">
+    <meta name="ajax_update_textbox" content="{{route('ajax_update_textbox',$note)}}">
     <meta name="ajax_destroy_textbox" content="{{route('ajax_destroy_textbox',$note)}}">
+
 
 
     <!-- param -->

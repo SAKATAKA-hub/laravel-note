@@ -7,6 +7,7 @@
         // route
         const jsonNote = document.querySelector('meta[name="json_note"]').content;
         const ajax_store_textbox = document.querySelector('meta[name="ajax_store_textbox"]').content;
+        const ajax_update_textbox = document.querySelector('meta[name="ajax_update_textbox"]').content;
         const ajax_destroy_textbox = document.querySelector('meta[name="ajax_destroy_textbox"]').content;
 
         // param
@@ -44,6 +45,9 @@
                 //<-- テキストボックス -->
                 //* params mode: テキストボックスの表示モード'select_textbox','editing_textbox','inoperable_textbox'　
                 textboxes: [],
+
+                //<-- 挿入した画像を保存する配列 -->
+                imageSrcs: [],
 
 
                 //<-- 編集中テキストボックス -->
@@ -228,32 +232,45 @@
 
                     console.log(this.editingTextbox);
 
-                    //DBへ保存
+                    //DBへ保存(非同期通信)
                     switch (this.inputMode) {
 
+                        // ------ 新規作成 ------
                         case 'create_textbox':
-                            let index = this.editingIndex;
 
-                            // 非同期通信
-                            fetch(ajax_store_textbox, {
+                            // let index = this.editingIndex;
+                            // fetch(ajax_store_textbox, {
+                            //     method: 'POST',
+                            //     body: new URLSearchParams({
+                            //         _token: token,
+                            //         case_name:this.editingTextbox.case_name,
+                            //         main_value: this.editingTextbox.main_value,
+                            //         sub_value: this.editingTextbox.sub_value,
+                            //         order: this.editingIndex,
+                            //     }),
+                            // })
+                            // .then(response => response.json())
+                            // .then(json => {
+                            //     this.textboxes[index].id = json.id ||[]; //textboxesテーブルのID登録
+                            // });
+                            // break;
+
+
+                        // ------ 更新 ------
+                        case 'edit_textbox':
+
+                            fetch(ajax_update_textbox, {
                                 method: 'POST',
                                 body: new URLSearchParams({
+                                    _method: 'PATCH',
                                     _token: token,
+                                    id:this.editingTextbox.id,
                                     case_name:this.editingTextbox.case_name,
                                     main_value: this.editingTextbox.main_value,
                                     sub_value: this.editingTextbox.sub_value,
                                     order: this.editingIndex,
                                 }),
-                            })
-                            .then(response => response.json())
-                            .then(json => {
-                                this.textboxes[index].id = json.id ||[]; //textboxesテーブルのID登録
                             });
-
-                            break;
-
-                        case 'edit_textbox':
-                            console.log('this.inputMode:"edit_textbox"');
                             break;
 
                         default:
@@ -284,6 +301,7 @@
                  *
                  */
                  deleteTextbox:function(textbox,index){
+
                     if( window.confirm('選択中のテキストボックスを削除しますか？') ){
 
                         // 非同期通信
@@ -311,7 +329,6 @@
 
                         // エディターの表示変更
                         this.inputMode = '';
-
 
                     }
                 },
@@ -389,7 +406,6 @@
 
                     console.log(this.editingTextbox.group);
 
-
                 },
 
 
@@ -440,17 +456,18 @@
                     // 読込んだ画像ファイルをプレビューに表示
                     var reader = new FileReader(this.editingTextbox.image_url);
                     let imageFilePreview = document.getElementById('imageFilePreview');
-
-                    reader.onload = function(){
-                        imageFilePreview.src = reader.result;
-                    }
                     let fileData = document.getElementById('imageFile').files;
                     reader.readAsDataURL(fileData[0]);
 
+                    let imageSrcs = this.imageSrcs; //挿入した画像を保存する配列
+                    let editingTextbox = this.editingTextbox; //編集中テキストボックス
+                    reader.onload = function(){
+                        imageSrcs.push(reader.result);
+                        imageFilePreview.src = imageSrcs[imageSrcs.length-1];
+                        editingTextbox.image_url = imageSrcs[imageSrcs.length-1];
+                    }
+                    console.log(this.editingTextbox);
 
-
-                    this.editingTextbox.image_url = imageFilePreview.src
-                    console.log(this.editingTextbox.image_url);
                 },
 
 

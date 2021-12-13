@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Note;
 use App\Models\Textbox;
@@ -14,6 +14,66 @@ use App\Models\Color;
 
 class NoteEditerController extends Controller
 {
+
+    /**
+     * ノート新規作成ページの表示(create_note)
+     *
+     *
+     * @param \App\Models\User $mypage_master (マイページの管理者)
+     * @return \Illuminate\View\View
+     */
+    public function create_note(User $mypage_master)
+    {
+        $note = 0;
+        $selects = [
+            'colors' => Color::get(),
+            'tags' => Tag::tagsList($mypage_master),
+        ];
+
+        return view('note_editer.create_note',
+            compact('note','mypage_master','selects')
+        );
+    }
+
+
+    /**
+     * 新規作成ノートの保存(post_note)
+     *
+     *
+     * @param \Illuminate\Http\EditNoteTitleFormRequest $request
+     * @param \App\Models\User $mypage_master (マイページの管理者)
+     * @return \Illuminate\View\View
+     */
+    public function post_note(Request $request, User $mypage_master){
+
+        # 新規ノートの保存
+        $note = new Note([
+            'title' => $request->title, //タイトル
+            'color' => $request->color, //カラー
+            'tags' => $this::getUpdateTagsString($request->tags), //タグ('****','****','****'形式)
+            'user_id' => $request->mypage_master_id, //投稿者ID
+
+            'created_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //作成日時
+            'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //更新日時
+            // 'publication_at' => $this::getPublicationAt($request), //公開日時
+            'publication_at' => null, //公開日時
+        ]);
+        $note->save();
+
+
+        # 新しいタグをtagsテーブルに保存
+        $this::saveNewTags($request);
+
+
+        return redirect()->route('note_editer',$note)
+        ->with('note_alert','store_note_title');
+
+    }
+
+
+
+
+
     /**
      * ノート編集ページの表示(note_editer)
      *
@@ -21,9 +81,8 @@ class NoteEditerController extends Controller
      * @param Note $note
      * @return \Illuminate\View\View
      */
-    public function note_editer(Note $note){
-
-
+    public function note_editer(Note $note)
+    {
         # マイページ管理者
         $mypage_master = User::find($note->user_id);
 
@@ -98,6 +157,21 @@ class NoteEditerController extends Controller
 
 
     /**
+     * ノート基本情報の更新(update_note)
+     *
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param Note $note
+     */
+    public function update_note(Request $request, Note $note)
+    {
+
+    }
+
+
+
+
+    /**
      * 新規作成テキストボックスの保存(ajax_store_textbox)
      *
      *
@@ -130,10 +204,10 @@ class NoteEditerController extends Controller
 
 
         // # 画像アップロード処理
-        // if($upload_image = $request->file('image'))
-        // {
-        //     $save_data['main_value'] = $this::uploadImage($request); //画像のパスを'main_value'カラムに保存
-        // }
+        if($upload_image = $request->file('image'))
+        {
+            $save_data['main_value'] = $this::uploadImage($request); //画像のパスを'main_value'カラムに保存
+        }
 
 
         # テキストボックスの保存
@@ -144,6 +218,12 @@ class NoteEditerController extends Controller
         # ノートの更新日の更新
         $note->update(['updated_at' => $textbox->created_at]);
 
+
+        # 画像のテキストオックスを保存した時、リダイレクト
+        if(( isset($request->group) )&&( $request->group == 'image' ) )
+        {
+            return redirect()->route('note_editer',$note);
+        }
 
         # JSONデータを返す
         return ['id' => $textbox->id,];
@@ -162,9 +242,12 @@ class NoteEditerController extends Controller
      */
     public function ajax_update_textbox(Request $request, Note $note)
     {
+
+        // dd($request->all());
+
+
         # 更新するテキストボックス
         $textbox = Textbox::find($request->id);
-
 
 
         # 保存データ
@@ -177,25 +260,24 @@ class NoteEditerController extends Controller
         ];
 
 
+        # 画像アップロード処理
+        if($request->file('image')) //ファイルの添付があれば、アップロード
+        {
+            $save_data['main_value'] = $this::uploadImage($request); //画像のパスを'main_value'カラムに保存
+        }
+        elseif($request->old_image) //アップ―ド画像に変更が無ければ、画像パスを更新しない。
+        {
+            $save_data['main_value'] = $request->old_image;
+        }
 
-        // # 画像アップロード処理
-        // if($request->file('image')) //ファイルの添付があれば、アップロード
-        // {
-        //     $save_data['main_value'] = $this::uploadImage($request); //画像のパスを'main_value'カラムに保存
-        // }
-        // elseif($request->old_image) //アップ―ド画像に変更が無ければ、画像パスを更新しない。
-        // {
-        //     $save_data['main_value'] = $request->old_image;
-        // }
 
-
-        // # 画像の削除(テキストボックスの種類グループが、'image'からそれ以外に変更されるとき)
-        // $new_group = TextboxCase::find( $save_data['textbox_case_id'] )->group; //'編集前'のテキストボックスの種類グループ名
-        // $old_group = TextboxCase::find( $textbox->textbox_case_id )->group; //'編集後'のテキストボックスの種類グループ名
-        // if ( ($old_group === 'image')&&($new_group !== 'image') )
-        // {
-        //     $this::deleteImage( $textbox->main_value );
-        // }
+        # 画像の削除(テキストボックスの種類グループが、'image'からそれ以外に変更されるとき)
+        $new_group = TextboxCase::find( $save_data['textbox_case_id'] )->group; //'編集前'のテキストボックスの種類グループ名
+        $old_group = TextboxCase::find( $textbox->textbox_case_id )->group; //'編集後'のテキストボックスの種類グループ名
+        if ( ($old_group === 'image')&&($new_group !== 'image') )
+        {
+            $this::deleteImage( $textbox->main_value );
+        }
 
 
         # テキストボックスの更新
@@ -204,6 +286,11 @@ class NoteEditerController extends Controller
         # ノートの更新日の更新
         $note->update(['updated_at' => $textbox->updated_at]);
 
+        # 画像のテキストオックスを保存した時、リダイレクト
+        if(( isset($request->group) )&&( $request->group == 'image' ) )
+        {
+            return redirect()->route('note_editer',$note);
+        }
     }
 
 
@@ -224,9 +311,9 @@ class NoteEditerController extends Controller
         $textbox = Textbox::find($request->id);
 
 
-        // // # 画像の削除
-        // // $pus = str_replace(["\r\n", "\r", "\n"], '', $textbox->main_value); //改行の削除
-        // // $this::deleteImage( $pus );
+        # 画像の削除
+        $pus = str_replace(["\r\n", "\r", "\n"], '', $textbox->main_value); //改行の削除
+        $this::deleteImage( $pus );
 
         # 採番の更新 (削除するテキストボックスより後のテキストボックスの採番を'1'減算)
         $textboxes = Textbox::changeOrders($request, $note);
@@ -258,6 +345,94 @@ class NoteEditerController extends Controller
     |
     */
 
+
+
+    /**
+     * タグの配列をノートの新規作成・更新時に保存する形式で返す(getUpdateTagsString)
+     *
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return Array
+     */
+    public function getUpdateTagsString($request_tags)
+    {
+        $tags_srting = implode(' ',$request_tags);
+        $tags_srting =  str_replace('　',' ',$tags_srting); //新しいタグ入力の区切り文字を'半角空白'に統一
+        $tags_array = explode(' ',$tags_srting);
+        $tags_array = array_unique($tags_array); //重複したタグの入力を削除
+
+        $key = array_search(null, $tags_array);
+        if( ($key==true)or($key===0) ){ unset($tags_array[$key]);} // 'NULLの値'を削除
+
+        $update_tags_srting = "'".implode("','",$tags_array)."'"; // ノートに保存する形式にタグを変換
+
+        return $update_tags_srting;
+    }
+
+
+
+
+    /**
+     * 新しいタグをtagsテーブルに保存(saveNewTags)
+     *
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return Array
+     */
+    public function saveNewTags($request)
+    {
+        # '入力された全てのタグ'から'登録済みのタグ'を削除
+        $update_tags_srting = $this::getUpdateTagsString($request->tags);
+        $update_tags_array = explode(",",$update_tags_srting); //'入力された全てのタグ'を配列形式に変換
+        $old_tags =  Tag::where('user_id',$request->mypage_master_id )->get();// '登録済みのタグ'を取得
+        foreach ($old_tags as $old_tag)
+        {
+            $del_val = $old_tag->value;
+            $key = array_search($del_val, $update_tags_array);
+            if( ($key==true)or($key===0) ){ unset($update_tags_array[$key]);} // '入力された全てのタグ'から'登録済みのタグ'を削除
+        }
+
+
+        # 新しいタグが存在すれば、新しいタグを登録
+        if( count($update_tags_array) )
+        {
+
+            foreach ($update_tags_array as $update_tag)
+            {
+                $tag = new Tag([
+                    'value' => $update_tag,
+                    'text' => str_replace("'",'',$update_tag),
+                    'user_id' => $request->mypage_master_id,
+                ]);
+                $tag->save();
+
+            }
+        }
+    }
+
+
+
+
+    /**
+     * 利用されていないタグをtagsテーブルから削除(deleteTags)
+     *
+     *
+     * @param String $mypage_master_id
+     * @return Array
+     */
+    public function deleteTags($mypage_master_id)
+    {
+        $tags =  Tag::where('user_id',$mypage_master_id)->get();// '登録済みのタグ'を取得
+        foreach ($tags as $tag)
+        {
+            $mypage_master = User::find($mypage_master_id);
+            $count = Note::TagsListCount($mypage_master,$tag->value); //タグが利用される投稿数
+
+            if($count === 0){ $tag->delete();} //タグが利用される投稿数が0なら、そのタグを削除
+        }
+
+    }
+
     /**
      * S3に画像をアップロード(uploadImage)
      *
@@ -281,5 +456,21 @@ class NoteEditerController extends Controller
         return $path;
     }
 
+
+
+
+    /**
+     * S3から画像を削除(deleteImage)
+     *
+     *
+     * @param $delete_image_path (削除する画像のS3内のパス)
+     */
+    public static function deleteImage($delete_image_path)
+    {
+        if ( Storage::disk('s3')->exists($delete_image_path) ) // 画像が存在するか確認
+        {
+            Storage::disk('s3')->delete($delete_image_path); //画像の削除
+        }
+    }
 
 }

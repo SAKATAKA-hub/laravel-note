@@ -3,9 +3,9 @@
         'use strict';
         // token
         const token = document.querySelector('meta[name="token"]').content;
-
         // route
         const jsonNote = document.querySelector('meta[name="json_note"]').content;
+        const update_note =  document.querySelector('meta[name="update_note"]').content;
         const ajax_store_textbox = document.querySelector('meta[name="ajax_store_textbox"]').content;
         const ajax_update_textbox = document.querySelector('meta[name="ajax_update_textbox"]').content;
         const ajax_destroy_textbox = document.querySelector('meta[name="ajax_destroy_textbox"]').content;
@@ -17,17 +17,13 @@
 
 
         var app = new Vue({
-
-
             el: '#app',
-
             /*
             | ------------------------------------------
             | data
             | ------------------------------------------
             */
             data: {
-
 
                 //<-- 入力モード -->
                 // 'create_textbox','edit_textbox',''
@@ -46,9 +42,6 @@
                 //* params mode: テキストボックスの表示モード'select_textbox','editing_textbox','inoperable_textbox'　
                 textboxes: [],
 
-                //<-- 挿入した画像を保存する配列 -->
-                imageSrcs: [],
-
 
                 //<-- 編集中テキストボックス -->
                 // 編集中テキストボックスのインデックス番号
@@ -57,8 +50,9 @@
                 // 編集中テキストボックス
                 editingTextbox : [],
 
-
-
+                // ノート編集時の追加情報
+                newTagsString : '', //新しく追加されたタグ
+                inputReleaseDatetime :'', //公開予約日時
 
                 //<-- セレクトボックスの選択要素-->
                 selects :{
@@ -66,8 +60,6 @@
                     tags : '',
                     textbox_cases : '',
                 },
-
-
 
                 //<-- バリデーションのエラーメッセージ -->
                 error:{
@@ -124,7 +116,7 @@
             methods:{
 
                 /**
-                 * 新規挿入フォームの表示(createTextbox(index))
+                 * テキストボックス新規挿入フォームの表示(createTextbox(index))
                  *
                  */
                  createTextbox:function(index){
@@ -137,9 +129,7 @@
 
                     // textboxの表示変更
                     this.textboxes.forEach(thisTextbox => {
-
                         thisTextbox.mode = 'inoperable_textbox';
-
                     });
 
 
@@ -161,7 +151,7 @@
 
 
                 /**
-                 * 編集フォームの表示(editTextbox(textbox,index))
+                 * テキストボックス編集フォームの表示(editTextbox(textbox,index))
                  *
                  */
                  editTextbox:function(textbox,index){
@@ -173,16 +163,13 @@
 
                     // textboxの表示変更
                     this.textboxes.forEach( (thisTextbox,i) => {
-
                         thisTextbox.mode = index === i? 'editing_textbox': 'inoperable_textbox';
-
                     });
-
 
                     // 編集中テキストボックスデータの保存
                     this.editingIndex = index;
                     this.editingTextbox = Object.assign({}, textbox);
-                    console.log('editingTextbox:'+this.editingTextbox);
+                    console.log(this.editingTextbox);
 
 
                     // エディターの表示変更
@@ -192,6 +179,33 @@
                     this.error = this.returnResetError();
 
                 },
+
+
+
+
+                /**
+                 * タイトルボックス編集フォームの表示(editTitlebox(textbox,index))
+                 *
+                 */
+                 editTitlebox:function(textbox,index){
+                    // 新規テキストボックスの削除
+                    if(this.inputMode === 'create_textbox'){
+                        this.textboxes.splice(this.editingIndex, 1);
+                    }
+
+                    // 編集中テキストボックスデータの保存
+                    this.editingIndex = index;
+                    this.editingTextbox = Object.assign({}, this.note);
+
+                    // textboxの表示変更
+                    this.textboxes.forEach( (thisTextbox,i) => {
+                        thisTextbox.mode = index === i? 'editing_textbox': 'inoperable_textbox';
+                    });
+
+
+                    // エディターの表示変更
+                    this.inputMode = 'edit_titlebox';
+                 },
 
 
 
@@ -230,30 +244,30 @@
                  */
                  saveTextbox:function(){
 
-                    console.log(this.editingTextbox);
-
                     //DBへ保存(非同期通信)
                     switch (this.inputMode) {
 
                         // ------ 新規作成 ------
                         case 'create_textbox':
 
-                            // let index = this.editingIndex;
-                            // fetch(ajax_store_textbox, {
-                            //     method: 'POST',
-                            //     body: new URLSearchParams({
-                            //         _token: token,
-                            //         case_name:this.editingTextbox.case_name,
-                            //         main_value: this.editingTextbox.main_value,
-                            //         sub_value: this.editingTextbox.sub_value,
-                            //         order: this.editingIndex,
-                            //     }),
-                            // })
-                            // .then(response => response.json())
-                            // .then(json => {
-                            //     this.textboxes[index].id = json.id ||[]; //textboxesテーブルのID登録
-                            // });
-                            // break;
+                            let index = this.editingIndex;
+                            fetch(ajax_store_textbox, {
+                                method: 'POST',
+                                body: new URLSearchParams({
+                                    _token: token,
+                                    case_name:this.editingTextbox.case_name,
+                                    main_value: this.editingTextbox.main_value,
+                                    sub_value: this.editingTextbox.sub_value,
+                                    order: this.editingIndex,
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(json => {
+
+                                // idの登録
+                                this.textboxes[index].id = json.id;
+                            });
+                            break;
 
 
                         // ------ 更新 ------
@@ -273,6 +287,7 @@
                             });
                             break;
 
+
                         default:
                         break;
                     }
@@ -291,6 +306,91 @@
                     // エディターの表示変更
                     this.inputMode = '';
                 },
+
+
+
+
+
+                /**
+                 * タイトルボックスの保存(saveTitlebox())
+                 *
+                 */
+                 saveTitlebox:function(){
+
+                    // 新しいタグの処理
+                    if(this.newTagsString){
+                        let result = '';
+                        while (result !== this.newTagsString) { //文字の置換え
+                            this.newTagsString = this.newTagsString.replace('　',' ');
+                            result = this.newTagsString.replace('　',' ');
+                        }
+                        let newTagsArray = this.newTagsString.split(' ');
+
+                        newTagsArray = this.editingTextbox.tags_array.concat(newTagsArray);
+                        this.editingTextbox.tags_array = [...new Set(newTagsArray)]; //重複削除
+                        this.newTagsString = '';
+                        console.log(this.editingTextbox.tags_array);
+                    }
+
+
+                    // DBへ保存(非同期通信)
+                    fetch(update_note, {
+                        method: 'POST',
+                        body: new URLSearchParams({
+                            _method: 'PATCH',
+                            _token: token,
+                            // id:this.editingTextbox.id,
+                            // case_name:this.editingTextbox.case_name,
+                            // main_value: this.editingTextbox.main_value,
+                            // sub_value: this.editingTextbox.sub_value,
+                            // order: this.editingIndex,
+                        }),
+                    })
+                    .then(response=>{
+                        if(!response.ok){
+                            throw new Error('通信エラーの為、ページを再読み込みします。');
+                        }
+                        return response.json;
+                    })
+                    .then(json=>{})
+                    .catch(err=>{
+                        alert(err.message);
+                        location.reload();
+                    });
+
+
+                    // 編集内容をnoteデータ配列に保存
+                    this.note = Object.assign({}, this.editingTextbox);
+
+                    // textboxの表示変更
+                    this.textboxes.forEach(textbox => {
+                        textbox.mode = 'select_textbox';
+                    });
+
+                    // editingTextboxの初期化
+                    this.editingTextbox = this.returnResetEditingTextbox();
+
+                    // エディターの表示変更
+                    this.inputMode = '';
+
+                },
+
+
+
+
+                /**
+                 * 画像テキストボックスの保存(saveImageTextbox())
+                 *
+                 */
+                 saveImageTextbox:function(){
+                    console.log(this.editingTextbox.id);
+                    document.querySelector('input[name="id"]').value = this.editingTextbox.id;
+                    document.querySelector('input[name="order"]').value = this.editingIndex;
+                    document.querySelector('input[name="case_name"]').value = this.editingTextbox.case_name;
+                    document.querySelector('input[name="group"]').value = this.editingTextbox.group;
+                    document.querySelector('input[name="old_image"]').value = this.textboxes[this.editingIndex].main_value;
+                 },
+
 
 
 
@@ -404,7 +504,8 @@
                     // テキストボックスのグループ名の更新
                     this.editingTextbox.group =　editingTextboxCaseGroup;
 
-                    console.log(this.editingTextbox.group);
+                    // console.log(this.editingTextbox.group);
+                    console.log(this.textboxes[this.editingIndex]);
 
                 },
 
@@ -453,18 +554,17 @@
                     //バリデーションチェック
                     if(!this.validateImageFile()){ return; }
 
-                    // 読込んだ画像ファイルをプレビューに表示
+                    // ファイルデータをURL形式に変換
                     var reader = new FileReader(this.editingTextbox.image_url);
                     let imageFilePreview = document.getElementById('imageFilePreview');
                     let fileData = document.getElementById('imageFile').files;
                     reader.readAsDataURL(fileData[0]);
 
-                    let imageSrcs = this.imageSrcs; //挿入した画像を保存する配列
+                    // 読込んだ画像ファイルをプレビューに表示
                     let editingTextbox = this.editingTextbox; //編集中テキストボックス
                     reader.onload = function(){
-                        imageSrcs.push(reader.result);
-                        imageFilePreview.src = imageSrcs[imageSrcs.length-1];
-                        editingTextbox.image_url = imageSrcs[imageSrcs.length-1];
+                        imageFilePreview.src = reader.result;
+                        editingTextbox.image_url = reader.result;
                     }
                     console.log(this.editingTextbox);
 

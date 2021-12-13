@@ -94,7 +94,7 @@ class User extends Authenticatable
         $no_image = 'people/mMU8CNbJtMfnjF5hjmgooUaZ1r4kwpyvQYWPmCmR.png'; //ユーザー画像の登録なしのパス
         $url = '';
 
-        // 開発環境のとき、
+        // // 開発環境のとき、
         if( Storage::disk('local')->exists($local_path) )
         {
             $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);

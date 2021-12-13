@@ -12,10 +12,11 @@
 
     <!-- route -->
     <meta name="json_note" content="{{route('json_note',$note)}}">
+
+    <meta name="update_note" content="{{route('update_note',$note)}}">
     <meta name="ajax_store_textbox" content="{{route('ajax_store_textbox',$note)}}">
     <meta name="ajax_update_textbox" content="{{route('ajax_update_textbox',$note)}}">
     <meta name="ajax_destroy_textbox" content="{{route('ajax_destroy_textbox',$note)}}">
-
 
 
     <!-- param -->
@@ -25,9 +26,6 @@
 
     <!-- note.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/note.css')}}">
-
-    <!-- edit_form.css -->
-    {{-- <link rel="stylesheet" href="{{asset('css/layouts/edit_form.css')}}"> --}}
 
     <!-- note_editer.css -->
     <link rel="stylesheet" href="{{asset('css/note_editer.css')}}">
@@ -47,11 +45,7 @@
 
 
 
-
-
-
-{{-- @section('title',$note->title.'"の編集') --}}
-@section('title','test ノート編集ページ')
+@section('title','ノート編集ページ')
 
 
 
@@ -71,15 +65,122 @@
 
 @section('main.side_container')
 
-    <form action="{{route('ajax_destroy_textbox',$note)}}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button>test</button>
-    </form>
+    <!-- titileboxの編集 -->
+    <div class="fw-bold text-primary"
+     v-if="inputMode==='edit_titlebox'"
+    >
+        タイトルボックスの編集
+    </div>
 
+    <div class="card p-2 pt-3 pb-3 mb-5"
+     v-if="inputMode==='edit_titlebox'"
+    >
+        {{-- タイトル --}}
+        <div class="form_group mb-3">
+            <label class="fw-bold" for="inputNoteTitle">タイトル</label>
+
+            <input type="text" name="title" class="form-control" placeholder="タイトル" id="inputNoteTitle" required
+             v-model="editingTextbox.title"
+            >
+        </div>
+
+
+        {{-- テーマカラー --}}
+        <div class="form_group mb-3">
+            <!-- field_label -->
+            <label class="fw-bold" for="inputNoteColor">テーマカラー</label>
+
+            <!-- field_input -->
+            <select class="form-control" name="color" id="inputNoteColor" required
+             v-model="editingTextbox.color"
+            >
+                <option v-for="color in selects.colors" :value="color.value">
+                    @{{color.text}}
+                </option>
+
+            </select>
+        </div>
+
+
+        {{-- タグ --}}
+        <div class="form_group mb-3">
+            <label class="fw-bold">タグ</label>
+
+            <!-- 登録済みタグの選択 -->
+            <div class="form-check" v-for="(tag,index) in selects.tags">
+                <input class="form-check-input" type="checkbox" :value="tag.text" :id="'tags'+index"
+                 v-model="editingTextbox.tags_array"
+                >
+                <label class="form-check-label" :for="'tags'+index">@{{tag.text}}</label>
+            </div>
+            <!-- 新しいタグの入力 -->
+            <input  class="form-control" type="text" name="tags[]"placeholder="新しいタグの追加 "
+             v-model="newTagsString"
+            >
+        </div>
+
+
+        {{-- 公開設定 --}}
+        <div class="form_group mb-3">
+            <label class="fw-bold">公開設定</label>
+
+            <!-- 公開切換え -->
+            <div class="form-check form-switch fs-5 mt-2">
+                <input class="form-check-input" type="checkbox" id="inputPublishing"
+                 v-model="editingTextbox.chake_publishing"
+                >
+
+                <label v-if="editingTextbox.chake_publishing"
+                 class="form-check-label fs-5 fw-bold text-primary" for="inputPublishing"
+                >公開</label>
+                <label v-if="!editingTextbox.chake_publishing"
+                 class="form-check-label fs-5 fw-bold text-secondary" for="inputPublishing"
+                >非公開</label>
+            </div>
+
+            <!-- 公開日の予約 -->
+            <div v-if="editingTextbox.chake_publishing" class="mt-2">
+                <label class="text-secondary" for="inputReleaseDatetime">公開日を予約する(翌日以降)</label>
+                <input class="form-control text-secondary" type="datetime-local" name="release_datetime" id="inputReleaseDatetime"
+                 min="{{\Carbon\Carbon::parse('tomorrow')->format('Y-m-d').'T00:00'}}" readonly
+                 v-model="inputReleaseDatetime"
+                >
+            </div>
+            <div v-if="!editingTextbox.chake_publishing" class="mt-2">
+                <label class="" for="inputReleaseDatetime">公開日を予約する(翌日以降)</label>
+                <input class="" type="datetime-local" name="release_datetime" id="inputReleaseDatetime"
+                 min="{{\Carbon\Carbon::parse('tomorrow')->format('Y-m-d').'T00:00'}}"
+                 v-model="inputReleaseDatetime"
+                >
+            </div>
+
+        </div>
+
+
+        {{-- ボタン --}}
+        <div class="form_group d-grid gap-2 mt-3 mb-3">
+            <button type="button" class="btn btn-primary btn-lg"
+            @click="saveTitlebox()"
+            >ノートの基本情報を保存</button>
+        </div>
+        <div class="form_group d-grid gap-2">
+            <button class="btn btn-outline-secondary"
+            @click="selectTextbox()"
+            >編集前に戻る</button>
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- textboxの編集 -->
     <div class="fw-bold text-primary"
     v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
-    >テキストボックスの編集</div>
+    >
+        テキストボックスの編集
+    </div>
     <div class="card p-2 pt-3 pb-3 mb-5"
     v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
     >
@@ -212,7 +313,85 @@
         <div class="input_group_container d-grid gap-2 mb-3"
         v-if=" editingTextbox.group==='image' "
         >
-            <div class="form_group mb-3">
+            <!-- create -->
+            <form action="{{ route('ajax_store_textbox',$note) }}" method="POST" enctype="multipart/form-data"
+            v-if=" inputMode==='create_textbox' "
+            >
+                @csrf
+                <input type="hidden" name="order" value="" id="order">
+                <input type="hidden" name="case_name" value="">
+                <input type="hidden" name="old_image" value="">
+                <input type="hidden" name="group" value="">
+
+
+
+                <div class="form_group mb-3">
+                    <label class="form-label" for="fileImage">挿入する画像を選択してください。<br>(100Kb以内,jpeg・pngファイルのみ)</label>
+                    <input type="file" name="image" class="form-control" id="imageFile" required
+                    @change="changeImageFile()"
+                    ><!-- 画像編集の時は、入力必須ではない -->
+                    <p style="color:red;">@{{error.imageFile}}</p>
+                </div>
+
+
+                <div class="form_group mb-3">
+                    <label class="fw-bold" for="inputImageSubValue">画像タイトルを入力してください。</label>
+                    <input type="text" name="sub_value" class="form-control" placeholder="画像のタイトル" required
+                    v-model="editingTextbox.sub_value"
+                    >
+                </div>
+
+
+                <div class="form_group d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg"
+                    @click="saveImageTextbox()"
+                    >テキストボックスの挿入</button>
+
+                </div>
+
+            </form>
+
+
+            <!-- update -->
+            <form action="{{ route('ajax_update_textbox',$note) }}" method="POST" enctype="multipart/form-data"
+            v-if=" inputMode==='edit_textbox' "
+            >
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="id" value="">
+                <input type="hidden" name="order" value="">
+                <input type="hidden" name="case_name" value="">
+                <input type="hidden" name="old_image" value="1"> <!-- 保存済み画像のパス -->
+                <input type="hidden" name="group" value="">
+
+
+                <div class="form_group mb-3">
+                    <label class="form-label" for="fileImage">挿入する画像を選択してください。<br>(100Kb以内,jpeg・pngファイルのみ)</label>
+                    <input type="file" name="image" class="form-control" id="imageFile"
+                    @change="changeImageFile()"
+                    ><!-- 画像編集の時は、入力必須ではない -->
+                    <p style="color:red;">@{{error.imageFile}}</p>
+                </div>
+
+
+                <div class="form_group mb-3">
+                    <label class="fw-bold" for="inputImageSubValue">画像タイトルを入力してください。</label>
+                    <input type="text" name="sub_value" class="form-control" placeholder="画像のタイトル"  required
+                    v-model="editingTextbox.sub_value"
+                    >
+                </div>
+
+
+                <div class="form_group d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg"
+                    @click="saveImageTextbox()"
+                    >編集内容を保存</button>
+                </div>
+
+            </form>
+
+
+            {{-- <div class="form_group mb-3">
                 <label class="form-label" for="fileImage">挿入する画像を選択してください。<br>(100Kb以内,jpeg・pngファイルのみ)</label>
                 <input type="file" name="image" class="form-control" id="imageFile"
                 @change="changeImageFile()"
@@ -237,14 +416,14 @@
                 v-if=" inputMode==='edit_textbox' "
                 @click="saveTextbox()"
                 >編集内容を保存</button>
-            </div>
+            </div> --}}
         </div>
 
 
         <!-- backButton -->
         <div class="form_group d-grid gap-2">
             <button class="btn btn-outline-secondary"
-            v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
+            v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox')"
             @click="selectTextbox()"
             >編集前に戻る</button>
         </div>
@@ -298,29 +477,32 @@
             v-if=" index===0 "
             >
 
-                <!-- テキストボックス選択中 -->
-                <div :class="'title_box '+ textbox.mode">
+                <!-- タイトルボックスの選択 -->
+                <div class="title_box select_textbox"
+                v-if=" textbox.mode==='select_textbox' "
+                @click="editTitlebox(textbox,index)"
+                >
+                    @include('note_editer.titlebox')
+                </div>
 
 
-                    <small class="d-flex">
-                        <span class="badge rounded-pill bg-success me-3" style="height:2em"
-                        v-if="note.chake_publishing">公開中</span>
-                        <span class="badge rounded-pill bg-danger  me-3" style="height:2em"
-                        v-if="!note.chake_publishing">非公開</span>
+                <!-- 編集中タイトルボックス -->
+                <div class="title_box editing_textbox"
+                v-if=" textbox.mode==='editing_textbox' "
+                @click="selectTextbox()"
+                >
+                    <p class="w-100 text-center" style="color:red;">・・・編集中・・・</p>
 
-                        <div>@{{note.time_text}}</div>
-                    </small>
-
-                    <h3 class="title">@{{note.title}}</h3>
-
-                    <small class="d-flex">
-                        <i class="bi bi-tag-fill me-2"></i>
-                        <span  v-for="tag in note.tags_array">
-                            @{{tag}}　
-                        </span>
-                    </small>
+                    @include('note_editer.titlebox')
+                </div>
 
 
+                <!-- 待機中タイトルボックス -->
+                <div class="title_box inoperable_textbox"
+                v-if=" textbox.mode==='inoperable_textbox' "
+                @click="editTitlebox(textbox,index)"
+                >
+                    @include('note_editer.titlebox')
                 </div>
 
 
@@ -336,8 +518,6 @@
                         <i class="bi bi-plus-square-fill d-none d-md-inline"></i>
                         <span>挿入</span>
                     </button>
-
-
                 </div>
 
 
@@ -357,9 +537,7 @@
                 v-if=" textbox.mode==='select_textbox' "
                 @click="editTextbox(textbox,index)"
                 >
-
                     @include('note_editer.textbox_cases')
-
                 </div>
 
 
@@ -370,11 +548,7 @@
                 >
                     <p class="w-100 text-center" style="color:red;">・・・編集中・・・</p>
 
-                    <div id="editingElement"> <!--#editingElement : 要素内のHTML内容を操作-->
-
-                        @include('note_editer.textbox_cases')
-
-                    </div>
+                    @include('note_editer.textbox_cases')
                 </div>
 
 

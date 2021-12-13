@@ -28,6 +28,11 @@
 
 
 
+
+
+
+
+
 <div v-if=" textbox.mode==='editing_textbox' ">
     <!-- 編集中　editingTextbox変数のデータを受取り -->
 

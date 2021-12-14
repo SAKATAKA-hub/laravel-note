@@ -66,10 +66,15 @@ Breadcrumbs::for('create_note_title', function ($trail,$mypage_master) {
 Breadcrumbs::for('edit_note', function ($trail,$mypage_master,$note) {
     $trail->parent('mypage_top',$mypage_master); //マイページの表示
     $trail->push(
-        $note->title.'"の編集',
+        !$note? 'ノートの新規作成': '"'.$note->title.'"の編集',
         route('edit_note',$mypage_master)
     );
 });
+
+
+
+
+
 
 
 

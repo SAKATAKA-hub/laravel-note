@@ -33,6 +33,7 @@ class Textbox extends Model
     |
     */
 
+
     /**
      * $textbox->replace_main_value
      * 'main_value'カラムの表示に'改行'と'<strong>タグ'を反映させる
@@ -42,13 +43,58 @@ class Textbox extends Model
      */
     public function getReplaceMainValueAttribute()
     {
-        $value = e($this->main_value);
+        $value = $this->main_value;
+
+        # S3にアップロードしている文章があるとき、
+        $textbox_group = TextboxCase::find($this->textbox_case_id)->group;
+        if( ($textbox_group === 'text')&&($this->sub_value === 'S3_upload') )
+        {
+            $path = $this->main_value;
+            if (Storage::disk('s3')->exists($path))
+            {
+                $value = Storage::disk('s3')->get($path);
+            }
+        }
+
+
+        # '改行'と'<strong>の入れ替え処理
+        $value = e($value);
         $value = str_replace('{{','<strong>',$value);
         $value = str_replace('}}','</strong>',$value);
         $value = nl2br($value);
 
         return $value;
     }
+
+
+
+
+    /**
+     * $textbox->main_value_input
+     * S3にテキストが保存されているときは、その内容を表示
+     *
+     *
+     * @return String
+     */
+    public function getMainValueInputAttribute()
+    {
+
+        # S3にアップロードしている文章があるとき
+        $value = $this->main_value;
+        $textbox_group = TextboxCase::find($this->textbox_case_id)->group;
+        if( ($textbox_group === 'text')&&($this->sub_value === 'S3_upload') )
+        {
+            $path = $this->main_value;
+            if (Storage::disk('s3')->exists($path))
+            {
+                return Storage::disk('s3')->get($path);
+            }
+        }
+
+        # DBのテーブルに値を保存しているとき
+        return $this->main_value;
+    }
+
 
 
 
@@ -71,7 +117,7 @@ class Textbox extends Model
         $s3_path = $this->main_value;
         $url = '';
 
-        // 開発環境のとき、
+        # 開発環境のとき、
         if( Storage::disk('local')->exists($local_path) )
         {
             $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
@@ -84,6 +130,7 @@ class Textbox extends Model
         }
 
         // $url = Storage::disk('s3')->url($s3_path);
+
         return $url;
     }
 

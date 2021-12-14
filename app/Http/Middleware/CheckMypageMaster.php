@@ -32,7 +32,7 @@ class CheckMypageMaster
         {
             $mypage_master = $request->mypage_master->id;
         }
-        if( isset($request->note) )
+        elseif( isset($request->note) )
         {
             $mypage_master = Note::find($request->note)->user_id;
         }

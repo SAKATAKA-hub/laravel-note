@@ -111,11 +111,74 @@ Route::middleware(['delete_easy_user'])->group(function ()
 
 /*
 | --------------------------------------------------------
-| ノート編集ページの処理 (EditNoteController)
+| 非同期通信を含むノート編集ページの処理 (NoteediterController)
 | --------------------------------------------------------
 */
-Route::middleware(['check_mypage_master'])->group(function ()
 //マイページ管理者ログイン時以外は閲覧不可
+Route::middleware(['check_mypage_master'])->group(function ()
+{
+
+    # ノート新規作成ページの表示(create_note)
+    Route::get('/create_note/{mypage_master}',[NoteEditerController::class,'create_note'])
+    ->name('create_note');
+
+
+    # 新規作成ノートの保存(post_note)
+    Route::post('/post_note/{mypage_master}',[NoteEditerController::class,'post_note'])
+    ->name('post_note');
+
+
+    # ノート基本情報の更新(update_note)
+    Route::patch('/update_note/{note}',[NoteEditerController::class,'update_note'])
+    ->name('update_note');
+
+
+    # ノートの削除(destroy_note)
+    Route::delete('/destroy_note/{mypage_master}',[NoteEditerController::class,'destroy_note'])
+    ->name('destroy_note');
+
+
+
+
+    # ノート編集ページの表示(note_editer)
+    Route::get('/note_editer/{note}',[NoteEditerController::class,'note_editer'])
+    ->name('note_editer');
+
+
+    # 編集用のノートのjsonデータを返す。(json_note)
+    Route::post('/json_note/{mypage_master}/{note}',[NoteEditerController::class,'json_note'])
+    ->name('json_note');
+
+    # 新規作成テキストボックスの保存(ajax_store_textbox)
+    Route::post('/ajax_store_textbox/{note}',[NoteEditerController::class,'ajax_store_textbox'])
+    ->name('ajax_store_textbox');
+
+
+    # テキストボックスの更新(ajax_update_textbox)
+    Route::patch('/ajax_update_textbox/{note}',[NoteEditerController::class,'ajax_update_textbox'])
+    ->name('ajax_update_textbox');
+
+
+    # テキストボックスの削除(ajax_destroy_textbox)
+    Route::delete('/ajax_destroy_textbox/{note}',[NoteEditerController::class,'ajax_destroy_textbox'])
+    ->name('ajax_destroy_textbox');
+
+});
+
+
+
+
+
+
+
+/*
+| --------------------------------------------------------
+| 同期処理ノート編集ページの処理 (EditNoteController)
+| --------------------------------------------------------
+*/
+
+//マイページ管理者ログイン時以外は閲覧不可
+Route::middleware(['check_mypage_master'])->group(function ()
 {
 
     # ノート編集ページの表示(edit_note)
@@ -146,9 +209,9 @@ Route::middleware(['check_mypage_master'])->group(function ()
 
 
 
-    # ノートの削除(destroy_note)
-    Route::delete('/destroy_note/{mypage_master}',[EditNoteController::class,'destroy_note'])
-    ->name('destroy_note');
+    # ノートの削除(destroy_note_title)
+    Route::delete('/destroy_note_title/{mypage_master}',[EditNoteController::class,'destroy_note_title'])
+    ->name('destroy_note_title');
 
 });
 
@@ -158,11 +221,12 @@ Route::middleware(['check_mypage_master'])->group(function ()
 
 /*
 | --------------------------------------------------------
-| テキストボックス編集ページの処理 (EditTextboxController)
+| 同期処理テキストボックス編集ページの処理 (EditTextboxController)
 | --------------------------------------------------------
 */
 
-Route::middleware(['check_mypage_master'])->group(function () //マイページ管理者ログイン時以外は表示不可
+//マイページ管理者ログイン時以外は表示不可
+Route::middleware(['check_mypage_master'])->group(function ()
 {
 
     # テキストボックス新規作成ページの表示(create_textbox)
@@ -266,53 +330,3 @@ Route::post('api',[TestController::class,'api'])
 
 
 
-
-
-
-
-
-/*
-| --------------------------------------------------------
-| 非同期通信によるノート編集ページの処理 (NoteediterController)
-| --------------------------------------------------------
-*/
-# ノート新規作成ページの表示(create_note)
-Route::get('/create_note/{mypage_master}',[NoteEditerController::class,'create_note'])
-->name('create_note');
-
-
-# 新規作成ノートの保存(post_note)
-Route::post('/post_note/{mypage_master}',[NoteEditerController::class,'post_note'])
-->name('post_note');
-
-
-
-
-# ノート編集ページの表示(note_editer)
-Route::get('/note_editer/{note}',[NoteEditerController::class,'note_editer'])
-->name('note_editer');
-
-
-# 編集用のノートのjsonデータを返す。(json_note)
-Route::post('/json_note/{note}',[NoteEditerController::class,'json_note'])
-->name('json_note');
-
-
-# ノート基本情報の更新(update_note)
-Route::patch('/update_note/{note}',[NoteEditerController::class,'update_note'])
-->name('update_note');
-
-
-# 新規作成テキストボックスの保存(ajax_store_textbox)
-Route::post('/ajax_store_textbox/{note}',[NoteEditerController::class,'ajax_store_textbox'])
-->name('ajax_store_textbox');
-
-
-# テキストボックスの更新(ajax_update_textbox)
-Route::patch('/ajax_update_textbox/{note}',[NoteEditerController::class,'ajax_update_textbox'])
-->name('ajax_update_textbox');
-
-
-# テキストボックスの削除(ajax_destroy_textbox)
-Route::delete('/ajax_destroy_textbox/{note}',[NoteEditerController::class,'ajax_destroy_textbox'])
-->name('ajax_destroy_textbox');

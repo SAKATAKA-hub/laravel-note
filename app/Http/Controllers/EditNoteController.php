@@ -203,14 +203,14 @@ class EditNoteController extends Controller
 
 
     /**
-     * ノートの削除(destroy_note)
+     * ノートの削除(destroy_note_title)
      *
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\User $mypage_master (マイページの管理者:マイページ管理者のチェックに利用)
      * @return \Illuminate\View\View
      */
-    public function destroy_note(Request $request, User $mypage_master){
+    public function destroy_note_title(Request $request, User $mypage_master){
 
         # 削除するノート
         $note = Note::find($request->note_id);

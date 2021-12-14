@@ -56,6 +56,8 @@ class EditTextboxController extends Controller
     public function store_textbox(EditTextboxFormRequest $request, $note){
 
 
+
+
         # 編集ノート
         $note = Note::find($note);
 
@@ -69,6 +71,7 @@ class EditTextboxController extends Controller
         ];
 
 
+
         # 採番の更新 (挿入するテキストボックスより後のテキストボックスの採番を'1'加算)
         $textboxes = Textbox::changeOrders($request, $note);
 
@@ -78,6 +81,9 @@ class EditTextboxController extends Controller
             $textboxes[$i]->update(['order' => $request->order +$i +1]); //挿入するテキストボックスの採番＋'$i-1'
 
         }
+
+        # テキストが100文字以上の時、S3に保存
+        $save_data = $this::uploadText($request,$save_data);
 
 
         # 画像アップロード処理
@@ -161,7 +167,7 @@ class EditTextboxController extends Controller
     public function update_textbox(EditTextboxFormRequest $request, $note, Textbox $edit_textbox){
 
         # ノートデータ
-        $note = Note::find($edit_textbox->note_id);
+        $note = Note::find($note);
 
 
         # 保存データ
@@ -172,6 +178,25 @@ class EditTextboxController extends Controller
             'sub_value' => $request->sub_value, //sub_value
             'order' => $request->order, //採番
         ];
+
+
+
+
+        # テキストが100文字以上の時、S3に保存
+        $save_data = $this::uploadText($request,$save_data);
+
+        # S3保存でなくなった時、S3ファイルの削除
+        $edit_textbox_group = TextboxCase::find($edit_textbox->textbox_case_id)->group;
+        $save_data_group = TextboxCase::find($save_data['textbox_case_id'])->group;
+        $path = $edit_textbox->main_value;
+        if(
+            ($edit_textbox_group === 'text')&&
+            ($edit_textbox->sub_value === 'S3_upload')&&
+            ( ($save_data_group !== 'text') || ($save_data['sub_value'] === null) )&&
+            (Storage::disk('s3')->exists($path))
+        ){
+            Storage::disk('s3')->delete($path); //削除
+        }
 
 
         # 画像アップロード処理
@@ -230,6 +255,19 @@ class EditTextboxController extends Controller
 
         # 削除するテキストボックスの取得
         $textbox = Textbox::find($request->textbox_id);
+
+
+        # S3テキストの削除
+        $textbox_group = TextboxCase::find($textbox->textbox_case_id)->group;
+        $path = $textbox->main_value;
+        if(
+            ($textbox_group === 'text')&&
+            ($textbox->sub_value === 'S3_upload')&&
+            (Storage::disk('s3')->exists($path))
+        ){
+            Storage::disk('s3')->delete($path); //削除
+        }
+
 
 
         # 画像の削除
@@ -306,5 +344,41 @@ class EditTextboxController extends Controller
             Storage::disk('s3')->delete($delete_image_path); //画像の削除
         }
     }
+
+
+    /**
+     * S3にテキストをアップロード(uploadText)
+     * 100文字以上の'文章'については、S3にテキスト保存する。
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param Array $request
+     * @return Array $save_data
+     */
+    public function uploadText($request,$save_data)
+    {
+        # テキストボックスグループの取得
+        $textbox_group = TextboxCase::where('value',$request->textbox_case_name)->first()->group;
+
+        if( ($textbox_group==='text')&&( strlen($request->main_value)>99 ) )
+        {
+            # 基本設定
+            $id = Textbox::orderBy('id','desc')->first()->id;
+            $dir = 'upload_text/';
+            $file = sprintf('%06d',$id).'.txt';
+            $text = $request->main_value;
+
+            # S3にテキストファイルを保存
+            Storage::disk('s3')->put($dir.$file, $text);
+
+            # $save_dataに値を保存
+            $save_data['main_value'] = $dir.$file;
+            $save_data['sub_value'] = 'S3_upload';
+
+        }
+
+        return $save_data;
+
+    }
+
 
 }

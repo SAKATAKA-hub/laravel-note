@@ -26,8 +26,14 @@
             data: {
 
                 //<-- 入力モード -->
-                // 'create_textbox','edit_textbox',''
                 inputMode: '',
+                /*
+                * 'create_titlebox' : ノートの新規作成
+                * 'edit_titlebox'   : ノートの編集
+                * 'create_textbox'  : テキストボックスの新規作成
+                * 'edit_textbox'    : テキストボックスの編集
+                */
+
 
                 //<-- ノート基本情報 -->
                 note:
@@ -39,7 +45,7 @@
                 },
 
                 //<-- テキストボックス -->
-                //* params mode: テキストボックスの表示モード'select_textbox','editing_textbox','inoperable_textbox'　
+                //* params mode: テキストボックスの表示モード'select_textbox','editing_textbox','inoperable_textbox'
                 textboxes: [],
 
 
@@ -62,10 +68,7 @@
                 },
 
                 //<-- バリデーションのエラーメッセージ -->
-                error:{
-                    strMax:'',
-                    imageFile:''
-                },
+                error:[],
 
             }, //end data
 
@@ -81,8 +84,8 @@
 
                 // editingTextboxの初期化
                 this.editingTextbox = this.returnResetEditingTextbox();
-
-
+                //エラー文の初期化
+                this.error = this.returnResetError();
 
                 // 非同期通信
                 fetch(jsonNote, {
@@ -100,6 +103,11 @@
                     this.selects = json.selects ||[]; //セレクト要素
 
                     console.log(json);
+
+                    if(this.textboxes.length === 1){
+                        this.editTitlebox();
+                    }
+                    console.log(this.inputMode);
                 });
 
 
@@ -144,7 +152,7 @@
                     // エディターの表示変更
                     this.inputMode = 'create_textbox';
 
-                    //エラー文のリセット
+                    //エラー文の初期化
                     this.error = this.returnResetError();
                 },
 
@@ -169,15 +177,15 @@
                     // 編集中テキストボックスデータの保存
                     this.editingIndex = index;
                     this.editingTextbox = Object.assign({}, textbox);
-                    console.log(this.editingTextbox);
 
 
                     // エディターの表示変更
                     this.inputMode = 'edit_textbox';
 
-                    //エラー文のリセット
+                    //エラー文の初期化
                     this.error = this.returnResetError();
 
+                    console.log(this.editingTextbox);
                 },
 
 
@@ -187,7 +195,9 @@
                  * タイトルボックス編集フォームの表示(editTitlebox(textbox,index))
                  *
                  */
-                 editTitlebox:function(textbox,index){
+                editTitlebox:function(){
+
+                    const index = 0;
                     // 新規テキストボックスの削除
                     if(this.inputMode === 'create_textbox'){
                         this.textboxes.splice(this.editingIndex, 1);
@@ -204,7 +214,14 @@
 
 
                     // エディターの表示変更
-                    this.inputMode = 'edit_titlebox';
+                    /*
+                     * 'create_titlebox' : ノートの新規作成
+                     * 'edit_titlebox'   : ノートの編集
+                    */
+                    this.inputMode = this.textboxes.length === 1? 'create_titlebox' :'edit_titlebox';
+
+                    //エラー文の初期化
+                    this.error = this.returnResetError();
                  },
 
 
@@ -261,17 +278,29 @@
                                     order: this.editingIndex,
                                 }),
                             })
-                            .then(response => response.json())
+                            .then(response => {
+                                if(!response.ok){ throw new Error(); }
+                                return response.json();
+                            })
                             .then(json => {
-
                                 // idの登録
                                 this.textboxes[index].id = json.id;
+                            })
+                            .catch(error => {
+                                alert('通信エラーが発生しました。ページを再読み込みします。');
+                                location.reload();
                             });
                             break;
 
 
                         // ------ 更新 ------
                         case 'edit_textbox':
+
+                            // editingTextbox.idの更新がうまくいっていないとき
+                            if(!this.editingTextbox.id){
+                                alert('データ更新エラーが発生しました.');
+                                return;
+                            }
 
                             fetch(ajax_update_textbox, {
                                 method: 'POST',
@@ -284,6 +313,13 @@
                                     sub_value: this.editingTextbox.sub_value,
                                     order: this.editingIndex,
                                 }),
+                            })
+                            .then(response => {
+                                if(!response.ok){ throw new Error(); }
+                            })
+                            .catch(error => {
+                                alert('通信エラーが発生しました。ページを再読み込みします。');
+                                location.reload();
                             });
                             break;
 
@@ -305,74 +341,9 @@
 
                     // エディターの表示変更
                     this.inputMode = '';
-                },
 
-
-
-
-
-                /**
-                 * タイトルボックスの保存(saveTitlebox())
-                 *
-                 */
-                 saveTitlebox:function(){
-
-                    // 新しいタグの処理
-                    if(this.newTagsString){
-                        let result = '';
-                        while (result !== this.newTagsString) { //文字の置換え
-                            this.newTagsString = this.newTagsString.replace('　',' ');
-                            result = this.newTagsString.replace('　',' ');
-                        }
-                        let newTagsArray = this.newTagsString.split(' ');
-
-                        newTagsArray = this.editingTextbox.tags_array.concat(newTagsArray);
-                        this.editingTextbox.tags_array = [...new Set(newTagsArray)]; //重複削除
-                        this.newTagsString = '';
-                        console.log(this.editingTextbox.tags_array);
-                    }
-
-
-                    // DBへ保存(非同期通信)
-                    fetch(update_note, {
-                        method: 'POST',
-                        body: new URLSearchParams({
-                            _method: 'PATCH',
-                            _token: token,
-                            // id:this.editingTextbox.id,
-                            // case_name:this.editingTextbox.case_name,
-                            // main_value: this.editingTextbox.main_value,
-                            // sub_value: this.editingTextbox.sub_value,
-                            // order: this.editingIndex,
-                        }),
-                    })
-                    .then(response=>{
-                        if(!response.ok){
-                            throw new Error('通信エラーの為、ページを再読み込みします。');
-                        }
-                        return response.json;
-                    })
-                    .then(json=>{})
-                    .catch(err=>{
-                        alert(err.message);
-                        location.reload();
-                    });
-
-
-                    // 編集内容をnoteデータ配列に保存
-                    this.note = Object.assign({}, this.editingTextbox);
-
-                    // textboxの表示変更
-                    this.textboxes.forEach(textbox => {
-                        textbox.mode = 'select_textbox';
-                    });
-
-                    // editingTextboxの初期化
-                    this.editingTextbox = this.returnResetEditingTextbox();
-
-                    // エディターの表示変更
-                    this.inputMode = '';
-
+                    //エラー文の初期化
+                    this.error = this.returnResetError();
                 },
 
 
@@ -382,9 +353,22 @@
                  * 画像テキストボックスの保存(saveImageTextbox())
                  *
                  */
-                 saveImageTextbox:function(){
-                    console.log(this.editingTextbox.id);
-                    document.querySelector('input[name="id"]').value = this.editingTextbox.id;
+                 saveImageTextbox:function(e){
+                    // e.preventDefault();
+
+                    // 'edit_textbox'modeのとき、idをリクエストする。
+                    if(this.inputMode==='edit_textbox'){
+
+                        // editingTextbox.idの更新がうまくいっていないとき
+                        if(!this.editingTextbox.id){
+                            e.preventDefault();
+                            alert('データ更新エラーが発生しました.');
+                            return;
+                        }
+                        document.querySelector('input[name="id"]').value = this.editingTextbox.id;
+                    }
+
+                    // リクエストの値を代入する
                     document.querySelector('input[name="order"]').value = this.editingIndex;
                     document.querySelector('input[name="case_name"]').value = this.editingTextbox.case_name;
                     document.querySelector('input[name="group"]').value = this.editingTextbox.group;
@@ -402,6 +386,13 @@
                  */
                  deleteTextbox:function(textbox,index){
 
+                    // editingTextbox.idの更新がうまくいっていないとき
+                    if(!this.editingTextbox.id){
+                        alert('データ更新エラーが発生しました.');
+                        return;
+                    }
+
+
                     if( window.confirm('選択中のテキストボックスを削除しますか？') ){
 
                         // 非同期通信
@@ -413,7 +404,15 @@
                                 id:this.editingTextbox.id,
                                 order: this.editingIndex,
                             }),
+                        })
+                        .then(response => {
+                            if(!response.ok){ throw new Error(); }
+                        })
+                        .catch(error => {
+                            alert('通信エラーが発生しました。ページを再読み込みします。');
+                            location.reload();
                         });
+
 
 
                         // プレビュー表示の削除
@@ -429,7 +428,6 @@
 
                         // エディターの表示変更
                         this.inputMode = '';
-
                     }
                 },
 
@@ -477,10 +475,13 @@
                  */
                  changeTextboxCase:function(){
 
-                    // テキストボックスの種類名 (editingTextboxCaseName)
+                    // テキストボックスのidの保存(textboxId)
+                    const editingTextboxId = this.editingTextbox.id;
+
+                    //テキストボックスの種類名の保存(editingTextboxCaseName)
                     const editingTextboxCaseName = this.editingTextbox.case_name;
 
-                    // テキストボックスのグループ名 (editingTextboxCaseGroup)
+                    // テキストボックスのグループの保存(editingTextboxCaseGroup)
                     let editingTextboxCaseGroup = '';
                     this.selects.textbox_cases.forEach(textbox_case => {
                         if(textbox_case.value === editingTextboxCaseName)
@@ -490,22 +491,25 @@
                     });
 
 
-                    // データのリセット(テキストボックスのグループが変更するとき)
+                    // テキストボックス情報(テキストボックスのグループが変更するとき)
                     if(this.editingTextbox.group !== editingTextboxCaseGroup){
 
+                        // テキストボックス情報のリセット
                         this.editingTextbox = this.returnResetEditingTextbox();
+
+                        // テキストボックス保存情報の更新
+                        this.editingTextbox.id = editingTextboxId;
                         this.editingTextbox.case_name = editingTextboxCaseName;
+                        this.editingTextbox.group = editingTextboxCaseGroup;
                     }
 
-                    //エラー文のリセット
+                    //エラー文の初期化
                     this.error = this.returnResetError();
 
 
-                    // テキストボックスのグループ名の更新
-                    this.editingTextbox.group =　editingTextboxCaseGroup;
 
-                    // console.log(this.editingTextbox.group);
-                    console.log(this.textboxes[this.editingIndex]);
+                    console.log(this.editingTextbox);
+                    // console.log(this.textboxes[this.editingIndex]);
 
                 },
 
@@ -580,6 +584,20 @@
                 */
 
                 /**
+                 * ノート基本情報更新時のバリデーションvalidateImageFile())
+                 *
+                 */
+                 checkTitleForm: function(e){
+                    if( !this.editingTextbox.tags_array.length && !this.newTagsString ){
+                        e.preventDefault();
+                        this.error.tag = 'タグを一つ以上選択して下さい。';
+                    }
+                },
+
+
+
+
+                /**
                  * imageファイル入力のバリデーションvalidateImageFile())
                  *
                  * @return bool
@@ -652,7 +670,7 @@
                  *
                  */
                  returnResetError:function(){
-                    return { strMax:'', imageFile:'' };
+                    return { strMax:'', imageFile:'', tag:'',};
                 },
 
             }, //end methods

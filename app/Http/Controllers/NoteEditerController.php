@@ -24,15 +24,13 @@ class NoteEditerController extends Controller
      */
     public function create_note(User $mypage_master)
     {
+        # note情報(新規作成なので 0)
         $note = 0;
-        $selects = [
-            'colors' => Color::get(),
-            'tags' => Tag::tagsList($mypage_master),
-        ];
 
-        return view('note_editer.create_note',
-            compact('note','mypage_master','selects')
+        return view('note_editer.edit_note',
+            compact('mypage_master','note')
         );
+
     }
 
 
@@ -55,8 +53,7 @@ class NoteEditerController extends Controller
 
             'created_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //作成日時
             'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //更新日時
-            // 'publication_at' => $this::getPublicationAt($request), //公開日時
-            'publication_at' => null, //公開日時
+            'publication_at' => $this::getPublicationAt($request), //公開日時
         ]);
         $note->save();
 
@@ -73,16 +70,92 @@ class NoteEditerController extends Controller
 
 
 
+    /**
+     * ノート基本情報の更新(update_note)
+     *
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param Int $note(ミドルウェア利用の為、$noteパラメーターは全てInt型で統一)
+     */
+    public function update_note(Request $request, $note)
+    {
+        # note情報の取得
+        $note = Note::find($note);
+
+
+        # ノート基本情報の更新
+        $note->update([
+            'title' => $request->title, //タイトル
+            'color' => $request->color, //カラー
+            'tags' => $this::getUpdateTagsString($request->tags), //タグ('****','****','****'形式)
+            'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //更新日時
+            'publication_at' => $this::getPublicationAt($request), //公開日時
+        ]);
+
+
+        # 新しいタグをtagsテーブルに保存
+        $this::saveNewTags($request);
+
+        # 利用されていないタグをtagsテーブルから削除
+        $this::deleteTags($note->user_id);
+
+
+        return redirect()->route('note_editer',$note)
+        ->with('note_alert','update_note_title');
+    }
+
+
+
+
+    /**
+     * ノートの削除(destroy_note)
+     *
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User $mypage_master (マイページの管理者:マイページ管理者のチェックに利用)
+     * @return \Illuminate\View\View
+     */
+    public function destroy_note(Request $request, User $mypage_master){
+
+        // dd($request->all());
+
+        # 削除するノート
+        $note = Note::find($request->note_id);
+
+        # マイページ管理者
+        $mypage_master = $note->user_id;
+
+        # 指定されたnoteに関連するS3保存画像の削除
+        $this::deleteNoteImages($note);
+
+        # ノートの削除
+        $note->delete();
+
+        # 利用されていないタグをtagsテーブルから削除
+        $this::deleteTags($mypage_master);
+
+
+        return redirect()->route('mypage_top',$mypage_master)
+        ->with('note_alert','destroy_note_alert');
+    }
+
+
+
+
+
 
     /**
      * ノート編集ページの表示(note_editer)
      *
      *
-     * @param Note $note
+     * @param Int $note(ミドルウェア利用の為、$noteパラメーターは全てInt型で統一)
      * @return \Illuminate\View\View
      */
-    public function note_editer(Note $note)
+    public function note_editer($note)
     {
+        # note情報の取得
+        $note = Note::find($note);
+
         # マイページ管理者
         $mypage_master = User::find($note->user_id);
 
@@ -98,47 +171,73 @@ class NoteEditerController extends Controller
     /**
      * 編集用のノートのjsonデータを返す。(json_note)
      *
-     * @param Note $note
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User $mypage_master (マイページの管理者:マイページ管理者のチェックに利用)
+     * @param Int $note(新規作成ページの値は0(Int型)なので、$noteパラメーターは全てInt型で統一)
      */
-    public function json_note(Request $request, Note $note)
+    public function json_note(Request $request, User $mypage_master, $note)
     {
 
-        # マイページ管理者
-        $mypage_master = User::find($request->mypage_master_id);
-
-
-        # ノートの基本情報の追加データ
-        $note['chake_publishing'] = $note->chake_publishing;
-        $note['time_text'] = $note->time_text;
-        $note['tags_array'] = $note->tags_array;
-
-
-        # textboxes情報の取得
-        $textboxes = Textbox::where('note_id',$note->id)->orderBy('order','asc')->get();
-        for ($i=0; $i < count($textboxes); $i++)
+        if(!$note) //ノートの新規作成用データ ----------------------------
         {
-            $textbox = $textboxes[$i];
+            $note = [];
+            $textboxes = [['mode'=>'editing_textbox'],];
+            /*
+             * $textboxesの最初の値は、ノート情報の表示状態を保存している。
+             * 状態を'編集中'(editing_textbox_textbox)としてデータを返す。
+             *
+            */
 
+            # note情報の取得
+            $keys = ['id','title','color','tags','user_id',
+                'created_at','updated_at','publication_at',
+                'chake_publishing','time_text',
+            ];
+            foreach ($keys as $key ) {
+                $note[$key] = '';
+            }
+            $note['tags_array'] = [];
 
-            // textboxの種類データ
-            $case = TextboxCase::find( $textbox->textbox_case_id );
-
-            // データの追加
-            $textbox['mode'] = 'select_textbox';
-            $textbox['replace_main_value'] = $textbox->replace_main_value;
-            $textbox['image_url'] = $textbox->image_url;
-            $textbox['group'] = $case->group;
-            $textbox['case_name'] = $case->value;
         }
+        else //ノートの更新用データ ---------------------------------------
+        {
+            # note情報の取得
+            $note = Note::find($note);
+
+            # ノートの基本情報の追加データ
+            $note['chake_publishing'] = $note->chake_publishing;
+            $note['time_text'] = $note->time_text;
+            $note['tags_array'] = $note->tags_array;
+
+            # textboxes情報の取得
+            $textboxes = Textbox::where('note_id',$note->id)->orderBy('order','asc')->get();
+            for ($i=0; $i < count($textboxes); $i++)
+            {
+                $textbox = $textboxes[$i];
 
 
-        # textboxes配列の先頭にnoteの基本情報を追加
-        $array = [];
-        $array[] = ['mode'=>'select_textbox'];
-        foreach ($textboxes as $textbox) {
-            $array[] = $textbox;
-        }
-        $textboxes = $array;
+                // textboxの種類データ
+                $case = TextboxCase::find( $textbox->textbox_case_id );
+
+                // データの追加
+                $textbox['mode'] = 'select_textbox';
+                $textbox['replace_main_value'] = $textbox->replace_main_value;
+                $textbox['image_url'] = $textbox->image_url;
+                $textbox['group'] = $case->group;
+                $textbox['case_name'] = $case->value;
+
+            } //--------------------------------------------------------------
+
+
+            # textboxes配列の先頭にnoteの基本情報を追加
+            $array = [];
+            $array[] = ['mode'=>'select_textbox'];
+            foreach ($textboxes as $textbox) {
+                $array[] = $textbox;
+            }
+            $textboxes = $array;
+
+        } //endif
 
 
         # JSONデータを返す
@@ -157,30 +256,18 @@ class NoteEditerController extends Controller
 
 
     /**
-     * ノート基本情報の更新(update_note)
-     *
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param Note $note
-     */
-    public function update_note(Request $request, Note $note)
-    {
-
-    }
-
-
-
-
-    /**
      * 新規作成テキストボックスの保存(ajax_store_textbox)
      *
      *
      * @param \Illuminate\Http\Request $request
-     * @param Note $note
+     * @param Int $note(ミドルウェア利用の為、$noteパラメーターは全てInt型で統一)
      * @return JSON
      */
-    public function ajax_store_textbox(Request $request, Note $note)
+    public function ajax_store_textbox(Request $request, $note)
     {
+        # note情報の取得
+        $note = Note::find($note);
+
 
         // # 保存データ
         $save_data = [
@@ -237,13 +324,14 @@ class NoteEditerController extends Controller
      *
      *
      * @param \Illuminate\Http\Request $request
-     * @param Note $note
+     * @param Int $note(ミドルウェア利用の為、$noteパラメーターは全てInt型で統一)
      * @return JSON
      */
-    public function ajax_update_textbox(Request $request, Note $note)
+    public function ajax_update_textbox(Request $request, $note)
     {
 
-        // dd($request->all());
+        # note情報の取得
+        $note = Note::find($note);
 
 
         # 更新するテキストボックス
@@ -301,11 +389,14 @@ class NoteEditerController extends Controller
      *
      *
      * @param \Illuminate\Http\Request $request
-     * @param Note $note
+     * @param Int $note(ミドルウェア利用の為、$noteパラメーターは全てInt型で統一)
      * @return \Illuminate\View\View
      */
-    public function ajax_destroy_textbox(Request $request, Note $note)
+    public function ajax_destroy_textbox(Request $request,$note)
     {
+        # note情報の取得
+        $note = Note::find($note);
+
 
         # 削除するテキストボックスの取得
         $textbox = Textbox::find($request->id);
@@ -340,7 +431,7 @@ class NoteEditerController extends Controller
 
     /*
     |
-    |　コントローラー内で利用するメソッド
+    | コントローラー内で利用するメソッド
     |
     |
     */
@@ -357,7 +448,7 @@ class NoteEditerController extends Controller
     public function getUpdateTagsString($request_tags)
     {
         $tags_srting = implode(' ',$request_tags);
-        $tags_srting =  str_replace('　',' ',$tags_srting); //新しいタグ入力の区切り文字を'半角空白'に統一
+        $tags_srting =  str_replace(' ',' ',$tags_srting); //新しいタグ入力の区切り文字を'半角空白'に統一
         $tags_array = explode(' ',$tags_srting);
         $tags_array = array_unique($tags_array); //重複したタグの入力を削除
 
@@ -433,6 +524,36 @@ class NoteEditerController extends Controller
 
     }
 
+
+
+
+    /**
+     * ノートの公開日時(getPublicationAt)
+     *
+     * 公開設定がONのとき、今の日時を返す。
+     * 公開設定がoffかつ、公開予約日時が指定されているとき、指定予約日時を返す。
+     * それ以外はnull。
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return String
+     */
+    public function getPublicationAt($request)
+    {
+        return
+
+            //公開設定がONのとき
+            isset($request->publishing)? \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'):
+
+            //公開設定がoff、公開予約日時が指定されているとき
+            ( isset($request->release_datetime)? str_replace('T',' ',$request->release_datetime).':00' :null )
+
+        ;
+
+    }
+
+
+
+
     /**
      * S3に画像をアップロード(uploadImage)
      *
@@ -472,5 +593,37 @@ class NoteEditerController extends Controller
             Storage::disk('s3')->delete($delete_image_path); //画像の削除
         }
     }
+
+
+
+
+        /**
+     * 指定されたnoteに関連する投稿画像の削除(deleteNoteImages)
+     *
+     *
+     * @param \App\Models\Note $note
+     */
+    public static function deleteNoteImages($note)
+    {
+        # 指定されたnoteに関連する画像関係のテキストボックス($image_text_boxes)の取得
+        $textbox = new Textbox;
+        $image_text_boxes = $textbox->where('note_id',$note->id)
+        ->where( function($textbox){
+            $textbox->where('textbox_case_id',10)->orWhere('textbox_case_id',11);
+        })
+        ->get();
+
+
+        # 画像の削除処理
+        foreach ($image_text_boxes as $image_text_box)
+        {
+            // 削除する画像のS3内のパス
+            $delete_image_path = $image_text_box->main_value;
+
+            // S3から画像を削除(EditTextboxControllerのメソッドを利用)
+            EditTextboxController::deleteImage($delete_image_path);
+        }
+    }
+
 
 }

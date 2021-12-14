@@ -111,7 +111,7 @@
         @else
             <div class="fs-3"><i class="bi bi-file-earmark-text"></i>{{$seach_heading}}</div>
         @endif
-        <a href="{{route('create_note_title',$mypage_master)}}" class="note_master_only btn btn-lg btn-primary" style="font-size:.8em;">
+        <a href="{{route('create_note',$mypage_master)}}" class="note_master_only btn btn-lg btn-primary" style="font-size:.8em;">
             <i class="bi bi-file-earmark-plus"></i> 新規ノート作成
         </a>
     </h5>
@@ -167,7 +167,7 @@
 
 
                 <div class="note_master_only col-md-3 text-md-end mt-3 mt-md-0">
-                    <a href="{{route('edit_note', compact('note') )}}" class="btn btn-outline-primary">
+                    <a href="{{route('note_editer', compact('note') )}}" class="btn btn-outline-primary">
                         <i class="bi bi-eraser-fill"></i> 編集
                     </a>
 

@@ -117,18 +117,21 @@ class Textbox extends Model
         $s3_path = $this->main_value;
         $url = '';
 
-        # 開発環境のとき、
-        if( Storage::disk('local')->exists($local_path) )
-        {
-            $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
-        }
-        // デプロイ後で、S3に保存データがあるとき、
-        elseif (Storage::disk('s3')->exists($s3_path))
+        // # 開発環境のとき、
+        // if( Storage::disk('local')->exists($local_path) )
+        // {
+        //     $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
+        // }
+        // // デプロイ後で、S3に保存データがあるとき、
+        // elseif (Storage::disk('s3')->exists($s3_path))
+        // {
+        //     $url = Storage::disk('s3')->url($s3_path);
+        // }
+
+        if (Storage::disk('s3')->exists($s3_path))
         {
             $url = Storage::disk('s3')->url($s3_path);
         }
-
-        $url = Storage::disk('s3')->url($s3_path);
 
         return $url;
     }

@@ -101,20 +101,29 @@ class User extends Authenticatable
         //     $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
 
         // }
-
         // // テーブルに保存された画像のパスがNULL
-        // else
+        // if(empty($s3_path))
+        // {
+        //     $url = Storage::disk('s3')->url($no_image);
+        // }
+        // // S3に保存データがあるとき、
+        // elseif (Storage::disk('s3')->exists($s3_path))
+        // {
+        //     $url = Storage::disk('s3')->url($s3_path);
+        // }
+
+
         if(empty($s3_path))
         {
             $url = Storage::disk('s3')->url($no_image);
         }
-
-
         // S3に保存データがあるとき、
         elseif (Storage::disk('s3')->exists($s3_path))
         {
             $url = Storage::disk('s3')->url($s3_path);
         }
+
+
 
         return $url;
 

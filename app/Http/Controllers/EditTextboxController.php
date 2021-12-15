@@ -55,9 +55,6 @@ class EditTextboxController extends Controller
      */
     public function store_textbox(EditTextboxFormRequest $request, $note){
 
-
-
-
         # 編集ノート
         $note = Note::find($note);
 
@@ -83,7 +80,7 @@ class EditTextboxController extends Controller
         }
 
         # テキストが100文字以上の時、S3に保存
-        $save_data = $this::uploadText($request,$save_data);
+        $save_data = $this::uploadText($request,$save_data,$textbox=null);
 
 
         # 画像アップロード処理
@@ -183,12 +180,13 @@ class EditTextboxController extends Controller
 
 
         # テキストが100文字以上の時、S3に保存
-        $save_data = $this::uploadText($request,$save_data);
+        $save_data = $this::uploadText($request,$save_data,$edit_textbox);
 
         # S3保存でなくなった時、S3ファイルの削除
         $edit_textbox_group = TextboxCase::find($edit_textbox->textbox_case_id)->group;
         $save_data_group = TextboxCase::find($save_data['textbox_case_id'])->group;
         $path = $edit_textbox->main_value;
+
         if(
             ($edit_textbox_group === 'text')&&
             ($edit_textbox->sub_value === 'S3_upload')&&
@@ -354,7 +352,7 @@ class EditTextboxController extends Controller
      * @param Array $request
      * @return Array $save_data
      */
-    public function uploadText($request,$save_data)
+    public function uploadText($request,$save_data,$textbox)
     {
         # テキストボックスグループの取得
         $textbox_group = TextboxCase::where('value',$request->textbox_case_name)->first()->group;
@@ -362,7 +360,7 @@ class EditTextboxController extends Controller
         if( ($textbox_group==='text')&&( strlen($request->main_value)>99 ) )
         {
             # 基本設定
-            $id = Textbox::orderBy('id','desc')->first()->id;
+            $id = $textbox!==null? $textbox->id: Textbox::orderBy('id','desc')->first()->id +1;
             $dir = 'upload_text/';
             $file = sprintf('%06d',$id).'.txt';
             $text = $request->main_value;

@@ -38,7 +38,7 @@ v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
             <label class="fw-bold" for="inputHeadingMainValue">見出しを入力して下さい。 <br>(100文字以内)</label>
 
             <input type="text" name="main_value" class="form-control" required
-             v-model="editingTextbox.main_value"
+             v-model="editingTextbox.main_value_input"
              @change="changeReplaceMainValue()"
             >
             <p style="color:red;">@{{error.strMax}}</p>
@@ -75,7 +75,7 @@ v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
 
             <textarea name="main_value" class="form-control" style="height:12rem;"
              placeholder="※重要な言葉は  (半角記号) で囲む。" required
-             v-model="editingTextbox.main_value"
+             v-model="editingTextbox.main_value_input"
              @change="changeReplaceMainValue()"
             ></textarea>
 
@@ -105,7 +105,7 @@ v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
         <div class="form_group mb-3">
             <label class="fw-bold" for="inputLinkMainValue">リンク先URLを入力して下さい。</label>
             <input type="text" name="main_value" class="form-control" placeholder="半角記号英数字" required
-             v-model="editingTextbox.main_value"
+             v-model="editingTextbox.main_value_input"
             >
         </div>
 

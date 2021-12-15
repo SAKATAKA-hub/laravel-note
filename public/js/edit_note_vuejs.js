@@ -273,7 +273,7 @@
                             body: new URLSearchParams({
                                 _token: token,
                                 case_name:this.editingTextbox.case_name,
-                                main_value: this.editingTextbox.main_value,
+                                main_value: this.editingTextbox.main_value_input,
                                 sub_value: this.editingTextbox.sub_value,
                                 order: this.editingIndex,
                             }),
@@ -309,7 +309,7 @@
                                 _token: token,
                                 id:this.editingTextbox.id,
                                 case_name:this.editingTextbox.case_name,
-                                main_value: this.editingTextbox.main_value,
+                                main_value: this.editingTextbox.main_value_input,
                                 sub_value: this.editingTextbox.sub_value,
                                 order: this.editingIndex,
                             }),
@@ -442,6 +442,7 @@
                 return {
                     mode: 'editing_textbox',
                     main_value : '',
+                    main_value_input: '',
                     replace_main_value : '',
                     sub_value : '',
                     image_url : '',
@@ -522,10 +523,6 @@
              */
              changeReplaceMainValue: function(){
 
-                this.editingTextbox.main_value = this.validateStrMax(this.editingTextbox.main_value,100);
-
-
-
                 // 改行・<strong>タグの差替え関数
                 function replaceValue(value)
                 {
@@ -538,12 +535,14 @@
 
                 // 文字列の差し替え
                 let result = '';
-                let replace_value = replaceValue(this.editingTextbox.main_value);
+                let replace_value = replaceValue(this.editingTextbox.main_value_input);
                 while (replace_value!==result) {
                     replace_value = replaceValue(replace_value);
                     result = replaceValue(replace_value);
                 }
+
                 this.editingTextbox.replace_main_value = replace_value;
+
             },
 
 

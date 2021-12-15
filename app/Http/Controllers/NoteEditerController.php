@@ -117,7 +117,6 @@ class NoteEditerController extends Controller
      */
     public function destroy_note(Request $request, User $mypage_master){
 
-        // dd($request->all());
 
         # 削除するノート
         $note = Note::find($request->note_id);
@@ -125,8 +124,27 @@ class NoteEditerController extends Controller
         # マイページ管理者
         $mypage_master = $note->user_id;
 
-        # 指定されたnoteに関連するS3保存画像の削除
-        $this::deleteNoteImages($note);
+
+        # S3アップロードファイルの削除
+        $textboxes = Textbox::where('note_id',$note->id)->get();
+        foreach ($textboxes as $textbox)
+        {
+
+            # 指定されたnoteに関連するS3保存テキストファイルの削除
+            $this::deleteTextFile($textbox);
+
+
+            # 指定されたnoteに関連するS3保存画像の削除
+            $textbox_group = TextboxCase::find($textbox->textbox_case_id)->group;
+            $path = $textbox->main_value;
+            if(
+                ($textbox_group === 'image')&&
+                (Storage::disk('s3')->exists($path))
+            ){
+                Storage::disk('s3')->delete($path); //削除
+            }
+        }
+
 
         # ノートの削除
         $note->delete();
@@ -169,7 +187,7 @@ class NoteEditerController extends Controller
 
 
     /**
-     * 編集用のノートのjsonデータを返す。(json_note)
+     * ノート表示のjsonデータを返す。(json_note)
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\User $mypage_master (マイページの管理者:マイページ管理者のチェックに利用)
@@ -222,6 +240,7 @@ class NoteEditerController extends Controller
                 // データの追加
                 $textbox['mode'] = 'select_textbox';
                 $textbox['replace_main_value'] = $textbox->replace_main_value;
+                $textbox['main_value_input'] = $textbox->main_value_input;
                 $textbox['image_url'] = $textbox->image_url;
                 $textbox['group'] = $case->group;
                 $textbox['case_name'] = $case->value;
@@ -265,6 +284,8 @@ class NoteEditerController extends Controller
      */
     public function ajax_store_textbox(Request $request, $note)
     {
+        $request->case_name = empty($request->case_name)? $request->textbox_case_name: $request->case_name;
+
         # note情報の取得
         $note = Note::find($note);
 
@@ -284,16 +305,18 @@ class NoteEditerController extends Controller
 
         for ($i=0; $i < count($textboxes); $i++)
         {
-
             $textboxes[$i]->update(['order' => $request->order +$i +1]); //挿入するテキストボックスの採番＋'$i-1'
-
         }
+
+
+        # テキストが100文字以上の時、S3に保存
+        $save_data = $this::uploadText($request,$save_data,$textbox=null);
 
 
         // # 画像アップロード処理
         if($upload_image = $request->file('image'))
         {
-            $save_data['main_value'] = $this::uploadImage($request); //画像のパスを'main_value'カラムに保存
+            $save_data['main_value'] = $this::uploadImageFile($request); //画像のパスを'main_value'カラムに保存
         }
 
 
@@ -312,6 +335,7 @@ class NoteEditerController extends Controller
             return redirect()->route('note_editer',$note);
         }
 
+
         # JSONデータを返す
         return ['id' => $textbox->id,];
     }
@@ -329,7 +353,6 @@ class NoteEditerController extends Controller
      */
     public function ajax_update_textbox(Request $request, $note)
     {
-
         # note情報の取得
         $note = Note::find($note);
 
@@ -348,10 +371,33 @@ class NoteEditerController extends Controller
         ];
 
 
+
+
+        # テキストが100文字以上の時、S3に保存
+        $save_data = $this::uploadText($request,$save_data,$textbox);
+
+
+        # S3保存でなくなった時、S3ファイルの削除
+        $textbox_group = TextboxCase::find($textbox->textbox_case_id)->group;
+        $save_data_group = TextboxCase::find($save_data['textbox_case_id'])->group;
+        $path = $textbox->main_value;
+
+        if(
+            ($textbox_group === 'text')&&
+            ($textbox->sub_value === 'S3_upload')&&
+            ( ($save_data_group !== 'text') || ($save_data['sub_value'] === null) )&&
+            (Storage::disk('s3')->exists($path))
+        ){
+
+            Storage::disk('s3')->delete($path); //削除
+
+        }
+        // dd('srue');
+
         # 画像アップロード処理
         if($request->file('image')) //ファイルの添付があれば、アップロード
         {
-            $save_data['main_value'] = $this::uploadImage($request); //画像のパスを'main_value'カラムに保存
+            $save_data['main_value'] = $this::uploadImageFile($request); //画像のパスを'main_value'カラムに保存
         }
         elseif($request->old_image) //アップ―ド画像に変更が無ければ、画像パスを更新しない。
         {
@@ -362,10 +408,13 @@ class NoteEditerController extends Controller
         # 画像の削除(テキストボックスの種類グループが、'image'からそれ以外に変更されるとき)
         $new_group = TextboxCase::find( $save_data['textbox_case_id'] )->group; //'編集前'のテキストボックスの種類グループ名
         $old_group = TextboxCase::find( $textbox->textbox_case_id )->group; //'編集後'のテキストボックスの種類グループ名
-        if ( ($old_group === 'image')&&($new_group !== 'image') )
-        {
-            $this::deleteImage( $textbox->main_value );
+        if (
+            ($old_group === 'image')&&
+            ($new_group !== 'image')
+        ){
+            $this::deleteImageFile( $textbox->main_value );
         }
+
 
 
         # テキストボックスの更新
@@ -374,11 +423,12 @@ class NoteEditerController extends Controller
         # ノートの更新日の更新
         $note->update(['updated_at' => $textbox->updated_at]);
 
-        # 画像のテキストオックスを保存した時、リダイレクト
+        # 画像のテキストボックスを保存した時、リダイレクト
         if(( isset($request->group) )&&( $request->group == 'image' ) )
         {
             return redirect()->route('note_editer',$note);
         }
+
     }
 
 
@@ -402,9 +452,14 @@ class NoteEditerController extends Controller
         $textbox = Textbox::find($request->id);
 
 
+        # S3テキストの削除
+        $this::deleteTextFile($textbox);
+
+
         # 画像の削除
         $pus = str_replace(["\r\n", "\r", "\n"], '', $textbox->main_value); //改行の削除
-        $this::deleteImage( $pus );
+        $this::deleteImageFile( $pus );
+
 
         # 採番の更新 (削除するテキストボックスより後のテキストボックスの採番を'1'減算)
         $textboxes = Textbox::changeOrders($request, $note);
@@ -412,7 +467,6 @@ class NoteEditerController extends Controller
         {
             $textboxes[$i]->update(['order' => $request->order +$i-1]); //削除するテキストボックスの採番＋'$i-1'
         }
-
 
 
         # テキストボックスの削除
@@ -555,13 +609,13 @@ class NoteEditerController extends Controller
 
 
     /**
-     * S3に画像をアップロード(uploadImage)
+     * S3に画像をアップロード(uploadImageFile)
      *
      *
      * @param \Illuminate\Http\EditTextboxFormRequest $request
      * @return String $path (アプロードした画像のs3内パスを返す)
      */
-    public function uploadImage($request)
+    public function uploadImageFile($request)
     {
         $upload_image = $request->file('image'); //保存画像
         $dir = 'upload_image'; //アップロード先ディレクトリ名
@@ -571,7 +625,7 @@ class NoteEditerController extends Controller
         $path = Storage::disk('s3')->putFile($dir, $upload_image, 'public');
 
         # 古いアップロード画像の削除
-        $this:: deleteImage($delete_image_path);
+        $this:: deleteImageFile($delete_image_path);
 
 
         return $path;
@@ -581,12 +635,12 @@ class NoteEditerController extends Controller
 
 
     /**
-     * S3から画像を削除(deleteImage)
+     * S3から画像を削除(deleteImageFile)
      *
      *
      * @param $delete_image_path (削除する画像のS3内のパス)
      */
-    public static function deleteImage($delete_image_path)
+    public function deleteImageFile($delete_image_path)
     {
         if ( Storage::disk('s3')->exists($delete_image_path) ) // 画像が存在するか確認
         {
@@ -597,33 +651,60 @@ class NoteEditerController extends Controller
 
 
 
-        /**
-     * 指定されたnoteに関連する投稿画像の削除(deleteNoteImages)
+    /**
+     * S3にテキストをアップロード(uploadText)
+     * 100文字以上の'文章'については、S3にテキスト保存する。
      *
-     *
-     * @param \App\Models\Note $note
+     * @param \Illuminate\Http\Request $request
+     * @param Array $request
+     * @return Array $save_data
      */
-    public static function deleteNoteImages($note)
+    public function uploadText($request,$save_data,$textbox)
     {
-        # 指定されたnoteに関連する画像関係のテキストボックス($image_text_boxes)の取得
-        $textbox = new Textbox;
-        $image_text_boxes = $textbox->where('note_id',$note->id)
-        ->where( function($textbox){
-            $textbox->where('textbox_case_id',10)->orWhere('textbox_case_id',11);
-        })
-        ->get();
+        # テキストボックスグループの取得
+        $textbox_group = TextboxCase::where('value',$request->case_name)->first()->group;
 
-
-        # 画像の削除処理
-        foreach ($image_text_boxes as $image_text_box)
+        if( ($textbox_group==='text')&&( strlen($request->main_value)>99 ) )
         {
-            // 削除する画像のS3内のパス
-            $delete_image_path = $image_text_box->main_value;
+            # 基本設定
+            $id = $textbox!==null? $textbox->id: Textbox::orderBy('id','desc')->first()->id +1;
+            $dir = 'upload_text/';
+            $file = sprintf('%06d',$id).'.txt';
+            $text = $request->main_value;
 
-            // S3から画像を削除(EditTextboxControllerのメソッドを利用)
-            EditTextboxController::deleteImage($delete_image_path);
+            # S3にテキストファイルを保存
+            Storage::disk('s3')->put($dir.$file, $text);
+
+            # $save_dataに値を保存
+            $save_data['main_value'] = $dir.$file;
+            $save_data['sub_value'] = 'S3_upload';
+
         }
+
+        return $save_data;
+
     }
 
+
+
+
+    /**
+     * S3からテキストファイルを削除(deleteTextFile)
+     *
+     *
+     * @param App\Models\Textbox $textbox
+     */
+    public function deleteTextFile($textbox)
+    {
+        $textbox_group = TextboxCase::find($textbox->textbox_case_id)->group;
+        $path = $textbox->main_value;
+        if(
+            ($textbox_group === 'text')&&
+            ($textbox->sub_value === 'S3_upload')&&
+            (Storage::disk('s3')->exists($path))
+        ){
+            Storage::disk('s3')->delete($path); //削除
+        }
+    }
 
 }

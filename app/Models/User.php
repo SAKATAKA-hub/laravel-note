@@ -91,13 +91,15 @@ class User extends Authenticatable
 
         $local_path = 'img/user0001.png';// ローカル環境画像
         $s3_path = $this->image; //ユーザー登録画像
-        $no_image = 'people/mMU8CNbJtMfnjF5hjmgooUaZ1r4kwpyvQYWPmCmR.png'; //ユーザー画像の登録なしのパス
+        $no_image = 'msalq9FtlPTgGFB8tbo2N5yoIc9vPFWDAFstwWsQ.png'; //ユーザー画像の登録なしのパス
+
         $url = '';
 
-        // // 開発環境のとき、
+        // 開発環境のとき、
         if( Storage::disk('local')->exists($local_path) )
         {
             $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
+
         }
 
         // テーブルに保存された画像のパスがNULL
@@ -105,6 +107,7 @@ class User extends Authenticatable
         {
             $url = Storage::disk('s3')->url($no_image);
         }
+
 
         // S3に保存データがあるとき、
         elseif (Storage::disk('s3')->exists($s3_path))

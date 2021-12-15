@@ -80,7 +80,7 @@
 
     <!-- inputText -->
     @if ( !isset($edit_textbox) ) <!-- ( create ) -->
-    <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputText">
+        <form method="POST" action="{{route('store_textbox',$note)}}" class="input_box hidden" id="inputText">
         @csrf
     @else <!-- ( edit ) -->
     <form method="POST" action="{{route('update_textbox',compact('note','edit_textbox') )}}" id="inputText"
@@ -97,7 +97,6 @@
 
             <textarea name="main_value" class="form-control" style="height:12rem;"
             placeholder="※重要な言葉は {{ '{'.'{' }} と {{ '}'.'}' }} (半角記号) で囲む。" id="inputTextMainValue" required
-            {{-- >{{isset($edit_textbox)&&($edit_textbox_case->group === 'text')? $edit_textbox->main_value:''}}</textarea> --}}
             >{{isset($edit_textbox)&&($edit_textbox_case->group === 'text')? $edit_textbox->main_value_input:''}}</textarea>
 
             <p>※重要な言葉は {{ '{'.'{' }}  {{ '}'.'}' }} (半角記号) で囲むことで強調させることができます。</p>

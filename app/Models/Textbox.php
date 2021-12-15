@@ -123,13 +123,12 @@ class Textbox extends Model
             $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
         }
         // デプロイ後で、S3に保存データがあるとき、
-        else
-        if (Storage::disk('s3')->exists($s3_path))
+        elseif (Storage::disk('s3')->exists($s3_path))
         {
             $url = Storage::disk('s3')->url($s3_path);
         }
 
-        // $url = Storage::disk('s3')->url($s3_path);
+        $url = Storage::disk('s3')->url($s3_path);
 
         return $url;
     }

@@ -96,14 +96,15 @@ class User extends Authenticatable
         $url = '';
 
         // 開発環境のとき、
-        if( Storage::disk('local')->exists($local_path) )
-        {
-            $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
+        // if( Storage::disk('local')->exists($local_path) )
+        // {
+        //     $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
 
-        }
+        // }
 
-        // テーブルに保存された画像のパスがNULL
-        elseif(empty($s3_path))
+        // // テーブルに保存された画像のパスがNULL
+        // else
+        if(empty($s3_path))
         {
             $url = Storage::disk('s3')->url($no_image);
         }

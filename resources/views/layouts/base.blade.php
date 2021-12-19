@@ -18,10 +18,12 @@
 
         @yield('style')
 
+    <!-- favicon -->
+        <link rel="icon" href="{{asset('svg/logo.svg')}}">
+
 </head>
 
 <body>
-
 
     <!-- header -->
     @include('includes.header')

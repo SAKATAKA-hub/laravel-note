@@ -56,11 +56,11 @@ class TextboxsTableSeeder extends Seeder
                'sub_value' => 'google',
             ],
            '10' => [
-               'main_value' => 'Gc3CdUbviE5HtZI8Ypwf862Te5cXRNDh8VixH85T.jpg',
+               'main_value' => 'upload_image/3HTOOdw0c39aW4En2qB6Pu2lBozu3cLfvdWmgNZo.jpg',
                'sub_value' => '大きい画像',
             ],
            '11' => [
-                'main_value' => 'Gc3CdUbviE5HtZI8Ypwf862Te5cXRNDh8VixH85T.jpg',
+                'main_value' => 'upload_image/3HTOOdw0c39aW4En2qB6Pu2lBozu3cLfvdWmgNZo.jpg',
                 'sub_value' => '小さい画像',
             ],
         ];

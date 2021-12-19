@@ -20,7 +20,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'sakataka',
                 'email' => 'sakataka@mail.co.jp',
-                'image' => 'people/XEAn7eZNutmZwS6Vujaccl5ZIHr4GO4RkItWZ7xz.png',
+                'image' => 'people/jVy1oj2YLdIkPDxwYeJMlBS2Uss3esCK5G0wwUaB.png',
             ],[
                 'name' => '佐々木 直子',
                 'email' => 'sasaki@mail.co.jp',

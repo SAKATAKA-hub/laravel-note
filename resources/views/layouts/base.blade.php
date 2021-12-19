@@ -19,7 +19,12 @@
         @yield('style')
 
     <!-- favicon -->
-        <link rel="icon" href="{{asset('svg/logo.svg')}}">
+        @if (Storage::disk('local')->exists('img/sample.jpg'))
+            <!-- ローカル環境の時は、ファビコンを表示しない -->
+        @else
+            <link rel="icon" href="{{asset('svg/logo.svg')}}">
+        @endif
+
 
 </head>
 

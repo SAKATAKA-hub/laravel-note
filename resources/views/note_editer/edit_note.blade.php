@@ -39,8 +39,8 @@
     <!-- Vue.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 
-    {{-- <script src="{{asset('js/edit_note_vuejs.js')}}"></script> --}}
-    @include('note_editer.edit_note_vuejs')
+    <script src="{{asset('js/edit_note_vuejs.js')}}"></script>
+    {{-- @include('note_editer.edit_note_vuejs') --}}
 
 @endsection
 

@@ -273,7 +273,7 @@
                     const num = 100; //最大文字数
 
                     key = 'main_value_input';
-                    if(this.validateStrMax(key,num)){
+                    if(this.validateStrMax(this.editingTextbox[key],num)){
                         this.error[key] = "文字数が"+num+"文字を超えて超えています。";
                         validate = false;
                     }
@@ -681,13 +681,12 @@
              * @param Int num
              * @return Boolean
              */
-             validateStrMax: function(key,num){
+             validateStrMax: function(editingTextbox_caram,num){
 
 
-                if(this.editingTextbox[key].length >num){
+                if(editingTextbox_caram.length >num){
                     return true;
                 }else{
-                    this.error.strMax = '';
                     return false;
                 }
             },

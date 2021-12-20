@@ -261,10 +261,11 @@
              *
              */
              saveTextbox:function(){
+                 console.log(this.editingTextbox.group);
 
                 // 入力要素の文字数バリデーション
                 let validate = true;
-                if(this.editingTextbox !== 'text'){
+                if(this.editingTextbox.group !== 'text'){
 
                     // エラー文を初期値に戻す。
                     this.error = this.returnResetError();

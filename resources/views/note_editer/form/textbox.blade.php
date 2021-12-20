@@ -41,8 +41,7 @@ v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
              v-model="editingTextbox.main_value_input"
              @change="changeReplaceMainValue()"
             >
-            <p style="color:red;">@{{error.strMax}}</p>
-
+            <p style="color:red;">@{{error.main_value_input}}</p>
 
             <p>※重要な言葉は @{{ '{'+'{' }}  @{{ '}'+'}' }} (半角記号) で囲むことで強調させることができます。</p>
 
@@ -107,6 +106,7 @@ v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
             <input type="text" name="main_value" class="form-control" placeholder="半角記号英数字" required
              v-model="editingTextbox.main_value_input"
             >
+            <p style="color:red;">@{{error.main_value_input}}</p>
         </div>
 
         <div class="form_group mb-3">
@@ -114,6 +114,7 @@ v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
             <input type="text" name="sub_value" class="form-control" placeholder="リンクタイトル"  required
              v-model="editingTextbox.sub_value"
             >
+            <p style="color:red;">@{{error.sub_value}}</p>
         </div>
 
         <div class="form_group d-grid gap-2">

@@ -245,8 +245,7 @@ class NoteEditerController extends Controller
                 $textbox['group'] = $case->group;
                 $textbox['case_name'] = $case->value;
 
-            } //--------------------------------------------------------------
-
+            }
 
             # textboxes配列の先頭にnoteの基本情報を追加
             $array = [];

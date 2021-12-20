@@ -104,10 +104,10 @@
 
                 console.log(json);
 
-                if(this.textboxes.length === 1){
+                // ノートの新規作成のとき、新規作成フォームの表示
+                if(this.textboxes[0].mode === 'editing_textbox'){
                     this.editTitlebox();
                 }
-                console.log(this.inputMode);
             });
 
 
@@ -261,89 +261,120 @@
              */
              saveTextbox:function(){
 
-                //DBへ保存(非同期通信)
-                switch (this.inputMode) {
+                // 入力要素の文字数バリデーション
+                let validate = true;
+                if(this.editingTextbox !== 'text'){
 
-                    // ------ 新規作成 ------
-                    case 'create_textbox':
+                    // エラー文を初期値に戻す。
+                    this.error = this.returnResetError();
 
-                        let index = this.editingIndex;
-                        fetch(ajax_store_textbox, {
-                            method: 'POST',
-                            body: new URLSearchParams({
-                                _token: token,
-                                case_name:this.editingTextbox.case_name,
-                                main_value: this.editingTextbox.main_value_input,
-                                sub_value: this.editingTextbox.sub_value,
-                                order: this.editingIndex,
-                            }),
-                        })
-                        .then(response => {
-                            if(!response.ok){ throw new Error(); }
-                            return response.json();
-                        })
-                        .then(json => {
-                            // idの登録
-                            this.textboxes[index].id = json.id;
-                        })
-                        .catch(error => {
-                            alert('通信エラーが発生しました。ページを再読み込みします。');
-                            location.reload();
-                        });
-                        break;
+                    let key ='';
+                    const num = 100; //最大文字数
 
+                    key = 'main_value_input';
+                    if(this.validateStrMax(key,num)){
+                        this.error[key] = "文字数が"+num+"文字を超えて超えています。";
+                        validate = false;
+                    }
 
-                    // ------ 更新 ------
-                    case 'edit_textbox':
-
-                        // editingTextbox.idの更新がうまくいっていないとき
-                        if(!this.editingTextbox.id){
-                            alert('データ更新エラーが発生しました.');
-                            return;
-                        }
-
-                        fetch(ajax_update_textbox, {
-                            method: 'POST',
-                            body: new URLSearchParams({
-                                _method: 'PATCH',
-                                _token: token,
-                                id:this.editingTextbox.id,
-                                case_name:this.editingTextbox.case_name,
-                                main_value: this.editingTextbox.main_value_input,
-                                sub_value: this.editingTextbox.sub_value,
-                                order: this.editingIndex,
-                            }),
-                        })
-                        .then(response => {
-                            if(!response.ok){ throw new Error(); }
-                        })
-                        .catch(error => {
-                            alert('通信エラーが発生しました。ページを再読み込みします。');
-                            location.reload();
-                        });
-                        break;
-
-
-                    default:
-                    break;
+                    key = 'sub_value';
+                    if(this.validateStrMax(key,num)){
+                        this.error[key] = "文字数が"+num+"文字を超えて超えています。";
+                        validate = false;
+                    }
                 }
 
-                // 編集内容をtextboesデータ配列に保存
-                this.textboxes[this.editingIndex] = Object.assign({}, this.editingTextbox);
 
-                // textboxの表示変更
-                this.textboxes.forEach(textbox => {
-                    textbox.mode = 'select_textbox';
-                });
+                // バリデーションに通過したとき、
+                if(validate){
 
-                // editingTextboxの初期化
-                this.editingTextbox = this.returnResetEditingTextbox();
 
-                // エディターの表示変更
-                this.inputMode = '';
+                    //DBへ保存(非同期通信)
+                    switch (this.inputMode) {
 
-                //エラー文の初期化
-                this.error = this.returnResetError();
+                        // ------ 新規作成 ------
+                        case 'create_textbox':
+
+                            let index = this.editingIndex;
+                            fetch(ajax_store_textbox, {
+                                method: 'POST',
+                                body: new URLSearchParams({
+                                    _token: token,
+                                    case_name:this.editingTextbox.case_name,
+                                    main_value: this.editingTextbox.main_value_input,
+                                    sub_value: this.editingTextbox.sub_value,
+                                    order: this.editingIndex,
+                                }),
+                            })
+                            .then(response => {
+                                if(!response.ok){ throw new Error(); }
+                                return response.json();
+                            })
+                            .then(json => {
+                                // idの登録
+                                this.textboxes[index].id = json.id;
+                            })
+                            .catch(error => {
+                                alert('通信エラーが発生しました。ページを再読み込みします。');
+                                location.reload();
+                            });
+                            break;
+
+
+                        // ------ 更新 ------
+                        case 'edit_textbox':
+
+                            // editingTextbox.idの更新がうまくいっていないとき
+                            if(!this.editingTextbox.id){
+                                alert('データ更新エラーが発生しました.');
+                                return;
+                            }
+
+                            fetch(ajax_update_textbox, {
+                                method: 'POST',
+                                body: new URLSearchParams({
+                                    _method: 'PATCH',
+                                    _token: token,
+                                    id:this.editingTextbox.id,
+                                    case_name:this.editingTextbox.case_name,
+                                    main_value: this.editingTextbox.main_value_input,
+                                    sub_value: this.editingTextbox.sub_value,
+                                    order: this.editingIndex,
+                                }),
+                            })
+                            .then(response => {
+                                if(!response.ok){ throw new Error(); }
+                            })
+                            .catch(error => {
+                                alert('通信エラーが発生しました。ページを再読み込みします。');
+                                location.reload();
+                            });
+                            break;
+
+
+                        default:
+                        break;
+                    }
+
+                    // 編集内容をtextboesデータ配列に保存
+                    this.textboxes[this.editingIndex] = Object.assign({}, this.editingTextbox);
+
+                    // textboxの表示変更
+                    this.textboxes.forEach(textbox => {
+                        textbox.mode = 'select_textbox';
+                    });
+
+                    // editingTextboxの初期化
+                    this.editingTextbox = this.returnResetEditingTextbox();
+
+                    // エディターの表示変更
+                    this.inputMode = '';
+
+                    //エラー文の初期化
+                    this.error = this.returnResetError();
+
+
+                } //end if(validate)
             },
 
 
@@ -647,20 +678,17 @@
              *
              * @param String str
              * @param Int num
-             * @return String num文字以上の文字を返す
+             * @return Boolean
              */
-             validateStrMax: function(str,num){
+             validateStrMax: function(key,num){
 
-                if(str.length >num){
 
-                    str = str.substring(0,num); //num文字以上の文字を削除
-                    this.error.strMax = '文字数が'+num+'文字を超えて超えています'; //エラー文
+                if(this.editingTextbox[key].length >num){
+                    return true;
                 }else{
                     this.error.strMax = '';
+                    return false;
                 }
-
-                console.log(str+'('+str.length+')')
-                return str
             },
 
 
@@ -669,7 +697,7 @@
              *
              */
              returnResetError:function(){
-                return { strMax:'', imageFile:'', tag:'',};
+                return {imageFile:'', tag:'',main_value_input:'',sub_value:'',};
             },
 
         }, //end methods

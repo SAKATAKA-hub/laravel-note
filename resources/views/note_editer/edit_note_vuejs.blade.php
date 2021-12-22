@@ -637,7 +637,7 @@
              validateImageFile: function(){
 
                 // 保存可能な条件
-                const fileTypesArray = ['jpeg','png','jpg'];
+                const fileTypesArray = ['jpeg','png','jpg','gif'];
                 const maxFileSize = '100000';
 
                 // ファイル情報の取得

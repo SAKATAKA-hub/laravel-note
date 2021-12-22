@@ -37,7 +37,7 @@ v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
 
             <label class="fw-bold" for="inputHeadingMainValue">見出しを入力して下さい。 <br>(100文字以内)</label>
 
-            <input type="text" name="main_value" class="form-control" required
+            <input type="text" name="main_value" class="form-control"
              v-model="editingTextbox.main_value_input"
              @change="changeReplaceMainValue()"
             >
@@ -73,7 +73,7 @@ v-if=" (inputMode==='create_textbox')||(inputMode==='edit_textbox') "
             <label class="fw-bold" for="inputTextMainValue">文章を入力して下さい。</label>
 
             <textarea name="main_value" class="form-control" style="height:12rem;"
-             placeholder="※重要な言葉は  (半角記号) で囲む。" required
+             placeholder="※重要な言葉は  (半角記号) で囲む。"
              v-model="editingTextbox.main_value_input"
              @change="changeReplaceMainValue()"
             ></textarea>

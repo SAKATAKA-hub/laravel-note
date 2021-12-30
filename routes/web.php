@@ -328,5 +328,9 @@ Route::get('test',function(){
 Route::post('api',[TestController::class,'api'])
 ->name('api');
 
+# upload_test
+Route::get('upload_test',function(){
+    return 'upload test';
+})->name('upload_test');
 
 

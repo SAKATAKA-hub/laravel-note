@@ -96,7 +96,10 @@
                     mypage_master_id: mypageMasterId,
                 }),
             })
-            .then(response => response.json())
+            .then(response => {
+                if(!response.ok){ throw new Error(); }
+                return response.json();
+            })
             .then(json => {
 
                 this.note = json.note ||[]; //noteデータ
@@ -109,7 +112,11 @@
                 if(this.textboxes[0].mode === 'editing_textbox'){
                     this.editTitlebox();
                 }
+            })
+            .catch(error => {
+                alert('データの読み込みに失敗しました。');
             });
+
 
 
         }, //end mounted

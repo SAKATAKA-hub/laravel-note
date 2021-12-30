@@ -196,6 +196,9 @@ class NoteEditerController extends Controller
     public function json_note(Request $request, User $mypage_master, $note)
     {
 
+        $note = Note::find($note);
+
+
         if(!$note) //ノートの新規作成用データ ----------------------------
         {
             $note = [];
@@ -220,7 +223,6 @@ class NoteEditerController extends Controller
         else //ノートの更新用データ ---------------------------------------
         {
             # note情報の取得
-            $note = Note::find($note);
 
             # ノートの基本情報の追加データ
             $note['chake_publishing'] = $note->chake_publishing;
@@ -268,6 +270,7 @@ class NoteEditerController extends Controller
                 'textbox_cases' => TextboxCase::All(),
             ],
         ];
+
     }
 
 

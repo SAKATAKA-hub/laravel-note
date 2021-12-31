@@ -32,22 +32,22 @@ class DatabaseSeeder extends Seeder
     # 投稿のフェイクデータを挿入するユーザーのID
     public static function getUserId()
     {
-        // return 2;
-        return 15;
+        return 2;
+        // return 15;
     }
 
     # テキストボックスを挿入する投稿ノートのID
     public static function getNoteId()
     {
-        // return 1;
-        return 5;
+        return 1;
+        // return 5;
     }
 
     # herokuのclearDBのテーブルIDは、($n-1)*10+5で附番される
     public static function textboxCaseId($n)
     {
-        // return $n;
-        return ($n-1)*10+5;
+        return $n;
+        // return ($n-1)*10+5;
     }
 
 }

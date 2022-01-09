@@ -9,6 +9,8 @@
     <!-- Title meta tags -->
         <title>ようこそ　my noteへ！</title>
 
+    <!-- favicon -->
+        <link rel="icon" href="{{asset('svg/logo.svg')}}">
 
     <!-- Styel link tags -->
         <!--(bootstrap)-->
@@ -87,19 +89,9 @@
                 <div class="p-3 bg-light" style="max-width:600px;margin:0 auto;">
                     <div>
                         <p class="d-lg-inline">簡単ユーザー登録を押すと、</p>
-                        <p class="d-lg-inline">簡易的にユーザー登録をして、すぐに利用することができるよ。</p>
+                        <p class="d-lg-inline">簡易的にユーザー登録をして、すぐに利用することができます。</p>
                     </div>
                     <p><small>※簡単ユーザー登録アカウントの利用期限は24時間です。</small></p>
-                    <div>
-                        <p class="d-lg-inline">アカウント作成後にログアウトしたときは、</p>
-                        <p class="d-lg-inline">下のメールアドレスとパスワードからログインしてね。</p>
-                    </div>
-
-
-                    <div class="mt-3 p-1 ps-5 bg-info text-start" style="max-width:400px;margin:0 auto;">
-                        <p class="m-1 text-start">メールアドレス：プロフィール変更より確認</p>
-                        <p class="m-1 text-start">パスワード：password</p>
-                    </div>
                 </div>
 
 
@@ -123,7 +115,7 @@
 
                 </div>
                 <div class="col-md-5">
-                    <svg class="mt-5 bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="300" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">no image</text></svg>
+                    <img src="{{asset('storage/img/top/top1.png')}}" alt="サンプル画像" width="400" height="400">
                 </div>
             </div>
         </section>
@@ -153,7 +145,7 @@
 
                     </div>
                 <div class="col-md-5 order-md-1">
-                    <svg class="mt-5 bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="300" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">no image</text></svg>
+                    <img src="{{asset('storage/img/top/top2.png')}}" alt="サンプル画像" width="400" height="400">
                 </div>
             </div>
         </section>
@@ -180,7 +172,7 @@
 
                 </div>
                 <div class="col-md-5">
-                    <svg class="mt-5 bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="300" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">no image</text></svg>
+                    <img src="{{asset('storage/img/top/top4.png')}}" alt="サンプル画像" width="400" height="400">
                 </div>
             </div>
         </section>

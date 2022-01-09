@@ -43,17 +43,18 @@ class Textbox extends Model
      */
     public function getReplaceMainValueAttribute()
     {
-        $value = $this->main_value;
 
-        # S3にアップロードしている文章があるとき、
+
+        # 文章の取得(ストレージ保存のテキスト、又はテーブルデータ)
         $textbox_group = TextboxCase::find($this->textbox_case_id)->group;
-        if( ($textbox_group === 'text')&&($this->sub_value === 'S3_upload') )
+
+        if( ($textbox_group === 'text')&&($this->sub_value) )
         {
-            $path = $this->main_value;
-            if (Storage::disk('s3')->exists($path))
-            {
-                $value = Storage::disk('s3')->get($path);
-            }
+            $value = Storage::get($this->main_value);
+        }
+        else
+        {
+            $value = $this->main_value;
         }
 
 
@@ -79,20 +80,19 @@ class Textbox extends Model
     public function getMainValueInputAttribute()
     {
 
-        # S3にアップロードしている文章があるとき
-        $value = $this->main_value;
+        # 文章の取得(ストレージ保存のテキスト、又はテーブルデータ)
         $textbox_group = TextboxCase::find($this->textbox_case_id)->group;
-        if( ($textbox_group === 'text')&&($this->sub_value === 'S3_upload') )
+
+        if( ($textbox_group === 'text')&&($this->sub_value) )
         {
-            $path = $this->main_value;
-            if (Storage::disk('s3')->exists($path))
-            {
-                return Storage::disk('s3')->get($path);
-            }
+            $value = Storage::get($this->main_value);
+        }
+        else
+        {
+            $value = $this->main_value;
         }
 
-        # DBのテーブルに値を保存しているとき
-        return $this->main_value;
+        return $value;
     }
 
 
@@ -101,39 +101,14 @@ class Textbox extends Model
 
     /**
      * $textbox->image_url
-     * S3に保存された画像のURLを表示
+     * DBに保存された画像のURLを表示
      *
      *
      * @return String
      */
     public function getImageUrlAttribute()
     {
-        //-----------------------------------------------------
-        // 開発環境時には、local stragの'sample.jpg'を表示
-        // デプロイ後は、S3に保存した画像を表示
-        //-----------------------------------------------------
-
-        $local_path = 'img/sample.jpg';
-        $s3_path = $this->main_value;
-        $url = '';
-
-        // # 開発環境のとき、
-        // if( Storage::disk('local')->exists($local_path) )
-        // {
-        //     $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
-        // }
-        // // デプロイ後で、S3に保存データがあるとき、
-        // elseif (Storage::disk('s3')->exists($s3_path))
-        // {
-        //     $url = Storage::disk('s3')->url($s3_path);
-        // }
-
-        if (Storage::disk('s3')->exists($s3_path))
-        {
-            $url = Storage::disk('s3')->url($s3_path);
-        }
-
-        return $url;
+        return  $this->main_value;
     }
 
 

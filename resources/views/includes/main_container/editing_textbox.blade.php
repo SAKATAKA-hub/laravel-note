@@ -67,8 +67,7 @@
         </div>
     @else
         <div class="editing_box {{$edit_textbox_case->value}}" id="editingImage">
-            {{-- <img id="previewImage" src="{{ asset('storage/'.$textbox->main_value) }}" alt=""> --}}
-            <img id="previewImage" src="{{ $textbox->image_url }}" alt="">
+            <img id="previewImage" src="{{ asset('storage/'.$textbox->image_url) }}" alt="">
             <p class="subValue title">{{$textbox->sub_value}}</p>
         </div>
     @endif

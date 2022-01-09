@@ -9,6 +9,8 @@
     <!-- Title meta tags -->
         <title>@yield('title')</title>
 
+    <!-- favicon -->
+        <link rel="icon" href="{{asset('svg/logo.svg')}}">
 
     <!-- Styel link tags -->
         <!--(bootstrap)-->
@@ -18,12 +20,6 @@
 
         @yield('style')
 
-    <!-- favicon -->
-        @if (Storage::disk('local')->exists('img/sample.jpg'))
-            <!-- ローカル環境の時は、ファビコンを表示しない -->
-        @else
-            <link rel="icon" href="{{asset('svg/logo.svg')}}">
-        @endif
 
 
 </head>

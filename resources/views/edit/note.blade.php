@@ -93,6 +93,7 @@
 
 
 
+
 @section('main.center_container')
 
 
@@ -148,8 +149,6 @@
 
 
         </div>
-
-
 
 
         <!-- テキストボックスの表示 -->

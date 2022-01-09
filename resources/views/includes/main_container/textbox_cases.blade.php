@@ -24,7 +24,7 @@
 
     <!-- Image -->
     <div class="{{$textbox->textboxCase->value}}">
-        <img id="previewImage" src="{{ $textbox->image_url }}" alt="">
+        <img id="previewImage" src="{{ asset('storage/'.$textbox->image_url) }}" alt="">
         <p class="subValue title">{{$textbox->sub_value}}</p>
     </div>
 @endif

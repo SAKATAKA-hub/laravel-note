@@ -24,6 +24,7 @@ class EditNoteController extends Controller
      */
     public function edit_note($note){
 
+
         # notesテーブルとtextboxsテーブルのリレーション
         $note = Note::with('Textboxes')->find($note);
 
@@ -169,6 +170,7 @@ class EditNoteController extends Controller
      * @return \Illuminate\View\View
      */
     public function update_note_title(EditNoteTitleFormRequest $request, $note){
+
 
         # note(ミドルウェア利用の為、$noteパラメーターは全てInt型で統一)
         $note = Note::find($note);

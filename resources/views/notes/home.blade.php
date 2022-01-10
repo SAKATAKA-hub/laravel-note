@@ -42,9 +42,12 @@
     <!-- header -->
     @include('includes.header')
 
+    <!-- alert -->
+    @include('includes.alert')
 
 
     <main>
+
         <section>
             <div class="sec_container">
 
@@ -115,7 +118,7 @@
 
                 </div>
                 <div class="col-md-5">
-                    <img src="{{asset('storage/img/top/top1.png')}}" alt="サンプル画像" width="400" height="400">
+                    <img src="{{asset('storage/common/img/top/top1.png')}}" alt="サンプル画像" width="400" height="400">
                 </div>
             </div>
         </section>
@@ -145,7 +148,7 @@
 
                     </div>
                 <div class="col-md-5 order-md-1">
-                    <img src="{{asset('storage/img/top/top2.png')}}" alt="サンプル画像" width="400" height="400">
+                    <img src="{{asset('storage/common/img/top/top2.png')}}" alt="サンプル画像" width="400" height="400">
                 </div>
             </div>
         </section>
@@ -164,7 +167,7 @@
                         もちろん、マイページからは”タイトルキーワード検索”、”日付絞り込み”、”公開・非公開別表示”など、ブログの様な簡単管理が可能！
                     </p>
                     <p class="lead text-start m-3">
-                        <a class="btn btn-outline-secondary" href="https://sakataka-laravel-note.herokuapp.com/mypage_top/15">
+                        <a class="btn btn-outline-secondary" href="{{route('mypage_top',2)}}">
                             サンプルユーザーのマイページはこちら
                         </a>
                     </p>
@@ -172,7 +175,7 @@
 
                 </div>
                 <div class="col-md-5">
-                    <img src="{{asset('storage/img/top/top4.png')}}" alt="サンプル画像" width="400" height="400">
+                    <img src="{{asset('storage/common/img/top/top4.png')}}" alt="サンプル画像" width="400" height="400">
                 </div>
             </div>
         </section>

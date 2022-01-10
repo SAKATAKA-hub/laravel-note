@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Method;
 use App\Http\Controllers\EditNoteController;
 
 use Illuminate\Http\Request;
@@ -11,13 +12,14 @@ use App\Http\Requests\RegisterFormRequest;
 use App\Http\Requests\EditRegisterFormRequest;
 
 use App\Models\Note;
+use App\Models\Textbox;
+
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\User;
-use Carbon\Carbon;
 
 
 class AuthController extends Controller
@@ -139,11 +141,7 @@ class AuthController extends Controller
 
 
         # 画像アップロード処理
-        if($request->file('image')) //ファイルの添付があれば、アップロード
-        {
-            $save_data['image'] = $this::uploadUserImage($request); //画像のパスを'image'カラムに保存
-        }
-
+        $save_data = $this::uploadUserImage($request, $save_data);
 
         # ユーザー情報の更新
         User::find($request->user_id)->update($save_data);
@@ -171,15 +169,17 @@ class AuthController extends Controller
         # 削除するユーザー
         $delete_user = User::find($request->user_id);
 
+
         # アラート表示する、削除ユーザーの名前
         $user_name = $delete_user->name;
 
 
-        # S3からユーザー画像を削除
-        $this::deleteUserImage($delete_user->image);
+        # ストレージからユーザー画像を削除
+        Storage::delete($delete_user->image);
 
-        # S3からユーザーが投稿した画像を削除
-        $this::deleteUserUplordImages($delete_user->id);
+
+        # ストレージからユーザーがアップロードしたファイルを削除
+        $this::deleteUserUplordFiles($delete_user);
 
 
         # ユーザー情報の削除
@@ -214,7 +214,6 @@ class AuthController extends Controller
         ]);
         $user->save();
 
-        // dd($user);
 
         // ログアウト処理
         Auth::logout(); //ユーザーセッションの削除
@@ -252,59 +251,59 @@ class AuthController extends Controller
     */
 
     /**
-     * S3にユーザー画像をアップロード(uploadUserImage)
+     * ストレージにユーザー画像をアップロード(uploadUserImage)
      *
      *
-     * @param \Illuminate\Http\EditTextboxFormRequest $request
-     * @return String $path (アプロードした画像のs3内パスを返す)
+     * @param \Illuminate\Illuminate\Http\Request $request
+     * @param Array $save_data
+     * @return Array $save_data
      */
-    public function uploadUserImage($request)
+    public function uploadUserImage($request,$save_data)
     {
-        $upload_image = $request->file('image'); //保存画像
-        $dir = 'people'; //アップロード先ディレクトリ名
-        $delete_image_path = $request->old_image; //古いアップロード画像のパス
-
-        # 画像のアップロード
-        $path = Storage::disk('s3')->putFile($dir, $upload_image, 'public');
-
-        # 古いアップロード画像の削除
-        $this:: deleteUserImage($delete_image_path);
-
-
-        return $path;
-    }
-
-
-    /**
-     * S3からユーザー画像を削除(deleteUserImage)
-     *
-     *
-     * @param $delete_image_path (削除する画像のＳ3内パス)
-     */
-    public function deleteUserImage($delete_image_path)
-    {
-        if ( Storage::disk('s3')->exists($delete_image_path) ) // 画像が存在するか確認
+        if($request->file('image')) //ファイルの添付があれば、アップロード
         {
-            Storage::disk('s3')->delete($delete_image_path); //画像の削除
+            $upload_image = $request->file('image'); //保存画像
+            $dir = 'upload/user'; //アップロード先ディレクトリ名
+
+            # 画像のアップロード
+            $save_data['image'] = $upload_image->store($dir);
+
+            # 古いアップロード画像の削除
+            Storage::delete($request->old_image);
         }
+
+
+        return $save_data;
     }
 
 
+
+
     /**
-     * S3からユーザーが投稿した画像を削除(deleteUserUplordImages)
+     * ストレージからユーザーが投稿した画像を削除(deleteUserUplordFiles)
      *
      *
      * @param $delete_user_id (削除するユーザーIDID)
      */
-    public function deleteUserUplordImages($delete_user_id)
+    public function deleteUserUplordFiles($delete_user)
     {
-        # 削除ユーザーの投稿ノートの取得
-        $notes = Note::where('user_id',$delete_user_id)->get();
-
-        # 画像の削除処理(EditNoteControllerのメソッドを利用)
+        # 削除ユーザーに紐づく、投稿ノートを取得
+        $notes = Note::where('user_id',$delete_user->id)->get();
         foreach ($notes as $note)
         {
-            EditNoteController::deleteNoteImages($note);
+            # 投稿ノートに紐づく、テキストボックスを取得
+            $textboxes = Textbox::where('note_id',$note->id)->get();
+            foreach ($textboxes as $textbox)
+            {
+
+                // ストレージ保存のテキストファイルを削除
+                Method::deleteTextFile($textbox);
+
+                // ストレージ保存の画像ファイルを削除
+                Method::deleteImageFile($textbox);
+
+            }
+
         }
     }
 

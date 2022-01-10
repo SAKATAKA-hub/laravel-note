@@ -63,6 +63,7 @@ class User extends Authenticatable
 
 
 
+
     /**
      * $user->replace_comment
      * 'comment'カラムの表示に'改行'を反映させる
@@ -78,6 +79,9 @@ class User extends Authenticatable
         return $value;
     }
 
+
+
+
     /**
      * $user->image_url
      * S3に保存されたユーザー画像のURLを表示
@@ -88,63 +92,23 @@ class User extends Authenticatable
      */
     public function getImageUrlAttribute()
     {
+        $path ='';
+        $no_image = 'common/img/no_img.png'; //ユーザー画像の登録なしのパス
 
-        $local_path = 'img/user0001.png';// ローカル環境画像
-        $s3_path = $this->image; //ユーザー登録画像
-        $no_image = 'people/mMU8CNbJtMfnjF5hjmgooUaZ1r4kwpyvQYWPmCmR.png'; //ユーザー画像の登録なしのパス
-
-        $url = '';
-
-        // 開発環境のとき、
-        if( Storage::disk('local')->exists($local_path) )
-        {
-            $url = 'http://localhost/laravel-note/public/'.Storage::disk('local')->url($local_path);
-
+        // ユーザー画像が登録されていないとき、
+        if(
+            empty($this->image) or !Storage::exists($this->image)
+        ){
+            $path = asset('storage/'.$no_image);
         }
-        // パスの値がnull、またはS3に保存データがない、
-        elseif(
-            empty($s3_path)or
-            !Storage::disk('s3')->exists($s3_path)
-        )
-        {
-            $url = Storage::disk('s3')->url($no_image);
-        }
-        // S3に保存データがあるとき、
+        // 登録しているユーザー画像の表示
         else
         {
-            $url = Storage::disk('s3')->url($s3_path);
+            $path = asset('storage/'.$this->image);
         }
 
 
-        // // パスの値がnull、またはS3に保存データがない、
-        // if(
-        //     empty($s3_path)or
-        //     !Storage::disk('s3')->exists($s3_path)
-        // )
-        // {
-        //     $url = Storage::disk('s3')->url($no_image);
-        // }
-        // // S3に保存データがあるとき、
-        // else
-        // {
-        //     $url = Storage::disk('s3')->url($s3_path);
-        // }
-
-
-
-        return $url;
-
-
-
-
-
-
-
-        // // テーブルに保存された画像のパスを参照。NULLなら'no-image'画像のパスを参照。
-        // $path = empty($this->image)? S3ImageUrlComposer::filePath()['no_image']: $this->image;
-
-        // // S3に画像が保存されていれば表示、なければ非表示
-        // return Storage::disk('s3')->exists($path)? Storage::disk('s3')->url($path):'';
+        return $path;
     }
 
 }

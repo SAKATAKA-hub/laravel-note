@@ -56,7 +56,7 @@ inputTextBoxCase.onchange = ()=> {
         if(inputBox.id === 'input'+textboxCaseGroup)
         {
             inputBox.classList.remove('hidden'); //表示
-            inputBox.querySelector('input[name="textbox_case_name"]').value = textboxCase; //インプットタグのvalueにテキストボックスの種類を代入
+            inputBox.querySelector('input[name="case_name"]').value = textboxCase; //インプットタグのvalueにテキストボックスの種類を代入
         }
 
     });

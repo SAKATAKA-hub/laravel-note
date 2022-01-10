@@ -48,7 +48,7 @@ class Textbox extends Model
         # 文章の取得(ストレージ保存のテキスト、又はテーブルデータ)
         $textbox_group = TextboxCase::find($this->textbox_case_id)->group;
 
-        if( ($textbox_group === 'text')&&($this->sub_value) )
+        if( ($textbox_group === 'text')&&($this->sub_value === 'strage_upload') )
         {
             $value = Storage::get($this->main_value);
         }
@@ -83,7 +83,7 @@ class Textbox extends Model
         # 文章の取得(ストレージ保存のテキスト、又はテーブルデータ)
         $textbox_group = TextboxCase::find($this->textbox_case_id)->group;
 
-        if( ($textbox_group === 'text')&&($this->sub_value) )
+        if( ($textbox_group === 'text')&&($this->sub_value === 'strage_upload') )
         {
             $value = Storage::get($this->main_value);
         }
@@ -108,7 +108,7 @@ class Textbox extends Model
      */
     public function getImageUrlAttribute()
     {
-        return  $this->main_value;
+        return asset('storage/'.$this->main_value);
     }
 
 

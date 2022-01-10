@@ -42,8 +42,7 @@ class EditTextboxController extends Controller
     }
 
 
-
-
+    public function test(){return 'test';}
 
     /**
      * 新規作成テキストボックスの保存(store_textbox)
@@ -55,13 +54,18 @@ class EditTextboxController extends Controller
      */
     public function store_textbox(EditTextboxFormRequest $request, $note){
 
+        // return NoteEditerController::ajax_store_textbox($request, $note);
+
+
+
+
         # 編集ノート
         $note = Note::find($note);
 
         # 保存データ
         $save_data = [
             'note_id' => $note->id, //ノートID
-            'textbox_case_id' => TextboxCase::where('value',$request->textbox_case_name)->first()->id, //テキストボックスの種類ID
+            'textbox_case_id' => TextboxCase::where('value',$request->case_name)->first()->id, //テキストボックスの種類ID
             'main_value' => $request->main_value, //mein_value
             'sub_value' => $request->sub_value, //sub_value
             'order' => $request->order, //採番
@@ -71,7 +75,7 @@ class EditTextboxController extends Controller
         $save_data = Method::uploadTextFile($request,$save_data,$textbox=null);
 
 
-        # 画像アップロード処理
+        # 画像ファイルをストレージに保存
         $save_data = Method::uploadImageFile($request ,$save_data, $textbox=null);
 
 
@@ -157,6 +161,7 @@ class EditTextboxController extends Controller
      */
     public function update_textbox(EditTextboxFormRequest $request, $note, Textbox $edit_textbox){
 
+
         $textbox = $edit_textbox;
 
         # ノートデータ
@@ -166,7 +171,7 @@ class EditTextboxController extends Controller
         # 保存データ
         $save_data = [
             'note_id' => $note->id, //ノートID
-            'textbox_case_id' => TextboxCase::where('value',$request->textbox_case_name)->first()->id, //テキストボックスの種類ID
+            'textbox_case_id' => TextboxCase::where('value',$request->case_name)->first()->id, //テキストボックスの種類ID
             'main_value' => $request->main_value, //mein_value
             'sub_value' => $request->sub_value, //sub_value
             'order' => $request->order, //採番
@@ -179,7 +184,7 @@ class EditTextboxController extends Controller
         $save_data = Method::uploadTextFile($request,$save_data,$textbox);
 
 
-        # 画像アップロード処理
+        # 画像ファイルをストレージに保存
         $save_data = Method::uploadImageFile($request ,$save_data, $textbox);
 
 
@@ -225,9 +230,8 @@ class EditTextboxController extends Controller
         Method::deleteTextFile($textbox);
 
 
-        # 画像の削除
-        $pus = str_replace(["\r\n", "\r", "\n"], '', $textbox->main_value); //改行の削除
-        Storage::delete($pus);
+        # ストレージ保存の画像ファイルを削除
+        Method::deleteImageFile($textbox);
 
 
         # 採番の更新 (削除するテキストボックスより後のテキストボックスの採番を'1'減算)
@@ -249,55 +253,5 @@ class EditTextboxController extends Controller
         ->with('note_alert','destroy_textbox');
 
     }
-
-
-
-
-
-
-
-    /*
-    |
-    |　コントローラー内で利用するメソッド
-    |
-    |
-    */
-
-
-    /**
-     * ストレージにテキストをアップロード(uploadTextFile)
-     * 100文字以上の'文章'については、ストレージにテキスト保存する。
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param Array $request
-     * @return Array $save_data
-     */
-    public function uploadTextFile($request,$save_data,$textbox)
-    {
-        # テキストボックスグループの取得
-        $textbox_group = TextboxCase::where('value',$request->textbox_case_name)->first()->group;
-
-        if( ($textbox_group==='text')&&( strlen($request->main_value)>99 ) )
-        {
-            # 基本設定
-            $id = $textbox!==null? $textbox->id: Textbox::orderBy('id','desc')->first()->id +1;
-            $dir = 'upload_text/';
-            $file = sprintf('%06d',$id).'.txt';
-            $text = $request->main_value;
-
-            # ストレージにテキストファイルを保存
-            Storage::disk('s3')->put($dir.$file, $text);
-            // Storage::disk('s3')->put($dir.$file, $text);
-
-            # $save_dataに値を保存
-            $save_data['main_value'] = $dir.$file;
-            $save_data['sub_value'] = 'S3_upload';
-
-        }
-
-        return $save_data;
-
-    }
-
 
 }

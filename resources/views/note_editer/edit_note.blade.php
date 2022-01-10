@@ -23,7 +23,6 @@
     <meta name="mypage_master_id" content="{{$mypage_master->id}}">
 
 
-
     <!-- note.css -->
     <link rel="stylesheet" href="{{asset('css/layouts/note.css')}}">
 

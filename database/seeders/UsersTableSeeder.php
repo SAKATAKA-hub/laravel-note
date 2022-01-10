@@ -20,15 +20,15 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'sakataka',
                 'email' => 'sakataka@mail.co.jp',
-                'image' => 'people/jVy1oj2YLdIkPDxwYeJMlBS2Uss3esCK5G0wwUaB.png',
+                'image' => 'upload/user/7777.png',
             ],[
                 'name' => '佐々木 直子',
                 'email' => 'sasaki@mail.co.jp',
-                'image' => 'people/ZDb0IafPzLMq1vmeyAC41VX0heXJOSKqxOeazDbZ.png',
+                'image' => 'upload/user/0001.png',
             ],[
                 'name' => '杉山 聡太郎',
                 'email' => 'sugiyama@mail.co.jp',
-                'image' => 'people/xvy4286IS55i6pnNWtpaCAx9KroaPstamZhIDiaN.png',
+                'image' => 'upload/user/0002.png',
             ],
 
         ];

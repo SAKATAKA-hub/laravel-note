@@ -149,6 +149,7 @@ Route::middleware(['check_mypage_master'])->group(function ()
     Route::post('/json_note/{mypage_master}/{note}',[NoteEditerController::class,'json_note'])
     ->name('json_note');
 
+
     # 新規作成テキストボックスの保存(ajax_store_textbox)
     Route::post('/ajax_store_textbox/{note}',[NoteEditerController::class,'ajax_store_textbox'])
     ->name('ajax_store_textbox');

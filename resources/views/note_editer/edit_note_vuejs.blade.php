@@ -9,10 +9,8 @@
     const ajax_store_textbox = document.querySelector('meta[name="ajax_store_textbox"]').content;
     const ajax_update_textbox = document.querySelector('meta[name="ajax_update_textbox"]').content;
     const ajax_destroy_textbox = document.querySelector('meta[name="ajax_destroy_textbox"]').content;
-
     // param
     const mypageMasterId = document.querySelector('meta[name="mypage_master_id"]').content;
-
 
 
 
@@ -70,6 +68,7 @@
 
             //<-- バリデーションのエラーメッセージ -->
             error:[],
+
 
         }, //end data
 

@@ -47,8 +47,9 @@
         @method('PATCH')
         @csrf
     @endif
+
         <input type="hidden" name="order" value="{{$order}}">
-        <input type="hidden" name="textbox_case_name" value="{{isset($edit_textbox)? $edit_textbox_case->value:''}}">
+        <input type="hidden" name="case_name" value="{{isset($edit_textbox)? $edit_textbox_case->value:''}}">
 
 
         <div class="form_group mb-5">
@@ -90,7 +91,7 @@
     @endif
 
         <input type="hidden" name="order" value="{{$order}}">
-        <input type="hidden" name="textbox_case_name" value="{{isset($edit_textbox)? $edit_textbox_case->value:''}}">
+        <input type="hidden" name="case_name" value="{{isset($edit_textbox)? $edit_textbox_case->value:''}}">
 
         <div class="form_group mb-5">
             <label class="fw-bold" for="inputTextMainValue">文章を入力して下さい。</label>
@@ -132,7 +133,7 @@
     @endif
 
     <input type="hidden" name="order" value="{{$order}}">
-    <input type="hidden" name="textbox_case_name" value="{{isset($edit_textbox)? $edit_textbox_case->value:''}}">
+    <input type="hidden" name="case_name" value="{{isset($edit_textbox)? $edit_textbox_case->value:''}}">
 
         <div class="form_group mb-5">
             <label class="fw-bold" for="inputLinkMainValue">リンク先URLを入力して下さい。</label>
@@ -173,7 +174,7 @@
     @endif
 
         <input type="hidden" name="order" value="{{$order}}">
-        <input type="hidden" name="textbox_case_name" value="{{isset($edit_textbox)? $edit_textbox_case->value:''}}">
+        <input type="hidden" name="case_name" value="{{isset($edit_textbox)? $edit_textbox_case->value:''}}">
         <input type="hidden" name="old_image"
         value="{{isset($edit_textbox_case)&&($edit_textbox_case->group === 'image')? $edit_textbox->main_value:''}}"> <!-- 保存済み画像のパス -->
 

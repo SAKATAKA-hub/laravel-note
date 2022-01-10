@@ -23,8 +23,10 @@
         <!-- image -->
         <img :src="textbox.image_url" :alt="textbox.sub_value">
         <p class="subValue title">@{{textbox.sub_value}}</p>
+
     </div>
 </div>
+
 
 
 

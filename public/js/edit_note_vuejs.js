@@ -8,10 +8,8 @@
     const ajax_store_textbox = document.querySelector('meta[name="ajax_store_textbox"]').content;
     const ajax_update_textbox = document.querySelector('meta[name="ajax_update_textbox"]').content;
     const ajax_destroy_textbox = document.querySelector('meta[name="ajax_destroy_textbox"]').content;
-
     // param
     const mypageMasterId = document.querySelector('meta[name="mypage_master_id"]').content;
-
 
 
 
@@ -58,7 +56,6 @@
 
             // ノート編集時の追加情報
             newTagsString : '', //新しく追加されたタグ
-            inputReleaseDatetime :'', //公開予約日時
 
             //<-- セレクトボックスの選択要素-->
             selects :{
@@ -69,6 +66,7 @@
 
             //<-- バリデーションのエラーメッセージ -->
             error:[],
+
 
         }, //end data
 
@@ -95,7 +93,10 @@
                     mypage_master_id: mypageMasterId,
                 }),
             })
-            .then(response => response.json())
+            .then(response => {
+                if(!response.ok){ throw new Error(); }
+                return response.json();
+            })
             .then(json => {
 
                 this.note = json.note ||[]; //noteデータ
@@ -107,8 +108,13 @@
                 // ノートの新規作成のとき、新規作成フォームの表示
                 if(this.textboxes[0].mode === 'editing_textbox'){
                     this.editTitlebox();
+                    this.inputMode =  'create_titlebox';
                 }
+            })
+            .catch(error => {
+                alert('データの読み込みに失敗しました。');
             });
+
 
 
         }, //end mounted
@@ -218,7 +224,8 @@
                  * 'create_titlebox' : ノートの新規作成
                  * 'edit_titlebox'   : ノートの編集
                 */
-                this.inputMode = this.textboxes.length === 1? 'create_titlebox' :'edit_titlebox';
+                this.inputMode = this.inputMode !== 'create_titlebox'? 'edit_titlebox': 'create_titlebox';
+
 
                 //エラー文の初期化
                 this.error = this.returnResetError();
@@ -244,6 +251,13 @@
                 if(this.inputMode === 'create_textbox'){
                     this.textboxes.splice(this.editingIndex, 1);
                 }
+
+                // テーマカラーを元に戻す
+                if(this.inputMode === 'edit_titlebox'){
+                    let color = this.editingTextbox.color;
+                    this.note.color = color;
+                }
+
 
                 // editingTextboxの初期化
                 this.editingTextbox = this.returnResetEditingTextbox();
@@ -636,7 +650,7 @@
              validateImageFile: function(){
 
                 // 保存可能な条件
-                const fileTypesArray = ['jpeg','png','jpg'];
+                const fileTypesArray = ['jpeg','png','jpg','gif'];
                 const maxFileSize = '100000';
 
                 // ファイル情報の取得

@@ -132,9 +132,19 @@
                 </div>
 
 
-                <!-- 編集中タイトルボックス -->
+                <!-- 編集中タイトルボックス(新規作成) -->
+                <div class="title_box editing_textbox" style="cursor:default"
+                v-if="inputMode==='create_titlebox'"
+                >
+                    <p class="w-100 text-center" style="color:red;">・・・編集中・・・</p>
+
+                     @include('note_editer.preview.titlebox')
+                </div>
+
+
+                <!-- 編集中タイトルボックス(更新) -->
                 <div class="title_box editing_textbox"
-                v-if=" textbox.mode==='editing_textbox' "
+                v-if=" (textbox.mode==='editing_textbox') && (inputMode!=='create_titlebox') "
                 @click="selectTextbox()"
                 >
                     <p class="w-100 text-center" style="color:red;">・・・編集中・・・</p>
@@ -149,8 +159,7 @@
                 @click="editTitlebox(textbox,index)"
                 >
                      @include('note_editer.preview.titlebox')
-                </div>
-
+            </div>
 
 
 

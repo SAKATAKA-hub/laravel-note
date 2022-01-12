@@ -7,7 +7,7 @@
     <title>印刷ページ</title>
 
 
-    <!-- note.css -->
+    <link rel="stylesheet" href="{{asset('css/layouts/base.css')}}">
     <link rel="stylesheet" href="{{asset('css/layouts/note.css')}}">
 
 </head>

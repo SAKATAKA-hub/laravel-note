@@ -38,7 +38,8 @@
 
        <!-- field_input -->
        <select class="form-control" name="color" id="inputNoteColor" required
-        v-model="editingTextbox.color"
+        {{-- v-model="editingTextbox.color" --}}
+        v-model="note.color"
        >
             <option value="">選択してください</option>
             <option v-for="color in selects.colors" :value="color.value">
@@ -92,14 +93,14 @@
            <label class="text-secondary" for="inputReleaseDatetime">公開日を予約する(翌日以降)</label>
            <input class="form-control text-secondary" type="datetime-local" name="release_datetime" id="inputReleaseDatetime"
             min="{{\Carbon\Carbon::parse('tomorrow')->format('Y-m-d').'T00:00'}}" readonly
-            v-model="inputReleaseDatetime"
+            v-model="editingTextbox.release_datetime_value"
            >
        </div>
        <div v-if="!editingTextbox.chake_publishing" class="mt-2">
            <label class="" for="inputReleaseDatetime">公開日を予約する(翌日以降)</label>
            <input class="form-control" type="datetime-local" name="release_datetime" id="inputReleaseDatetime"
             min="{{\Carbon\Carbon::parse('tomorrow')->format('Y-m-d').'T00:00'}}"
-            v-model="inputReleaseDatetime"
+            v-model="editingTextbox.release_datetime_value"
            >
        </div>
 

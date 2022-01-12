@@ -104,7 +104,10 @@
 
 
             <div class="mt-3 d-flex">
-                <button class="btn btn-outline-primary" onclick="window.open('{{route('print',$note)}}');">
+                {{-- <button class="btn btn-outline-primary" onclick="window.open('{{route('print',$note)}}');"> --}}
+                <button class="btn btn-outline-primary"
+                 onclick="window.open('{{route('print',$note)}}','印刷ページ','width=600,height=700,scrollbars=yes');"
+                >
                     <i class="bi bi-printer"></i> 印刷
                 </button>
             </div>

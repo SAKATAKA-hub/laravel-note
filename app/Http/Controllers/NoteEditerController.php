@@ -196,6 +196,7 @@ class NoteEditerController extends Controller
         {
             $note = [];
             $textboxes = [['mode'=>'editing_textbox'],];
+
             /*
              * $textboxesの最初の値は、ノート情報の表示状態を保存している。
              * 状態を'編集中'(editing_textbox_textbox)としてデータを返す。
@@ -218,9 +219,11 @@ class NoteEditerController extends Controller
             # note情報の取得
 
             # ノートの基本情報の追加データ
-            $note['chake_publishing'] = $note->chake_publishing;
+            $note['chake_publishing'] = $note->chake_publishing; //公開設定
+            $note['release_datetime_value'] = $note->release_datetime_value; //公開予定日
             $note['time_text'] = $note->time_text;
             $note['tags_array'] = $note->tags_array;
+
 
             # textboxes情報の取得
             $textboxes = Textbox::where('note_id',$note->id)->orderBy('order','asc')->get();

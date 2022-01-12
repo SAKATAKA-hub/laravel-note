@@ -187,7 +187,7 @@ class Note extends Model
      * 公開待ちではない：上記以外
      *
      *
-     * @return String
+     * @return String (0000-00-00T00:00)
      */
     public function getReleaseDatetimeValueAttribute()
     {
@@ -198,7 +198,6 @@ class Note extends Model
         return isset($publication_at) && $publication_at > $noe_date_time?
         str_replace(' ','T', substr($publication_at, 0,16) ): '';
     }
-
 
 
 

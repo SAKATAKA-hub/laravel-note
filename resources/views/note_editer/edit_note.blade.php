@@ -10,7 +10,6 @@
     <meta name="token" content="{{ csrf_token() }}">
 
     <!-- route -->
-    {{-- <meta name="json_note" content="{{route('json_note',$note)}}"> --}}
     <meta name="json_note" content="{{route('json_note',compact('mypage_master','note'))}}">
 
 

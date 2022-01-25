@@ -84,6 +84,7 @@
             </small>
 
 
+
             <!-- 投稿タイトル -->
             <h3 class="title ">{{$note->title}}</h3>
 

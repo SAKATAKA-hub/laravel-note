@@ -82,7 +82,7 @@ class EditNoteController extends Controller
 
             'created_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //作成日時
             'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //更新日時
-            'publication_at' => Method::getPublicationAt($request), //公開日時
+            'publication_at' => Method::getPublicationAt($request, $note=NULL), //公開日時
 
         ]);
         $note->save();
@@ -183,7 +183,7 @@ class EditNoteController extends Controller
             'user_id' => $request->mypage_master_id, //投稿者ID
 
             'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //更新日時
-            'publication_at' => Method::getPublicationAt($request), //公開日時
+            'publication_at' => Method::getPublicationAt($request, $note), //公開日時
         ]);
 
 

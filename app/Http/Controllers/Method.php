@@ -117,19 +117,41 @@ class Method
      * それ以外はnull。
      *
      * @param \Illuminate\Http\Request $request
+     * @param App\Models\Note $note
      * @return String
      */
-    public static function getPublicationAt($request)
+    public static function getPublicationAt($request, $note)
     {
-        return
+        $Publication_at = NULL;
 
-            //公開設定がONのとき
-            isset($request->publishing)? \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'):
+        // 公開設定がONのとき
+        if($request->publishing)
+        {
+            // 新規投稿のとき、または投稿の更新のとき
+            $Publication_at = !isset($note) ?
+                \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s') :
+                $note->publication_at;
+        }
+        // 公開設定がoffのとき
+        else
+        {
+            // 公開予約日時が指定されているとき、公開予定がないとき
+            $Publication_at = isset($request->release_datetime) ?
+                str_replace('T',' ',$request->release_datetime).':00' : null ;
+        }
 
-            //公開設定がoff、公開予約日時が指定されているとき
-            ( isset($request->release_datetime)? str_replace('T',' ',$request->release_datetime).':00' :null )
 
-        ;
+        return $Publication_at;
+
+        // return
+
+        //     //公開設定がONのとき
+        //     isset($request->publishing)? \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'):
+
+        //     //公開設定がoff、公開予約日時が指定されているとき
+        //     ( isset($request->release_datetime)? str_replace('T',' ',$request->release_datetime).':00' :null )
+
+        // ;
 
     }
 

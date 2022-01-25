@@ -53,7 +53,7 @@ class NoteEditerController extends Controller
 
             'created_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //作成日時
             'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //更新日時
-            'publication_at' => Method::getPublicationAt($request), //公開日時
+            'publication_at' => Method::getPublicationAt($request, $note=NULL), //公開日時
         ]);
         $note->save();
 
@@ -89,7 +89,8 @@ class NoteEditerController extends Controller
             'color' => $request->color, //カラー
             'tags' => Method::getUpdateTagsString($request->tags), //タグ('****','****','****'形式)
             'updated_at' => \Carbon\Carbon::parse('now')->format('Y-m-d H:i:s'), //更新日時
-            'publication_at' => Method::getPublicationAt($request), //公開日時
+            'publication_at' => Method::getPublicationAt($request, $note),
+
         ]);
 
 
